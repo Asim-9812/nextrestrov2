@@ -66,4 +66,33 @@ class CustomerRepositoryImpl implements CustomerRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<void> updateCustomer(CustomerModel customer) async {
+    try {
+      _logger.i('Updating customer: ${customer.firstName} ${customer.lastName}');
+      await _apiClient.put(
+        ApiConstants.updateCustomerEndpoint,
+        data: customer.toJson(),
+      );
+      _logger.i('Customer updated successfully');
+    } catch (e) {
+      _logger.e('Failed to update customer', error: e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteCustomer(int customerId) async {
+    try {
+      _logger.i('Deleting customer with ID: $customerId');
+      final endpoint = ApiConstants.deleteCustomerEndpoint
+          .replaceFirst(':id', customerId.toString());
+      await _apiClient.delete(endpoint);
+      _logger.i('Customer deleted successfully');
+    } catch (e) {
+      _logger.e('Failed to delete customer', error: e);
+      rethrow;
+    }
+  }
 }

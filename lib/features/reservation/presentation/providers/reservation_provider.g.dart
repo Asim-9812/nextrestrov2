@@ -198,7 +198,7 @@ final class CreateCustomerStateProvider
 }
 
 String _$createCustomerStateHash() =>
-    r'd9b499a4529d2cc32e49b5696877bc7c62016dd2';
+    r'03f6bc24b3245143b1e8188eaac06d40817f9cf7';
 
 abstract class _$CreateCustomerState
     extends $Notifier<AsyncValue<CustomerModel?>> {

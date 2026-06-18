@@ -16,10 +16,34 @@ class UserRepositoryImpl implements UserRepository {
   UserRepositoryImpl(this._remoteDataSource);
 
   @override
+  Future<Either<Failure, List<UserModel>>> getAllUsers() async {
+    try {
+      final response = await _remoteDataSource.getAllUsers();
+      return Right(response);
+    } on DioException catch (e) {
+      return Left(ServerFailure(e.message ?? 'Server Error'));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, UserModel>> getUserById(int userId) async {
     try {
       final response = await _remoteDataSource.getUserById(userId);
       return Right(response);
+    } on DioException catch (e) {
+      return Left(ServerFailure(e.message ?? 'Server Error'));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> register(Map<String, dynamic> data) async {
+    try {
+      await _remoteDataSource.register(data);
+      return const Right(null);
     } on DioException catch (e) {
       return Left(ServerFailure(e.message ?? 'Server Error'));
     } catch (e) {

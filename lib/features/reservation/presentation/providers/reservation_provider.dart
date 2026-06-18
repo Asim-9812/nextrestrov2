@@ -58,11 +58,12 @@ class CreateCustomerState extends _$CreateCustomerState {
     try {
       final repository = ref.read(customerRepositoryProvider);
       await repository.createCustomer(customer);
-      await ref.read(customersProvider.notifier).refresh();
       
+      ref.invalidate(customersProvider);
       final newList = await ref.read(customersProvider.future);
+      
       final newCustomer = newList.firstWhere(
-        (c) => c.phone == customer.phone || c.email == customer.email,
+        (c) => c.phone == customer.phone || (customer.email.isNotEmpty && c.email == customer.email),
         orElse: () => customer,
       );
       

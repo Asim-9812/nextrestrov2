@@ -16,6 +16,8 @@ import 'package:nextrestro/features/orders/presentation/pages/orders_page.dart';
 import 'package:nextrestro/features/shift/presentation/providers/shift_provider.dart';
 import 'package:nextrestro/features/shift/presentation/shift_page.dart';
 import 'package:nextrestro/features/tables/presentation/tables_page.dart';
+import 'package:nextrestro/features/customer/presentation/pages/customer_page.dart';
+import 'package:nextrestro/features/users/presentation/pages/staff_page.dart';
 
 class AdminDashboardPotraitPage extends ConsumerStatefulWidget {
   const AdminDashboardPotraitPage({super.key});
@@ -75,10 +77,12 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
       case 5:
         return 'Reports';
       case 6:
-        return 'Staff Management';
+        return 'Customer Management';
       case 7:
-        return 'Branch Management';
+        return 'Staff Management';
       case 8:
+        return 'Branch Management';
+      case 9:
         return 'Department Management';
       default:
         return 'Dashboard';
@@ -113,8 +117,8 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
           const MenuPage(),
           const ShiftPage(),
           _buildPlaceholderTab('Reports', MaterialSymbols.bar_chart),
-          _buildPlaceholderTab('Customers Management', Ion.ios_people),
-          _buildPlaceholderTab('Staffs Management', Ion.people_circle_sharp),
+          const CustomerPage(),
+          const StaffPage(),
           _buildPlaceholderTab('Branch Management', MaterialSymbols.store),
           _buildPlaceholderTab('Department Management', MaterialSymbols.account_balance),
         ],

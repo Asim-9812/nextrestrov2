@@ -8,13 +8,24 @@ final userRemoteDataSourceProvider = Provider<UserRemoteDataSource>((ref) {
 });
 
 abstract class UserRemoteDataSource {
+  Future<List<UserModel>> getAllUsers();
   Future<UserModel> getUserById(int userId);
+  Future<void> register(Map<String, dynamic> data);
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final ApiClient _apiClient;
 
   UserRemoteDataSourceImpl(this._apiClient);
+
+  @override
+  Future<List<UserModel>> getAllUsers() async {
+    final response = await _apiClient.get(ApiConstants.getAllUsersEndpoint);
+    if (response.data is List) {
+      return (response.data as List).map((e) => UserModel.fromJson(e)).toList();
+    }
+    return [];
+  }
 
   @override
   Future<UserModel> getUserById(int userId) async {
@@ -28,5 +39,13 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     } else {
       throw Exception('Failed to fetch user: Empty response');
     }
+  }
+
+  @override
+  Future<void> register(Map<String, dynamic> data) async {
+    await _apiClient.post(
+      ApiConstants.registerEndpoint,
+      data: data,
+    );
   }
 }

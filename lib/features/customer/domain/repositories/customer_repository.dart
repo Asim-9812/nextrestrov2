@@ -4,4 +4,6 @@ abstract class CustomerRepository {
   Future<List<CustomerModel>> getCustomers();
   Future<void> createCustomer(CustomerModel customer);
   Future<CustomerModel> getCustomerById(int customerId);
+  Future<void> updateCustomer(CustomerModel customer);
+  Future<void> deleteCustomer(int customerId);
 }

@@ -9,6 +9,8 @@ import 'package:nextrestro/features/shift/presentation/providers/shift_managemen
 import 'package:nextrestro/features/shift/presentation/shift_page.dart';
 import 'package:nextrestro/features/tables/presentation/tables_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/orders_page.dart';
+import 'package:nextrestro/features/customer/presentation/pages/customer_page.dart';
+import 'package:nextrestro/features/users/presentation/pages/staff_page.dart';
 import 'widgets/admin_sidebar.dart';
 import 'widgets/admin_header.dart';
 import 'widgets/active_shift_card.dart';
@@ -88,8 +90,8 @@ class _AdminDashboardLandscapePageState
                       const MenuPage(),
                       const ShiftPage(),
                       _buildPlaceholderTab('Reports', Icons.bar_chart),
-                      _buildPlaceholderTab('Customer Management', Icons.bar_chart),
-                      _buildPlaceholderTab('Staff Management', Icons.people),
+                      const CustomerPage(),
+                      const StaffPage(),
                       _buildPlaceholderTab('Branch Management', Icons.store),
                       _buildPlaceholderTab('Department Management', Icons.account_balance),
                     ],
