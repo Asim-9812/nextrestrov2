@@ -192,7 +192,7 @@ final class FilteredStaffProvider
   }
 }
 
-String _$filteredStaffHash() => r'b686dea07e15a55d35e40525528c22982d95e00f';
+String _$filteredStaffHash() => r'3e8ea831c3c70df3e8240e21028e36f74cde5806';
 
 @ProviderFor(staffRoles)
 final staffRolesProvider = StaffRolesProvider._();
@@ -233,7 +233,7 @@ final class StaffRolesProvider
   }
 }
 
-String _$staffRolesHash() => r'35df5c5bd25743ed99957406d9f7a7960eeaca64';
+String _$staffRolesHash() => r'31d74862e28675072c5f6a7e0805d4a9acb3bfe1';
 
 @ProviderFor(SelectedStaffForView)
 final selectedStaffForViewProvider = SelectedStaffForViewProvider._();

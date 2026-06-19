@@ -18,6 +18,7 @@ import 'package:nextrestro/features/shift/presentation/shift_page.dart';
 import 'package:nextrestro/features/tables/presentation/tables_page.dart';
 import 'package:nextrestro/features/customer/presentation/pages/customer_page.dart';
 import 'package:nextrestro/features/users/presentation/pages/staff_page.dart';
+import 'package:nextrestro/features/department/presentation/pages/department_page.dart';
 
 class AdminDashboardPotraitPage extends ConsumerStatefulWidget {
   const AdminDashboardPotraitPage({super.key});
@@ -120,7 +121,7 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
           const CustomerPage(),
           const StaffPage(),
           _buildPlaceholderTab('Branch Management', MaterialSymbols.store),
-          _buildPlaceholderTab('Department Management', MaterialSymbols.account_balance),
+          const DepartmentPage(),
         ],
       ),
     );
