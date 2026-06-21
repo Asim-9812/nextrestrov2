@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
+import 'package:nextrestro/core/network/session_service.dart';
 import '../providers/menu_provider.dart';
 import 'widgets/menu_sidebar_item.dart';
 import 'widgets/menu_sidebar_dropdown.dart';
@@ -17,66 +18,69 @@ class MenuLandscapePage extends ConsumerWidget {
     final selectedIndex = ref.watch(selectedMenuTabProvider);
     final categoryExpanded = ref.watch(categoryExpandedProvider);
     final productExpanded = ref.watch(productExpandedProvider);
+    final userRole = ref.watch(sessionServiceProvider).getUser()?['role']?.toString().toLowerCase();
+    final isWaiter = userRole == 'waiter';
 
     return Scaffold(
       body: Row(
         children: [
           // Left Section - Sidebar Menu
-          Expanded(
-            flex: 1,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: AppColors.white,
-                border: Border(right: BorderSide(color: AppColors.ashGrey, width: 0.5)),
-              ),
-              height: double.infinity,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 16),
-                    MenuSidebarItem(
-                      icon: MaterialSymbols.menu_book_rounded,
-                      label: 'Menus',
-                      isSelected: selectedIndex == 0,
-                      onTap: () => ref.read(selectedMenuTabProvider.notifier).set(0),
-                    ),
-                    MenuSidebarDropdown(
-                      icon: MaterialSymbols.category_rounded,
-                      label: 'Category',
-                      isExpanded: categoryExpanded,
-                      onToggle: () => ref.read(categoryExpandedProvider.notifier).toggle(),
-                      items: [
-                        DropdownSubItem(
-                          label: 'Manage Category',
-                          isSelected: selectedIndex == 1,
-                          onTap: () => ref.read(selectedMenuTabProvider.notifier).set(1),
-                        ),
-                        DropdownSubItem(
-                          label: 'Manage Sub Category',
-                          isSelected: selectedIndex == 3,
-                          onTap: () => ref.read(selectedMenuTabProvider.notifier).set(3),
-                        ),
-                      ],
-                    ),
-                    MenuSidebarDropdown(
-                      icon: MaterialSymbols.inventory_2_rounded,
-                      label: 'Products',
-                      isExpanded: productExpanded,
-                      onToggle: () => ref.read(productExpandedProvider.notifier).toggle(),
-                      items: [
-                        DropdownSubItem(
-                          label: 'Manage Products',
-                          isSelected: selectedIndex == 5,
-                          onTap: () => ref.read(selectedMenuTabProvider.notifier).set(5),
-                        ),
-                      ],
-                    ),
-                  ],
+          if (!isWaiter)
+            Expanded(
+              flex: 1,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: AppColors.white,
+                  border: Border(right: BorderSide(color: AppColors.ashGrey, width: 0.5)),
+                ),
+                height: double.infinity,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 16),
+                      MenuSidebarItem(
+                        icon: MaterialSymbols.menu_book_rounded,
+                        label: 'Menus',
+                        isSelected: selectedIndex == 0,
+                        onTap: () => ref.read(selectedMenuTabProvider.notifier).set(0),
+                      ),
+                      MenuSidebarDropdown(
+                        icon: MaterialSymbols.category_rounded,
+                        label: 'Category',
+                        isExpanded: categoryExpanded,
+                        onToggle: () => ref.read(categoryExpandedProvider.notifier).toggle(),
+                        items: [
+                          DropdownSubItem(
+                            label: 'Manage Category',
+                            isSelected: selectedIndex == 1,
+                            onTap: () => ref.read(selectedMenuTabProvider.notifier).set(1),
+                          ),
+                          DropdownSubItem(
+                            label: 'Manage Sub Category',
+                            isSelected: selectedIndex == 3,
+                            onTap: () => ref.read(selectedMenuTabProvider.notifier).set(3),
+                          ),
+                        ],
+                      ),
+                      MenuSidebarDropdown(
+                        icon: MaterialSymbols.inventory_2_rounded,
+                        label: 'Products',
+                        isExpanded: productExpanded,
+                        onToggle: () => ref.read(productExpandedProvider.notifier).toggle(),
+                        items: [
+                          DropdownSubItem(
+                            label: 'Manage Products',
+                            isSelected: selectedIndex == 5,
+                            onTap: () => ref.read(selectedMenuTabProvider.notifier).set(5),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
 
           // Right Section - Content
           Expanded(
@@ -84,7 +88,7 @@ class MenuLandscapePage extends ConsumerWidget {
             child: Container(
               height: double.infinity,
               color: AppColors.bg,
-              child: _buildMainContent(ref, selectedIndex),
+              child: _buildMainContent(ref, isWaiter ? 0 : selectedIndex),
             ),
           ),
         ],

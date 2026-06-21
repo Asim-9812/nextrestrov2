@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
+import 'package:nextrestro/core/network/session_service.dart';
 import 'package:nextrestro/features/tables/presentation/providers/table_provider.dart';
 import 'package:nextrestro/features/reservation/presentation/widgets/reservation_management_landscape_page.dart';
 import 'package:nextrestro/features/tables/presentation/landscape/widgets/add_table_form.dart';
@@ -17,6 +18,8 @@ class TablesLandscapePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = ref.watch(selectedTableMenuProvider);
     final transferSource = ref.watch(transferTableStateProvider);
+    final userRole = ref.watch(sessionServiceProvider).getUser()?['role']?.toString().toLowerCase();
+    final isWaiter = userRole == 'waiter';
 
     return Column(
       children: [
@@ -40,18 +43,20 @@ class TablesLandscapePage extends ConsumerWidget {
                         isSelected: selectedIndex == 0,
                         onTap: () => ref.read(selectedTableMenuProvider.notifier).set(0),
                       ),
-                      TablesSidebarItem(
-                        icon: MaterialSymbols.playlist_add_circle_rounded,
-                        label: 'Add Tables',
-                        isSelected: selectedIndex == 1,
-                        onTap: () => ref.read(selectedTableMenuProvider.notifier).set(1),
-                      ),
-                      TablesSidebarItem(
-                        icon: MaterialSymbols.manage_search_rounded,
-                        label: 'Manage Tables',
-                        isSelected: selectedIndex == 2,
-                        onTap: () => ref.read(selectedTableMenuProvider.notifier).set(2),
-                      ),
+                      if (!isWaiter) ...[
+                        TablesSidebarItem(
+                          icon: MaterialSymbols.playlist_add_circle_rounded,
+                          label: 'Add Tables',
+                          isSelected: selectedIndex == 1,
+                          onTap: () => ref.read(selectedTableMenuProvider.notifier).set(1),
+                        ),
+                        TablesSidebarItem(
+                          icon: MaterialSymbols.manage_search_rounded,
+                          label: 'Manage Tables',
+                          isSelected: selectedIndex == 2,
+                          onTap: () => ref.read(selectedTableMenuProvider.notifier).set(2),
+                        ),
+                      ],
                       TablesSidebarItem(
                         icon: MaterialSymbols.event_available,
                         label: 'Reservation',

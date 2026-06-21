@@ -20,10 +20,10 @@ class OrdersSidebar extends StatelessWidget {
       width: 250, // Increased width to accommodate labels
       decoration: const BoxDecoration(
         color: AppColors.white,
-        border: Border(
-          left: BorderSide(color: AppColors.lightGrey),
-          right: BorderSide(color: AppColors.lightGrey),
-        ),
+        // border: Border(
+        //   left: BorderSide(color: AppColors.lightGrey),
+        //   right: BorderSide(color: AppColors.lightGrey),
+        // ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
