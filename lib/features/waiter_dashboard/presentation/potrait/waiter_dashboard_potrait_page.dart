@@ -11,9 +11,9 @@ import 'package:nextrestro/features/menu/presentation/pages/menu_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/orders_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/portrait/widgets/place_order/orders_place_order_portrait_page.dart';
 import 'package:nextrestro/features/profile/presentation/profile_page.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/portrait_shift_header.dart';
 import 'package:nextrestro/features/shift/presentation/providers/shift_provider.dart';
 import 'package:nextrestro/features/tables/presentation/tables_page.dart';
-import '../widgets/waiter_shift_header.dart';
 import '../widgets/waiter_shift_details_card.dart';
 
 class WaiterDashboardPotraitPage extends ConsumerStatefulWidget {
@@ -184,7 +184,7 @@ class _WaiterDashboardPotraitPageState extends ConsumerState<WaiterDashboardPotr
         return Column(
           children: [
             const SizedBox(height: 12),
-            WaiterShiftHeader(shift: shift),
+            PortraitShiftHeader(shift: shift),
             const SizedBox(height: 12),
             if (shift != null)
               WaiterShiftDetailsCard(
