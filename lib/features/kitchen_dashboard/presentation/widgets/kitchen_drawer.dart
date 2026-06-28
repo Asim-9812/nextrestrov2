@@ -44,9 +44,7 @@ class KitchenDrawer extends ConsumerWidget {
               children: [
                 _buildDrawerItem(0, 'Dashboard', MaterialSymbols.space_dashboard_rounded),
                 _buildDrawerItem(1, 'Orders', Ion.receipt),
-                _buildDrawerItem(2, 'Inventory', MaterialSymbols.inventory_2_rounded),
-                _buildDrawerItem(3, 'Menu', Bx.food_menu),
-                _buildDrawerItem(4, 'Shift', MaterialSymbols.schedule),
+                _buildDrawerItem(2, 'Menu', Bx.food_menu),
               ],
             ),
           ),

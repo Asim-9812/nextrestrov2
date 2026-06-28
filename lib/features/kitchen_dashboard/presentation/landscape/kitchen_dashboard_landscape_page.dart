@@ -5,7 +5,6 @@ import 'package:nextrestro/core/network/session_service.dart';
 import 'package:nextrestro/features/login/presentation/login_page.dart';
 import 'package:nextrestro/features/menu/presentation/pages/menu_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/orders_page.dart';
-import 'package:nextrestro/features/shift/presentation/shift_page.dart';
 import 'package:nextrestro/features/kitchen_dashboard/presentation/portrait/tabs/kitchen_overview_tab.dart';
 import 'widgets/kitchen_sidebar.dart';
 import 'widgets/kitchen_header.dart';
@@ -56,9 +55,7 @@ class _KitchenDashboardLandscapePageState extends ConsumerState<KitchenDashboard
     switch (_selectedIndex) {
       case 0: return 'Dashboard';
       case 1: return 'Live Orders';
-      case 2: return 'Inventory Control';
-      case 3: return 'Menu Management';
-      case 4: return 'Shift Status';
+      case 2: return 'Menu Management';
       default: return 'Dashboard';
     }
   }
@@ -86,9 +83,7 @@ class _KitchenDashboardLandscapePageState extends ConsumerState<KitchenDashboard
                     children: [
                       const KitchenOverviewTab(),
                       const OrdersPage(),
-                      const Center(child: Text('Inventory Control')),
                       const MenuPage(),
-                      const ShiftPage(),
                     ],
                   ),
                 ),

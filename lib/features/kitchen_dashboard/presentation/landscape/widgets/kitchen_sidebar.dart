@@ -66,9 +66,7 @@ class KitchenSidebar extends StatelessWidget {
     final items = [
       (MaterialSymbols.space_dashboard_rounded, 0, 'Dashboard'),
       (Ion.receipt, 1, 'Orders'),
-      (MaterialSymbols.inventory_2_rounded, 2, 'Inventory'),
-      (Bx.food_menu, 3, 'Menu'),
-      (MaterialSymbols.schedule, 4, 'Shift Management'),
+      (Bx.food_menu, 2, 'Menu'),
     ];
 
     return items.map((item) {
