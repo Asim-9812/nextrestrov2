@@ -1,0 +1,246 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nextrestro/core/constants/app_colors.dart';
+import 'package:nextrestro/features/orders/presentation/providers/order_dashboard_provider.dart';
+import 'package:nextrestro/features/orders/presentation/providers/order_dashboard_state.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/portrait_shift_header.dart';
+import 'package:nextrestro/features/shift/presentation/providers/shift_provider.dart';
+import 'package:nextrestro/features/waiter_dashboard/presentation/widgets/waiter_shift_details_card.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/landscape/widgets/active_shift_card.dart';
+
+class KitchenOverviewTab extends ConsumerWidget {
+  const KitchenOverviewTab({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dashboardAsync = ref.watch(orderDashboardProvider);
+    final shiftState = ref.watch(shiftControllerProvider);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isLandscape = constraints.maxWidth > 600;
+
+        return shiftState.when(
+          data: (data) {
+            final shift = data.$1;
+            final openerName = data.$2;
+
+            if (shift == null) {
+              return const Center(child: Text('No active shift', style: TextStyle(color: AppColors.grey)));
+            }
+
+            return RefreshIndicator(
+              onRefresh: () => ref.read(orderDashboardProvider.notifier).refresh(),
+              color: AppColors.primary,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(isLandscape ? 24 : 16), // Matching Admin Landscape padding
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (isLandscape) ...[
+                      ActiveShiftCard(
+                        shift: shift,
+                        openerName: openerName,
+                      ),
+                      const SizedBox(height: 32),
+                      const Text(
+                        'Overview',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ] else ...[
+                      const SizedBox(height: 12),
+                      PortraitShiftHeader(shift: shift),
+                      const SizedBox(height: 12),
+                      WaiterShiftDetailsCard(
+                        shift: shift,
+                        openerName: openerName,
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        'Kitchen Overview',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.black),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                    dashboardAsync.when(
+                      data: (state) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSummaryGrid(state, isLandscape),
+                          const SizedBox(height: 32),
+                          Text(
+                            isLandscape ? 'Recent Orders' : 'Live Preparation Feed',
+                            style: TextStyle(
+                              fontSize: isLandscape ? 18 : 16, 
+                              fontWeight: FontWeight.bold, 
+                              color: AppColors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          _buildRecentOrdersList(state, isLandscape),
+                        ],
+                      ),
+                      loading: () => const Center(child: CircularProgressIndicator()),
+                      error: (err, _) => Center(child: Text('Error: $err', style: const TextStyle(color: AppColors.error))),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(child: Text('Error: $error')),
+        );
+      },
+    );
+  }
+
+  Widget _buildSummaryGrid(OrderDashboardState state, bool isLandscape) {
+    return Row(
+      children: [
+        Expanded(child: _buildProfessionalCard('TO PREPARE', state.confirmedOrders.length.toString(), Icons.pending_actions, AppColors.warning)),
+        const SizedBox(width: 16),
+        Expanded(child: _buildProfessionalCard('IN PROGRESS', state.pendingOrders.length.toString(), Icons.restaurant, AppColors.info)),
+        const SizedBox(width: 16),
+        Expanded(child: _buildProfessionalCard('READY', state.readyOrders.length.toString(), Icons.check_circle, AppColors.success)),
+        const SizedBox(width: 16),
+        Expanded(child: _buildProfessionalCard('COMPLETED', state.completedOrders.length.toString(), Icons.task_alt, AppColors.grey)),
+      ],
+    );
+  }
+
+  Widget _buildProfessionalCard(String title, String value, IconData icon, Color color) {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Container(
+        height: 120,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          gradient: LinearGradient(
+            colors: [color.withOpacity(0.1), color.withOpacity(0.05)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          border: Border.all(color: color.withOpacity(0.1)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.all(8),
+                child: Icon(icon, color: color, size: 24),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    value,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.black,
+                    ),
+                  ),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentOrdersList(OrderDashboardState state, bool isLandscape) {
+    final allOrders = [...state.confirmedOrders, ...state.pendingOrders, ...state.readyOrders];
+    if (allOrders.isEmpty) {
+      return const Center(child: Text('No active preparation queue', style: TextStyle(color: AppColors.grey, fontSize: 13)));
+    }
+
+    allOrders.sort((a, b) => (b.orderID ?? 0).compareTo(a.orderID ?? 0));
+    final displayOrders = allOrders.take(10).toList();
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: isLandscape ? 2 : 1,
+        mainAxisExtent: 80,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+      ),
+      itemCount: displayOrders.length,
+      itemBuilder: (context, index) => _buildOrderTile(displayOrders[index]),
+    );
+  }
+
+  Widget _buildOrderTile(dynamic order) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.ashGrey.withOpacity(0.5)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(color: AppColors.bg, borderRadius: BorderRadius.circular(8)),
+            child: const Icon(Icons.receipt_long, size: 20, color: AppColors.grey),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Order #${order.orderID}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                Text('Table ${order.tableNumber} • ${order.productName}', style: const TextStyle(color: AppColors.grey, fontSize: 12)),
+              ],
+            ),
+          ),
+          _buildStatusTag(order.itemStatus ?? 'Pending'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusTag(String status) {
+    Color color = AppColors.grey;
+    if (status == 'Pending') color = AppColors.warning;
+    if (status == 'Ready') color = AppColors.success;
+    if (status == 'Confirmed') color = AppColors.info;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        status.toUpperCase(),
+        style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
