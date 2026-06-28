@@ -42,7 +42,7 @@ final class PlaceOrderNotifierProvider
 }
 
 String _$placeOrderNotifierHash() =>
-    r'6ca1eed86bc41fc39736ea596baf32c9e52ce81e';
+    r'c166747609ebe34df9d964626133084f2c586a0a';
 
 abstract class _$PlaceOrderNotifier extends $Notifier<PlaceOrderState> {
   PlaceOrderState build();

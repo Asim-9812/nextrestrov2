@@ -165,18 +165,32 @@ class OrderSummaryLandscapePage extends ConsumerWidget {
           const SizedBox(width: 8),
 
           ElevatedButton.icon(
-            onPressed: state.orderPlacementStatus.isLoading ? null : () => _showConfirmDialog(
-              context, 
-              'Place Order', 
-              'Confirm kitchen order?', 
-              () => notifier.placeOrder()
-            ),
+            onPressed: state.orderPlacementStatus.isLoading ? null : () {
+              if (state.selectedTable == null || state.items.isEmpty) {
+                String message = '';
+                if (state.selectedTable == null && state.items.isEmpty) {
+                  message = 'Please select a table and add items first.';
+                } else if (state.selectedTable == null) {
+                  message = 'Please select a table first.';
+                } else {
+                  message = 'Please add at least one item first.';
+                }
+                Toaster.error(context: context, message: message, isLandscape: true);
+                return;
+              }
+              _showConfirmDialog(
+                context, 
+                'Place Order', 
+                'Confirm kitchen order?', 
+                () => notifier.placeOrder()
+              );
+            },
             icon: state.orderPlacementStatus.isLoading 
               ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
               : const Icon(Icons.check_circle_outline, size: 18),
             label: const Text('PLACE ORDER', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.success,
+              backgroundColor: (state.selectedTable == null || state.items.isEmpty) ? AppColors.grey : AppColors.success,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -465,14 +479,28 @@ class OrderSummaryLandscapePage extends ConsumerWidget {
           _actionButton(
             label: 'PLACE ORDER',
             icon: Icons.shopping_cart_checkout_rounded,
-            color: AppColors.success,
+            color: (state.selectedTable == null || state.items.isEmpty) ? AppColors.grey : AppColors.success,
             isLoading: state.orderPlacementStatus.isLoading,
-            onPressed: () => _showConfirmDialog(
-              context, 
-              'Place Order', 
-              'Confirm kitchen order?', 
-              () => ref.read(placeOrderProvider.notifier).placeOrder(),
-            ),
+            onPressed: () {
+               if (state.selectedTable == null || state.items.isEmpty) {
+                String message = '';
+                if (state.selectedTable == null && state.items.isEmpty) {
+                  message = 'Please select a table and add items first.';
+                } else if (state.selectedTable == null) {
+                  message = 'Please select a table first.';
+                } else {
+                  message = 'Please add at least one item first.';
+                }
+                Toaster.error(context: context, message: message, isLandscape: true);
+                return;
+              }
+              _showConfirmDialog(
+                context, 
+                'Place Order', 
+                'Confirm kitchen order?', 
+                () => ref.read(placeOrderProvider.notifier).placeOrder(),
+              );
+            },
           ),
         ],
       ),

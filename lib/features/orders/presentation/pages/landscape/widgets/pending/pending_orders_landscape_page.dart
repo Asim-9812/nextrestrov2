@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/orders/presentation/providers/order_dashboard_provider.dart';
 import 'package:nextrestro/features/orders/data/models/order_detail_model.dart';
+import 'package:nextrestro/features/shift/presentation/providers/shift_provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'pending_order_details_landscape_panel.dart';
 
@@ -12,58 +13,79 @@ class PendingOrdersLandscapePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboardAsync = ref.watch(orderDashboardProvider);
+    final shiftAsync = ref.watch(shiftControllerProvider);
 
     return dashboardAsync.when(
-      data: (state) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 24.0, left: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Pending Orders',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.black,
+      data: (state) {
+        // Filter by shift opening time
+        final activeShift = shiftAsync.maybeWhen(
+          data: (data) => data.$1,
+          orElse: () => null,
+        );
+
+        DateTime? openingTime;
+        if (activeShift?.openingTime != null) {
+          openingTime = DateTime.tryParse(activeShift!.openingTime!);
+        }
+
+        final filteredOrders = state.pendingOrders.where((o) {
+          if (openingTime == null) return true;
+          final orderDate = DateTime.tryParse(o.orderDate ?? '');
+          if (orderDate == null) return true;
+          return orderDate.isAfter(openingTime) || orderDate.isAtSameMomentAs(openingTime);
+        }).toList();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0, left: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Pending Orders',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.black,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Review and confirm incoming orders',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.grey,
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Review and confirm incoming orders',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.grey,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 24),
-              ],
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
-          ),
-          const Divider(
-            height: 0,
-          ),
-          Expanded(
-            child: Row(
-              children: [
-                // Left Section: List
-                Expanded(
-                  flex: 2,
-                  child: _buildOrderListSection(context, ref, state.pendingOrders),
-                ),
-                const VerticalDivider(width: 1, thickness: 1, color: AppColors.ashGrey),
-                // Right Section: Order Details
-                const Expanded(
-                  flex: 3,
-                  child: PendingOrderDetailsLandscapePanel(),
-                ),
-              ],
+            const Divider(
+              height: 0,
             ),
-          ),
-        ],
-      ),
+            Expanded(
+              child: Row(
+                children: [
+                  // Left Section: List
+                  Expanded(
+                    flex: 2,
+                    child: _buildOrderListSection(context, ref, filteredOrders),
+                  ),
+                  const VerticalDivider(width: 1, thickness: 1, color: AppColors.ashGrey),
+                  // Right Section: Order Details
+                  const Expanded(
+                    flex: 3,
+                    child: PendingOrderDetailsLandscapePanel(),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
       loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
       error: (err, stack) => Center(child: Text('Error: $err', style: const TextStyle(color: AppColors.error))),
     );

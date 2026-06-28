@@ -43,9 +43,45 @@ class OrderDashboard extends _$OrderDashboard {
           state = AsyncValue.data(currentState.copyWith(
             pendingOrders: currentState.pendingOrders.map(updateItem).toList(),
             confirmedOrders: currentState.confirmedOrders.map(updateItem).toList(),
+            readyOrders: currentState.readyOrders.map(updateItem).toList(),
             completedOrders: currentState.completedOrders.map(updateItem).toList(),
             cancelledOrders: currentState.cancelledOrders.map(updateItem).toList(),
           ));
+
+          // Temporary Auto-Ready Logic:
+          // Check if all items for this order are now 'Ready' or 'Served'
+          final allItemsInOrder = [
+            ...currentState.confirmedOrders,
+            ...currentState.readyOrders,
+            ...currentState.pendingOrders,
+          ].where((o) => o.orderID == orderId).toList();
+
+          if (allItemsInOrder.isNotEmpty) {
+            final allReady = allItemsInOrder.every((item) {
+              if (item.productId == orderItemId) return status == 'Ready' || status == 'Served';
+              return item.itemStatus == 'Ready' || item.itemStatus == 'Served';
+            });
+
+            if (allReady) {
+              // Automatically update order status to Ready
+              updateOrderStatus(orderId, 'Ready');
+            }
+          }
+
+          // Temporary Auto-Complete Logic:
+          // Check if all items for this order are now 'Served' across confirmed/ready lists
+          if (allItemsInOrder.isNotEmpty) {
+            final allServed = allItemsInOrder.every((item) {
+              // If it's the item we just updated, use the NEW status
+              if (item.productId == orderItemId) return status == 'Served';
+              return item.itemStatus == 'Served';
+            });
+
+            if (allServed) {
+              // Automatically update order status to Completed
+              updateOrderStatus(orderId, 'Completed');
+            }
+          }
         }
       },
     );
@@ -86,8 +122,34 @@ class OrderDashboard extends _$OrderDashboard {
       await repository.updateOrderItemStatus(item.productId ?? 0, orderId, 'Served');
     }
 
-    // After all items are served, the dashboard stream will eventually poll and update.
-    // However, we invalidate to force an immediate refresh so the order moves to Completed list.
+    // Temporary Auto-Complete Logic for "Mark All Served"
+    await repository.updateOrderStatus(orderId, 'Completed');
+
+    // After all items are served and order is completed, invalidate to refresh
+    ref.invalidateSelf();
+  }
+
+  Future<void> markAllItemsAsReady(int orderId, List<OrderDetailModel> items) async {
+    final repository = ref.read(orderRepositoryProvider);
+    
+    // Filter items that are currently Pending (not Ready or Served)
+    final itemsToReady = items.where((i) => i.itemStatus == 'Pending').toList();
+    
+    if (itemsToReady.isEmpty) {
+      // Even if no items were pending, ensure order status is Ready if requested
+      await repository.updateOrderStatus(orderId, 'Ready');
+      ref.invalidateSelf();
+      return;
+    }
+
+    for (final item in itemsToReady) {
+      await repository.updateOrderItemStatus(item.productId ?? 0, orderId, 'Ready');
+    }
+
+    // Temporary Auto-Ready Logic for "Mark All Ready"
+    await repository.updateOrderStatus(orderId, 'Ready');
+
+    // Invalidate to force immediate refresh
     ref.invalidateSelf();
   }
 }
@@ -144,9 +206,10 @@ Future<List<OrderDetailModel>?> selectedOrderDetails(Ref ref) async {
   
   return dashboardAsync.maybeWhen(
     data: (state) {
-      // Look for the order in confirmed or completed lists
+      // Look for the order in confirmed, ready or completed lists
       final items = [
         ...state.confirmedOrders,
+        ...state.readyOrders,
         ...state.completedOrders,
       ].where((o) => o.orderID == orderId).toList();
       

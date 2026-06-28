@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/shift/presentation/providers/shift_provider.dart';
+import 'package:nextrestro/features/orders/presentation/pages/portrait/widgets/manage_orders/manage_orders_portrait_page.dart';
 import 'widgets/dashboard/orders_dashboard_portrait_page.dart';
 import 'widgets/place_order/orders_place_order_portrait_page.dart';
-import 'widgets/orders_tabs_portrait_page.dart';
 
 class OrdersPortraitPage extends ConsumerStatefulWidget {
   const OrdersPortraitPage({super.key});
@@ -19,7 +19,7 @@ class _OrdersPortraitPageState extends ConsumerState<OrdersPortraitPage> {
   final List<Widget> _pages = [
     const OrdersDashboardPortraitPage(),
     const OrdersPlaceOrderPortraitPage(),
-    const OrdersTabsPortraitPage(),
+    const ManageOrdersPortraitPage(),
   ];
 
   @override

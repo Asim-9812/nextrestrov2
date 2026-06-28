@@ -33,7 +33,7 @@ final class OrderDashboardProvider
   OrderDashboard create() => OrderDashboard();
 }
 
-String _$orderDashboardHash() => r'11060a5c24eaa8cea8d7385b8679ffe44e5f0a61';
+String _$orderDashboardHash() => r'0b5c4a36a186a73f8feec72bda33f9b1cf7b952b';
 
 abstract class _$OrderDashboard extends $StreamNotifier<OrderDashboardState> {
   Stream<OrderDashboardState> build();
@@ -409,7 +409,7 @@ final class SelectedOrderDetailsProvider
 }
 
 String _$selectedOrderDetailsHash() =>
-    r'fd4f68db905068c861213cb9a8991825474f3772';
+    r'499608a46ee12ff8d8ef8442ad0ac2233adb1990';
 
 @ProviderFor(selectedPendingOrderDetails)
 final selectedPendingOrderDetailsProvider =

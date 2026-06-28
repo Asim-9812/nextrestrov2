@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:nextrestro/features/orders/data/models/place_order_request.dart';
 import 'package:nextrestro/features/orders/data/models/place_order_response.dart';
 import 'package:nextrestro/features/orders/data/repositories/order_repository_impl.dart';
+import 'package:nextrestro/features/orders/presentation/providers/order_dashboard_provider.dart';
 import 'package:nextrestro/features/tables/presentation/providers/table_provider.dart';
 import 'package:nextrestro/features/tables/data/models/table_model.dart';
 import 'package:nextrestro/features/menu/data/models/menu_item_model.dart';
@@ -136,7 +137,12 @@ class PlaceOrderNotifier extends _$PlaceOrderNotifier {
           (failure) {
              state = state.copyWith(orderPlacementStatus: AsyncValue.error('Order created but confirmation failed: ${failure.message}', StackTrace.current));
           },
-          (_) {
+          (_) async {
+             // Refresh order list and wait for it
+             final dashboardNotifier = ref.read(orderDashboardProvider.notifier);
+             await dashboardNotifier.refresh();
+             await ref.read(orderDashboardProvider.future);
+
              state = state.copyWith(orderPlacementStatus: AsyncValue.data(response));
              ref.invalidate(tablesStreamProvider); // Refresh table list to show updated status
              clearOrder(); // Clear after success

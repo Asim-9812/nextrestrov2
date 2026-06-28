@@ -9,6 +9,7 @@ abstract class OrderDashboardState with _$OrderDashboardState {
     @Default([]) List<OrderDetailModel> completedOrders,
     @Default([]) List<OrderDetailModel> pendingOrders,
     @Default([]) List<OrderDetailModel> confirmedOrders,
+    @Default([]) List<OrderDetailModel> readyOrders,
     @Default([]) List<OrderDetailModel> cancelledOrders,
     @Default(false) bool isLoading,
     String? errorMessage,

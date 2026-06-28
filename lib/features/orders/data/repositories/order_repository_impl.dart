@@ -130,12 +130,14 @@ class OrderRepositoryImpl implements OrderRepository {
       try {
         final pendingResult = await getOrdersByStatus('Pending');
         final confirmedResult = await getOrdersByStatus('Confirmed');
+        final readyResult = await getOrdersByStatus('Ready');
         final completedResult = await getOrdersByStatus('Completed');
         final cancelledResult = await getOrdersByStatus('Cancelled');
 
         final state = OrderDashboardState(
           pendingOrders: pendingResult.getOrElse((_) => []),
           confirmedOrders: confirmedResult.getOrElse((_) => []),
+          readyOrders: readyResult.getOrElse((_) => []),
           completedOrders: completedResult.getOrElse((_) => []),
           cancelledOrders: cancelledResult.getOrElse((_) => []),
         );

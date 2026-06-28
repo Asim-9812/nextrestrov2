@@ -41,8 +41,6 @@ class OrdersDashboardLandscapePage extends ConsumerWidget {
               _buildStatsCards(state),
               const SizedBox(height: 32),
               _buildReadyToServeSection(ref, state),
-              const SizedBox(height: 32),
-              _buildConfirmedTablesSection(ref, state),
             ],
           ),
         ),
@@ -181,19 +179,6 @@ class OrdersDashboardLandscapePage extends ConsumerWidget {
     );
   }
 
-  Widget _buildConfirmedTablesSection(WidgetRef ref, OrderDashboardState dashboardState) {
-    final List<GroupedOrder> groupedOrders = _groupOrders(dashboardState.confirmedOrders);
-
-    return _buildSectionContainer(
-      title: 'Confirmed Order Tables',
-      description: 'Overview of all active orders and their preparation status',
-      onRefresh: () => ref.read(orderDashboardProvider.notifier).refresh(),
-      child: groupedOrders.isEmpty
-          ? _buildEmptyState('No confirmed orders at the moment')
-          : _buildConfirmedTablesTable(groupedOrders),
-    );
-  }
-
   Widget _buildSectionContainer({
     required String title,
     required String description,
@@ -268,44 +253,6 @@ class OrdersDashboardLandscapePage extends ConsumerWidget {
             item.tableNumber ?? 'N/A',
             item.itemStatus ?? 'Ready',
           ], isReady: true);
-        }),
-      ],
-    );
-  }
-
-  Widget _buildConfirmedTablesTable(List<GroupedOrder> orders) {
-    return Table(
-      columnWidths: const {
-        0: FixedColumnWidth(50),
-        1: FlexColumnWidth(1.2),
-        2: FlexColumnWidth(1.2),
-        3: FlexColumnWidth(1.2),
-        4: FlexColumnWidth(1.8),
-        5: FlexColumnWidth(1.8),
-        6: FlexColumnWidth(1.2),
-      },
-      children: [
-        _buildTableHeader(['SN', 'OrderID', 'Table', 'Time', 'Items', 'Pending/Ready', 'Status']),
-        ...orders.asMap().entries.map((entry) {
-          final int index = entry.key;
-          final GroupedOrder order = entry.value;
-          
-          final int totalItems = order.items.length;
-          final List<OrderDetailModel> pendingReadyItems = order.items.where((i) => i.itemStatus == 'Pending' || i.itemStatus == 'Ready').toList();
-          final int pendingCount = pendingReadyItems.length;
-          
-          // An order is completed if all items are served
-          final bool isCompleted = order.items.every((i) => i.itemStatus == 'Served');
-
-          return _buildTableRow([
-            (index + 1).toString(),
-            '#${order.orderId}',
-            order.tableNumber,
-            TimeFormatter.formatTimeAgo(order.items.first.orderDate),
-            '$totalItems items',
-            '$pendingCount items',
-            isCompleted ? 'Completed' : 'Pending',
-          ], isStatusColumn: true, isSuccess: isCompleted);
         }),
       ],
     );
@@ -389,28 +336,6 @@ class OrdersDashboardLandscapePage extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  List<GroupedOrder> _groupOrders(List<OrderDetailModel> items) {
-    final Map<int, List<OrderDetailModel>> groupedMap = {};
-    for (final item in items) {
-      if (item.orderID != null) {
-        groupedMap.putIfAbsent(item.orderID!, () => []).add(item);
-      }
-    }
-
-    return groupedMap.entries.map((entry) {
-      final firstItem = entry.value.first;
-      return GroupedOrder(
-        orderId: entry.key,
-        tableNumber: firstItem.tableNumber ?? 'N/A',
-        customerName: firstItem.customerName ?? 'Unknown',
-        status: firstItem.orderStatus ?? 'Unknown',
-        date: DateTime.tryParse(firstItem.orderDate ?? '') ?? DateTime(0),
-        itemCount: entry.value.length,
-        items: entry.value,
-      );
-    }).toList()..sort((a, b) => b.date.compareTo(a.date));
   }
 }
 

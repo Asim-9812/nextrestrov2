@@ -1,6 +1,6 @@
 class ApiConstants {
   // Base URL
-  static const String baseUrl = 'https://riatn-103-1-93-10.run.pinggy-free.link';
+  static const String baseUrl = 'https://unrpe-103-1-93-10.free.pinggy.net';
 
   // Timeouts (in milliseconds)
   static const Duration connectionTimeout = Duration(seconds: 30);
