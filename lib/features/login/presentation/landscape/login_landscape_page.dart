@@ -10,6 +10,7 @@ import 'package:nextrestro/features/login/presentation/providers/login_provider.
 import 'package:nextrestro/features/forgot_password/presentation/providers/forgot_password_provider.dart';
 import 'package:nextrestro/features/forgot_password/presentation/providers/forgot_password_state.dart';
 import 'package:nextrestro/features/forgot_password/presentation/portrait/forgot_password_portrait_page.dart';
+import 'package:nextrestro/features/forgot_password/presentation/widgets/resend_otp_timer.dart';
 
 import 'package:nextrestro/features/waiter_dashboard/presentation/waiter_dashboard_page.dart';
 import 'package:nextrestro/features/kitchen_dashboard/presentation/kitchen_dashboard_page.dart';
@@ -488,6 +489,7 @@ class _LoginLandscapePageState extends ConsumerState<LoginLandscapePage>
             onPressed: () {
               setState(() {
                 _isForgotPassword = false;
+                ref.read(forgotPasswordProvider.notifier).resetToInitial();
               });
             },
             icon: const Icon(Icons.arrow_back),
@@ -575,6 +577,10 @@ class _LoginLandscapePageState extends ConsumerState<LoginLandscapePage>
             defaultPinTheme: PinputTheme.defaultTheme,
             focusedPinTheme: PinputTheme.focusedTheme,
           ),
+        ),
+        const SizedBox(height: AppGaps.gapSmall),
+        ResendOtpTimer(
+          onResend: () => ref.read(forgotPasswordProvider.notifier).sendOtp(_emailController.text.trim()),
         ),
         const SizedBox(height: AppGaps.gapLarge),
         TextFormField(

@@ -28,9 +28,15 @@ class ForgotPasswordRemoteDataSourceImpl implements ForgotPasswordRemoteDataSour
     );
 
     if (response.statusCode == 200) {
-      return response.data['message'] ?? 'OTP sent successfully';
+      if (response.data is Map) {
+        return response.data['message'] ?? 'OTP sent successfully';
+      }
+      return response.data.toString();
     } else {
-      throw Exception(response.data['message'] ?? 'Failed to send OTP');
+      if (response.data is Map) {
+        throw Exception(response.data['message'] ?? 'Failed to send OTP');
+      }
+      throw Exception(response.data?.toString() ?? 'Failed to send OTP');
     }
   }
 
@@ -50,9 +56,15 @@ class ForgotPasswordRemoteDataSourceImpl implements ForgotPasswordRemoteDataSour
     );
 
     if (response.statusCode == 200) {
-      return response.data['message'] ?? 'Password reset successful';
+      if (response.data is Map) {
+        return response.data['message'] ?? 'Password reset successful';
+      }
+      return response.data.toString();
     } else {
-      throw Exception(response.data['message'] ?? 'Failed to reset password');
+      if (response.data is Map) {
+        throw Exception(response.data['message'] ?? 'Failed to reset password');
+      }
+      throw Exception(response.data?.toString() ?? 'Failed to reset password');
     }
   }
 }

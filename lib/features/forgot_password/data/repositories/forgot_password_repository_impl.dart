@@ -20,9 +20,12 @@ class ForgotPasswordRepositoryImpl implements ForgotPasswordRepository {
       final result = await _remoteDataSource.forgotPassword(email);
       return Right(result);
     } on DioException catch (e) {
-      return Left(ServerFailure(e.message ?? 'Server Error'));
+      final message = e.response?.data is Map 
+          ? e.response?.data['message'] 
+          : e.response?.data?.toString() ?? e.message;
+      return Left(ServerFailure(message ?? 'Server Error'));
     } catch (e) {
-      return Left(UnknownFailure(e.toString()));
+      return Left(UnknownFailure(e.toString().replaceAll('Exception: ', '')));
     }
   }
 
@@ -40,9 +43,12 @@ class ForgotPasswordRepositoryImpl implements ForgotPasswordRepository {
       );
       return Right(result);
     } on DioException catch (e) {
-      return Left(ServerFailure(e.message ?? 'Server Error'));
+      final message = e.response?.data is Map 
+          ? e.response?.data['message'] 
+          : e.response?.data?.toString() ?? e.message;
+      return Left(ServerFailure(message ?? 'Server Error'));
     } catch (e) {
-      return Left(UnknownFailure(e.toString()));
+      return Left(UnknownFailure(e.toString().replaceAll('Exception: ', '')));
     }
   }
 }

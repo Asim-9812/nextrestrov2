@@ -6,6 +6,7 @@ import 'package:nextrestro/core/constants/gap_manager.dart';
 import 'package:nextrestro/core/utils/toaster.dart';
 import 'package:nextrestro/features/forgot_password/presentation/providers/forgot_password_provider.dart';
 import 'package:nextrestro/features/forgot_password/presentation/providers/forgot_password_state.dart';
+import 'package:nextrestro/features/forgot_password/presentation/widgets/resend_otp_timer.dart';
 import 'package:pinput/pinput.dart';
 
 class ForgotPasswordPortraitPage extends ConsumerStatefulWidget {
@@ -194,6 +195,10 @@ class _ForgotPasswordPortraitPageState extends ConsumerState<ForgotPasswordPortr
               return null;
             },
           ),
+        ),
+        const SizedBox(height: AppGaps.gapSmall),
+        ResendOtpTimer(
+          onResend: () => ref.read(forgotPasswordProvider.notifier).sendOtp(email),
         ),
         const SizedBox(height: AppGaps.gapXLarge),
         Text(
