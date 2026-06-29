@@ -82,29 +82,32 @@ class _WaiterShiftDetailsCardState extends State<WaiterShiftDetailsCard> {
                           child: const Icon(Icons.check_circle_outline, size: 20, color: AppColors.grey),
                         ),
                         const SizedBox(width: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Total Completed Orders',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: AppColors.grey,
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Total Completed Orders',
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  color: AppColors.grey,
+                                ),
                               ),
-                            ),
-                            const Text(
-                              '12', // Static value
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.black,
+                              Text(
+                                '12', // Static value
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.black,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Row(
                       children: [
@@ -117,25 +120,27 @@ class _WaiterShiftDetailsCardState extends State<WaiterShiftDetailsCard> {
                           child: const Icon(Icons.person_outline, size: 20, color: AppColors.grey),
                         ),
                         const SizedBox(width: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Opened by',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: AppColors.grey,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Opened by',
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  color: AppColors.grey,
+                                ),
                               ),
-                            ),
-                            Text(
-                              widget.openerName ?? 'User #${widget.shift.openedByUserID}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.black,
+                              Text(
+                                widget.openerName ?? 'User #${widget.shift.openedByUserID}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.black,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),

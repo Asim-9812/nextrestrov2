@@ -35,7 +35,7 @@ class _KitchenDashboardLandscapePageState extends ConsumerState<KitchenDashboard
               final nav = Navigator.of(context);
               await ref.read(sessionServiceProvider).clearSession();
               if (mounted) {
-                nav.pop();
+                nav.pop(); // Close dialog
                 nav.pushReplacement(
                   MaterialPageRoute(builder: (context) => const LoginPage()),
                 );

@@ -11,15 +11,17 @@ import 'package:nextrestro/features/login/presentation/login_page.dart';
 class KitchenDrawer extends ConsumerWidget {
   final int selectedIndex;
   final Function(int) onItemSelected;
+  final VoidCallback onLogout;
 
   const KitchenDrawer({
     super.key,
     required this.selectedIndex,
     required this.onItemSelected,
+    required this.onLogout,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Drawer(
       width: 200, // Matching Waiter/Admin drawer width
       child: Column(
@@ -52,10 +54,7 @@ class KitchenDrawer extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red, size: 16),
             title: const Text('Logout', style: TextStyle(color: Colors.red, fontSize: 12)),
-            onTap: () {
-              Navigator.pop(context);
-              _handleLogout(context, ref);
-            },
+            onTap: onLogout,
           ),
           const SizedBox(height: 20),
         ],
@@ -80,40 +79,8 @@ class KitchenDrawer extends ConsumerWidget {
         ),
       ),
       selected: isSelected,
-      selectedTileColor: AppColors.primary.withOpacity(0.1),
+      selectedTileColor: AppColors.primary.withValues(alpha: 0.1),
       onTap: () => onItemSelected(index),
-    );
-  }
-
-  void _handleLogout(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              final nav = Navigator.of(context);
-              await ref.read(sessionServiceProvider).clearSession();
-              if (context.mounted) {
-                nav.pop();
-                nav.pushReplacement(
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                );
-              }
-            },
-            child: const Text(
-              'Logout',
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -114,17 +114,41 @@ class KitchenOverviewTab extends ConsumerWidget {
 
   Widget _buildSummaryGrid(bool isLandscape, AsyncValue<OrderDashboardState> dashboardAsync) {
     return dashboardAsync.when(
-      data: (state) => Row(
-        children: [
-          Expanded(child: _buildProfessionalCard('TO PREPARE', state.confirmedOrders.length.toString(), Icons.pending_actions, AppColors.warning)),
-          const SizedBox(width: 16),
-          Expanded(child: _buildProfessionalCard('IN PROGRESS', state.pendingOrders.length.toString(), Icons.restaurant, AppColors.info)),
-          const SizedBox(width: 16),
-          Expanded(child: _buildProfessionalCard('READY', state.readyOrders.length.toString(), Icons.check_circle, AppColors.success)),
-          const SizedBox(width: 16),
-          Expanded(child: _buildProfessionalCard('COMPLETED', state.completedOrders.length.toString(), Icons.task_alt, AppColors.grey)),
-        ],
-      ),
+      data: (state) {
+        final cards = [
+          _buildProfessionalCard('TO PREPARE', state.confirmedOrders.length.toString(), Icons.pending_actions, AppColors.warning),
+          _buildProfessionalCard('IN PROGRESS', state.pendingOrders.length.toString(), Icons.restaurant, AppColors.info),
+          _buildProfessionalCard('READY', state.readyOrders.length.toString(), Icons.check_circle, AppColors.success),
+          _buildProfessionalCard('COMPLETED', state.completedOrders.length.toString(), Icons.task_alt, AppColors.grey),
+        ];
+
+        if (isLandscape) {
+          // Matching Admin style: stretching cards in a Row for Landscape
+          return Row(
+            children: cards.map((card) => Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: card,
+              ),
+            )).toList(),
+          );
+        }
+
+        // Keep horizontal scroll for Portrait to prevent text wrapping/overflow
+        return SizedBox(
+          height: 801,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            // padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: cards.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 12),
+            itemBuilder: (context, index) => SizedBox(
+              width: 150,
+              child: cards[index],
+            ),
+          ),
+        );
+      },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, _) => Center(child: Text('Error: $err', style: const TextStyle(color: AppColors.error))),
     );
@@ -133,9 +157,10 @@ class KitchenOverviewTab extends ConsumerWidget {
   Widget _buildProfessionalCard(String title, String value, IconData icon, Color color) {
     return Card(
       elevation: 0,
+      margin: EdgeInsets.zero, // Remove default card margin to save space
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
-        height: 120,
+        height: 140, 
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           gradient: LinearGradient(
@@ -146,34 +171,38 @@ class KitchenOverviewTab extends ConsumerWidget {
           border: Border.all(color: color.withValues(alpha: 0.1)),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Reduced horizontal padding
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                padding: const EdgeInsets.all(8),
-                child: Icon(icon, color: color, size: 24),
+                padding: const EdgeInsets.all(6), // Reduced icon padding
+                child: Icon(icon, color: color, size: 20), // Reduced icon size
               ),
+              const SizedBox(width: 12,),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     value,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 16, // Slightly smaller value font
                       fontWeight: FontWeight.bold,
                       color: AppColors.black,
                     ),
                   ),
                   Text(
                     title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 10, // Slightly smaller title font
                       color: AppColors.grey,
                     ),
                   ),

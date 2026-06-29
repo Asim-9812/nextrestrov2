@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
+import 'package:nextrestro/core/network/session_service.dart';
+import 'package:nextrestro/features/login/presentation/login_page.dart';
 import 'package:nextrestro/features/kitchen_dashboard/presentation/widgets/kitchen_drawer.dart';
 import 'package:nextrestro/features/orders/presentation/pages/orders_page.dart';
 import 'package:nextrestro/features/menu/presentation/pages/menu_page.dart';
@@ -23,6 +25,38 @@ class _KitchenDashboardPortraitPageState extends ConsumerState<KitchenDashboardP
       case 2: return 'Menu';
       default: return 'Dashboard';
     }
+  }
+
+  void _handleLogout() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final nav = Navigator.of(context);
+              await ref.read(sessionServiceProvider).clearSession();
+              if (mounted) {
+                nav.pop(); // Close dialog
+                nav.pushReplacement(
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              }
+            },
+            child: const Text(
+              'Logout',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -49,6 +83,10 @@ class _KitchenDashboardPortraitPageState extends ConsumerState<KitchenDashboardP
             _selectedIndex = index;
           });
           Navigator.pop(context);
+        },
+        onLogout: () {
+          Navigator.pop(context);
+          _handleLogout();
         },
       ),
       body: IndexedStack(
