@@ -19,13 +19,13 @@ class KitchenDrawer extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Drawer(
-      width: 200, // Matching Admin/Waiter drawer width
+      width: 200, // Matching Waiter/Admin drawer width
       child: Column(
         children: [
           SizedBox(
-            height: 120, // Matching Admin/Waiter header height
+            height: 120, // Matching Waiter/Admin header height
             child: DrawerHeader(
               padding: const EdgeInsets.symmetric(vertical: 8),
               margin: EdgeInsets.zero,
@@ -33,7 +33,7 @@ class KitchenDrawer extends ConsumerWidget {
               child: Center(
                 child: Image.asset(
                   'assets/images/templogo.png',
-                  height: 100,
+                  height: 100, // Matching Waiter/Admin logo height
                 ),
               ),
             ),
@@ -69,14 +69,14 @@ class KitchenDrawer extends ConsumerWidget {
       leading: Iconify(
         icon,
         color: isSelected ? AppColors.primary : AppColors.grey,
-        size: 16, // Matching Admin/Waiter icon size
+        size: 16, // Matching Waiter/Admin icon size
       ),
       title: Text(
         title,
         style: TextStyle(
           color: isSelected ? AppColors.primary : AppColors.black,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          fontSize: 12, // Matching Admin/Waiter font size
+          fontSize: 12, // Matching Waiter/Admin font size
         ),
       ),
       selected: isSelected,

@@ -4,7 +4,7 @@ import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/kitchen_dashboard/presentation/widgets/kitchen_drawer.dart';
 import 'package:nextrestro/features/orders/presentation/pages/orders_page.dart';
 import 'package:nextrestro/features/menu/presentation/pages/menu_page.dart';
-import 'package:nextrestro/features/kitchen_dashboard/presentation/portrait/tabs/kitchen_overview_tab.dart';
+import 'tabs/kitchen_overview_tab.dart';
 
 class KitchenDashboardPortraitPage extends ConsumerStatefulWidget {
   const KitchenDashboardPortraitPage({super.key});
@@ -45,10 +45,12 @@ class _KitchenDashboardPortraitPageState extends ConsumerState<KitchenDashboardP
       drawer: KitchenDrawer(
         selectedIndex: _selectedIndex,
         onItemSelected: (index) {
-          setState(() => _selectedIndex = index);
+          setState(() {
+            _selectedIndex = index;
+          });
           Navigator.pop(context);
         },
-      ) ,
+      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: [

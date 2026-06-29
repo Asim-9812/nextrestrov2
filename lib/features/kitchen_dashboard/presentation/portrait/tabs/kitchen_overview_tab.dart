@@ -33,25 +33,43 @@ class KitchenOverviewTab extends ConsumerWidget {
               onRefresh: () => ref.read(orderDashboardProvider.notifier).refresh(),
               color: AppColors.primary,
               child: SingleChildScrollView(
-                padding: EdgeInsets.all(isLandscape ? 24 : 16), // Matching Admin Landscape padding
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (isLandscape) ...[
-                      ActiveShiftCard(
-                        shift: shift,
-                        openerName: openerName,
-                      ),
-                      const SizedBox(height: 32),
-                      const Text(
-                        'Overview',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.black,
+                      Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ActiveShiftCard(
+                              shift: shift,
+                              openerName: openerName,
+                            ),
+                            const SizedBox(height: 32),
+                            const Text(
+                              'Overview',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            _buildSummaryGrid(true, dashboardAsync),
+                            const SizedBox(height: 32),
+                            const Text(
+                              'Recent Orders',
+                              style: TextStyle(
+                                fontSize: 18, 
+                                fontWeight: FontWeight.bold, 
+                                color: AppColors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            _buildRecentOrdersList(true, dashboardAsync),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 16),
                     ] else ...[
                       const SizedBox(height: 12),
                       PortraitShiftHeader(shift: shift),
@@ -60,34 +78,28 @@ class KitchenOverviewTab extends ConsumerWidget {
                         shift: shift,
                         openerName: openerName,
                       ),
+                      const SizedBox(height: 12),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: _buildSummaryGrid(false, dashboardAsync),
+                      ),
                       const SizedBox(height: 24),
-                      const Text(
-                        'Kitchen Overview',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.black),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                    dashboardAsync.when(
-                      data: (state) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSummaryGrid(state, isLandscape),
-                          const SizedBox(height: 32),
-                          Text(
-                            isLandscape ? 'Recent Orders' : 'Live Preparation Feed',
-                            style: TextStyle(
-                              fontSize: isLandscape ? 18 : 16, 
-                              fontWeight: FontWeight.bold, 
-                              color: AppColors.black,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Live Preparation Feed',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.black),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          _buildRecentOrdersList(state, isLandscape),
-                        ],
+                            const SizedBox(height: 12),
+                            _buildRecentOrdersList(false, dashboardAsync),
+                          ],
+                        ),
                       ),
-                      loading: () => const Center(child: CircularProgressIndicator()),
-                      error: (err, _) => Center(child: Text('Error: $err', style: const TextStyle(color: AppColors.error))),
-                    ),
+                      const SizedBox(height: 20),
+                    ],
                   ],
                 ),
               ),
@@ -100,17 +112,21 @@ class KitchenOverviewTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildSummaryGrid(OrderDashboardState state, bool isLandscape) {
-    return Row(
-      children: [
-        Expanded(child: _buildProfessionalCard('TO PREPARE', state.confirmedOrders.length.toString(), Icons.pending_actions, AppColors.warning)),
-        const SizedBox(width: 16),
-        Expanded(child: _buildProfessionalCard('IN PROGRESS', state.pendingOrders.length.toString(), Icons.restaurant, AppColors.info)),
-        const SizedBox(width: 16),
-        Expanded(child: _buildProfessionalCard('READY', state.readyOrders.length.toString(), Icons.check_circle, AppColors.success)),
-        const SizedBox(width: 16),
-        Expanded(child: _buildProfessionalCard('COMPLETED', state.completedOrders.length.toString(), Icons.task_alt, AppColors.grey)),
-      ],
+  Widget _buildSummaryGrid(bool isLandscape, AsyncValue<OrderDashboardState> dashboardAsync) {
+    return dashboardAsync.when(
+      data: (state) => Row(
+        children: [
+          Expanded(child: _buildProfessionalCard('TO PREPARE', state.confirmedOrders.length.toString(), Icons.pending_actions, AppColors.warning)),
+          const SizedBox(width: 16),
+          Expanded(child: _buildProfessionalCard('IN PROGRESS', state.pendingOrders.length.toString(), Icons.restaurant, AppColors.info)),
+          const SizedBox(width: 16),
+          Expanded(child: _buildProfessionalCard('READY', state.readyOrders.length.toString(), Icons.check_circle, AppColors.success)),
+          const SizedBox(width: 16),
+          Expanded(child: _buildProfessionalCard('COMPLETED', state.completedOrders.length.toString(), Icons.task_alt, AppColors.grey)),
+        ],
+      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, _) => Center(child: Text('Error: $err', style: const TextStyle(color: AppColors.error))),
     );
   }
 
@@ -123,11 +139,11 @@ class KitchenOverviewTab extends ConsumerWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           gradient: LinearGradient(
-            colors: [color.withOpacity(0.1), color.withOpacity(0.05)],
+            colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          border: Border.all(color: color.withOpacity(0.1)),
+          border: Border.all(color: color.withValues(alpha: 0.1)),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -137,7 +153,7 @@ class KitchenOverviewTab extends ConsumerWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
+                  color: color.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 padding: const EdgeInsets.all(8),
@@ -170,26 +186,32 @@ class KitchenOverviewTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildRecentOrdersList(OrderDashboardState state, bool isLandscape) {
-    final allOrders = [...state.confirmedOrders, ...state.pendingOrders, ...state.readyOrders];
-    if (allOrders.isEmpty) {
-      return const Center(child: Text('No active preparation queue', style: TextStyle(color: AppColors.grey, fontSize: 13)));
-    }
+  Widget _buildRecentOrdersList(bool isLandscape, AsyncValue<OrderDashboardState> dashboardAsync) {
+    return dashboardAsync.when(
+      data: (state) {
+        final allOrders = [...state.confirmedOrders, ...state.pendingOrders, ...state.readyOrders];
+        if (allOrders.isEmpty) {
+          return const Center(child: Text('No active preparation queue', style: TextStyle(color: AppColors.grey, fontSize: 13)));
+        }
 
-    allOrders.sort((a, b) => (b.orderID ?? 0).compareTo(a.orderID ?? 0));
-    final displayOrders = allOrders.take(10).toList();
+        allOrders.sort((a, b) => (b.orderID ?? 0).compareTo(a.orderID ?? 0));
+        final displayOrders = allOrders.take(10).toList();
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: isLandscape ? 2 : 1,
-        mainAxisExtent: 80,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-      ),
-      itemCount: displayOrders.length,
-      itemBuilder: (context, index) => _buildOrderTile(displayOrders[index]),
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: isLandscape ? 2 : 1,
+            mainAxisExtent: 80,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+          ),
+          itemCount: displayOrders.length,
+          itemBuilder: (context, index) => _buildOrderTile(displayOrders[index]),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
     );
   }
 
