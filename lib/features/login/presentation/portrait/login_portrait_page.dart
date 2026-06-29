@@ -8,6 +8,7 @@ import 'package:nextrestro/core/utils/toaster.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/admin_dashboard_page.dart';
 import 'package:nextrestro/features/login/presentation/providers/login_provider.dart';
 
+import 'package:nextrestro/features/forgot_password/presentation/forgot_password_page.dart';
 import 'package:nextrestro/features/waiter_dashboard/presentation/waiter_dashboard_page.dart';
 import 'package:nextrestro/features/kitchen_dashboard/presentation/kitchen_dashboard_page.dart';
 import 'package:nextrestro/features/cashier_dashboard/presentation/cashier_dashboard_page.dart';
@@ -295,7 +296,12 @@ class _LoginPortraitPageState extends ConsumerState<LoginPortraitPage>
                               ],
                             ),
                             TextButton(
-                              onPressed: isLoading ? null : () {},
+                              onPressed: isLoading ? null : () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+                                );
+                              },
                               child: Text(
                                 'Forgot Password?',
                                 style: Theme.of(context).textTheme.labelLarge,

@@ -136,7 +136,7 @@ class KitchenOverviewTab extends ConsumerWidget {
 
         // Keep horizontal scroll for Portrait to prevent text wrapping/overflow
         return SizedBox(
-          height: 801,
+          height: 80,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             // padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -160,7 +160,7 @@ class KitchenOverviewTab extends ConsumerWidget {
       margin: EdgeInsets.zero, // Remove default card margin to save space
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
-        height: 140, 
+        height: 80,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           gradient: LinearGradient(
