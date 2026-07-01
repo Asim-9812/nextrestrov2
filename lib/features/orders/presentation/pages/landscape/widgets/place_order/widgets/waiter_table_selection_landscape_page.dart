@@ -6,8 +6,8 @@ import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/tables/presentation/providers/table_provider.dart';
 import 'package:nextrestro/features/orders/presentation/providers/place_order_provider.dart';
 
-class TableSelectionLandscapePage extends ConsumerWidget {
-  const TableSelectionLandscapePage({super.key});
+class WaiterTableSelectionLandscapePage extends ConsumerWidget {
+  const WaiterTableSelectionLandscapePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,12 +30,12 @@ class TableSelectionLandscapePage extends ConsumerWidget {
                 SizedBox(width: 8),
                 Text(
                   'Select Table',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'Manrope'),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Manrope'),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 4,),
+          const SizedBox(height: 12,),
           // Search and Floor Dropdown
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -96,7 +96,7 @@ class TableSelectionLandscapePage extends ConsumerWidget {
                   padding: const EdgeInsets.all(12),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 1.2 ,
+                    childAspectRatio: 1.9 ,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),

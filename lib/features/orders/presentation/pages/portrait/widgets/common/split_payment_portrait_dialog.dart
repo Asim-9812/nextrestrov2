@@ -27,6 +27,7 @@ class _SplitPaymentPortraitDialogState extends ConsumerState<SplitPaymentPortrai
   final List<Map<String, dynamic>> _splits = [
     {'method': 1, 'amount': 0.0}
   ];
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -57,6 +58,7 @@ class _SplitPaymentPortraitDialogState extends ConsumerState<SplitPaymentPortrai
       return;
     }
 
+    setState(() => _isLoading = true);
     final request = OrderCheckoutRequest(
       orderId: widget.orderId,
       paymentMethod: 3, // Split
@@ -70,8 +72,13 @@ class _SplitPaymentPortraitDialogState extends ConsumerState<SplitPaymentPortrai
     final repository = ref.read(orderRepositoryProvider);
     final result = await repository.checkoutOrder(request);
 
+    if (!mounted) return;
+
     result.fold(
-      (failure) => Toaster.error(context: context, message: failure.message),
+      (failure) {
+        setState(() => _isLoading = false);
+        Toaster.error(context: context, message: failure.message);
+      },
       (_) async {
         await repository.updateOrderStatus(widget.orderId, 'Completed');
         ref.invalidate(orderDashboardProvider);
@@ -185,9 +192,22 @@ class _SplitPaymentPortraitDialogState extends ConsumerState<SplitPaymentPortrai
               width: double.infinity,
               height: 52,
               child: ElevatedButton(
-                onPressed: _confirmSplitPayment,
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                child: const Text('CONFIRM SPLIT PAYMENT', style: TextStyle(fontWeight: FontWeight.bold)),
+                onPressed: _isLoading ? null : _confirmSplitPayment,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: _isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text('CONFIRM SPLIT PAYMENT', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
           ],

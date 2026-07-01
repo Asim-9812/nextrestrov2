@@ -317,8 +317,11 @@ class ManageOrdersDetailsPanel extends ConsumerWidget {
                 _logger.i('Updating item $productId status to $newStatus');
                 await ref.read(orderDashboardProvider.notifier).updateOrderItemStatus(productId, item.orderID ?? 0, newStatus);
                 
-                // Force an immediate invalidation and wait for the very next data emit
-                ref.read(orderDashboardProvider.notifier).refresh();
+                // Force refresh
+                await ref.read(orderDashboardProvider.notifier).refresh();
+                
+                // Wait for the next data event from the stream to ensure the list is updated
+                // Use .future to wait for the first non-loading emission
                 await ref.read(orderDashboardProvider.future);
                 
                 if (context.mounted) {
@@ -449,8 +452,8 @@ class ManageOrdersDetailsPanel extends ConsumerWidget {
               try {
                 await ref.read(orderDashboardProvider.notifier).markAllItemsAsServed(order.orderID ?? 0, items);
                 
-                // Force refresh and wait for the new state
-                ref.read(orderDashboardProvider.notifier).refresh();
+                // Force refresh and wait for the new state from the future
+                await ref.read(orderDashboardProvider.notifier).refresh();
                 await ref.read(orderDashboardProvider.future);
                 
                 if (context.mounted) {
@@ -491,8 +494,8 @@ class ManageOrdersDetailsPanel extends ConsumerWidget {
               try {
                 await ref.read(orderDashboardProvider.notifier).markAllItemsAsReady(order.orderID ?? 0, items);
                 
-                // Force refresh and wait for the new state
-                ref.read(orderDashboardProvider.notifier).refresh();
+                // Force refresh and wait for the new state from the future
+                await ref.read(orderDashboardProvider.notifier).refresh();
                 await ref.read(orderDashboardProvider.future);
 
                 if (context.mounted) {
@@ -574,6 +577,7 @@ class DiscountDialog extends StatefulWidget {
 class _DiscountDialogState extends State<DiscountDialog> {
   String _discountText = '0.00';
   bool _isPercentage = false;
+  bool _isLoading = false;
 
   void _onNumpadPressed(String val) {
     setState(() {
@@ -642,27 +646,43 @@ class _DiscountDialogState extends State<DiscountDialog> {
                   child: Consumer(
                     builder: (context, ref, child) {
                       return ElevatedButton(
-                        onPressed: () async {
-                          final repository = ref.read(orderRepositoryProvider);
-                          final result = await repository.getOrderPreview(widget.orderId, _discountValue);
-                          result.fold(
-                            (failure) => Toaster.error(context: context, message: failure.message, isLandscape: true),
-                            (preview) {
-                              Navigator.pop(context);
-                              showDialog(
-                                context: context,
-                                builder: (context) => CheckoutPreviewLandscapeDialog(preview: preview, discount: _discountValue),
-                              );
-                            },
-                          );
-                        },
+                        onPressed: _isLoading
+                            ? null
+                            : () async {
+                                setState(() => _isLoading = true);
+                                final repository = ref.read(orderRepositoryProvider);
+                                final result = await repository.getOrderPreview(widget.orderId, _discountValue);
+                                if (!mounted) return;
+                                result.fold(
+                                  (failure) {
+                                    setState(() => _isLoading = false);
+                                    Toaster.error(context: context, message: failure.message, isLandscape: true);
+                                  },
+                                  (preview) {
+                                    Navigator.pop(context);
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => CheckoutPreviewLandscapeDialog(preview: preview, discount: _discountValue),
+                                    );
+                                  },
+                                );
+                              },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text('CHECKOUT', style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: _isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text('CHECKOUT', style: TextStyle(fontWeight: FontWeight.bold)),
                       );
                     },
                   ),

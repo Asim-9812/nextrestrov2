@@ -26,17 +26,8 @@ class OrderSummaryLandscapePage extends ConsumerWidget {
       );
     });
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          )
-        ],
-      ),
+    return Material(
+      color: Colors.white,
       child: Stack(
         children: [
           state.isExpanded 
@@ -239,18 +230,20 @@ class OrderSummaryLandscapePage extends ConsumerWidget {
   Widget _buildEnhancedTableDetails(dynamic table) {
     if (table == null) {
       return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.table_restaurant_outlined, size: 40, color: AppColors.ashGrey),
-            SizedBox(height: 8),
-            Text('No Table', style: TextStyle(color: AppColors.grey, fontSize: 12)),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.table_restaurant_outlined, size: 40, color: AppColors.ashGrey),
+              SizedBox(height: 8),
+              Text('No Table', style: TextStyle(color: AppColors.grey, fontSize: 12)),
+            ],
+          ),
         ),
       );
     }
 
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -319,50 +312,52 @@ class OrderSummaryLandscapePage extends ConsumerWidget {
 
     return Column(
       children: [
+        const SizedBox(height: 16,),
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Order Items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Manrope')),
-              // Text('${items.length} items added', style: const TextStyle(color: AppColors.grey, fontSize: 12)),
+              const Text('Order Items', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Manrope')),
             ],
           ),
         ),
+        const SizedBox(height: 16,),
         const Divider(height: 1),
         Expanded(
           child: ListView.separated(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 4),
             itemCount: items.length,
             separatorBuilder: (context, index) => const Divider(height: 1, indent: 16, endIndent: 16),
             itemBuilder: (context, index) {
               final item = items[index];
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: 32,
-                      height: 32,
+                      width: 28,
+                      height: 28,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: AppColors.bg,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                      child: Text('${index + 1}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                      child: Text('${index + 1}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(item.itemName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                          const SizedBox(height: 4),
+                          Text(item.itemName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                          const SizedBox(height: 8),
                           SizedBox(
-                            height: 24,
+                            height: 32,
                             child: TextField(
                               onChanged: (val) => notifier.updateSpecialInstruction(item.productId, val),
-                              style: const TextStyle(fontSize: 11),
+                              style: const TextStyle(fontSize: 10),
                               decoration: InputDecoration(
                                 hintText: 'Add special request...',
                                 border: InputBorder.none,
@@ -374,12 +369,12 @@ class OrderSummaryLandscapePage extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('Qty: ${item.quantity}', style: const TextStyle(fontWeight: FontWeight.w600)),
-                        Text('Rs. ${item.subtotal.toStringAsFixed(0)}', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                        Text('Qty: ${item.quantity}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
+                        Text('Rs. ${item.subtotal.toStringAsFixed(0)}', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 13)),
                       ],
                     ),
                   ],
@@ -389,13 +384,13 @@ class OrderSummaryLandscapePage extends ConsumerWidget {
           ),
         ),
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           color: AppColors.bg.withValues(alpha: 0.5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Order Total', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              Text('Rs. ${total.toStringAsFixed(0)}', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.primary)),
+              const Text('Order Total', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              Text('Rs. ${total.toStringAsFixed(0)}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: AppColors.primary)),
             ],
           ),
         ),
@@ -406,7 +401,7 @@ class OrderSummaryLandscapePage extends ConsumerWidget {
   Widget _buildEnhancedActions(BuildContext context, WidgetRef ref, PlaceOrderState state) {
     final selectedCustomer = state.selectedCustomer;
 
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -462,7 +457,7 @@ class OrderSummaryLandscapePage extends ConsumerWidget {
               ),
             ),
           ),
-          const Spacer(),
+          const SizedBox(height: 24),
           _actionButton(
             label: 'CLEAR ORDER',
             icon: Icons.delete_outline_rounded,
@@ -517,7 +512,7 @@ class OrderSummaryLandscapePage extends ConsumerWidget {
   }) {
     return SizedBox(
       width: double.infinity,
-      height: 54,
+      height: 48,
       child: isOutlined
           ? OutlinedButton.icon(
               onPressed: isLoading ? null : onPressed,

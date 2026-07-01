@@ -26,65 +26,68 @@ class OrderDashboard extends _$OrderDashboard {
     final repository = ref.read(orderRepositoryProvider);
     final result = await repository.updateOrderItemStatus(orderItemId, orderId, status);
     
-    result.fold(
-      (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
-      (_) {
-        // Update local state instead of calling refresh() to avoid full screen refresh
-        if (state.hasValue) {
-          final currentState = state.value!;
-          
-          OrderDetailModel updateItem(OrderDetailModel item) {
-            if (item.orderID == orderId && item.productId == orderItemId) {
-              return item.copyWith(itemStatus: status);
-            }
-            return item;
-          }
+    if (result.isLeft()) {
+      final failure = result.getLeft().toNullable()!;
+      state = AsyncValue.error(failure.message, StackTrace.current);
+      return;
+    }
 
-          state = AsyncValue.data(currentState.copyWith(
-            pendingOrders: currentState.pendingOrders.map(updateItem).toList(),
-            confirmedOrders: currentState.confirmedOrders.map(updateItem).toList(),
-            readyOrders: currentState.readyOrders.map(updateItem).toList(),
-            completedOrders: currentState.completedOrders.map(updateItem).toList(),
-            cancelledOrders: currentState.cancelledOrders.map(updateItem).toList(),
-          ));
-
-          // Temporary Auto-Ready Logic:
-          // Check if all items for this order are now 'Ready' or 'Served'
-          final allItemsInOrder = [
-            ...currentState.confirmedOrders,
-            ...currentState.readyOrders,
-            ...currentState.pendingOrders,
-          ].where((o) => o.orderID == orderId).toList();
-
-          if (allItemsInOrder.isNotEmpty) {
-            final allReady = allItemsInOrder.every((item) {
-              if (item.productId == orderItemId) return status == 'Ready' || status == 'Served';
-              return item.itemStatus == 'Ready' || item.itemStatus == 'Served';
-            });
-
-            if (allReady) {
-              // Automatically update order status to Ready
-              updateOrderStatus(orderId, 'Ready');
-            }
-          }
-
-          // Temporary Auto-Complete Logic:
-          // Check if all items for this order are now 'Served' across confirmed/ready lists
-          if (allItemsInOrder.isNotEmpty) {
-            final allServed = allItemsInOrder.every((item) {
-              // If it's the item we just updated, use the NEW status
-              if (item.productId == orderItemId) return status == 'Served';
-              return item.itemStatus == 'Served';
-            });
-
-            if (allServed) {
-              // Automatically update order status to Completed
-              updateOrderStatus(orderId, 'Completed');
-            }
-          }
+    // Update local state instead of calling refresh() to avoid full screen refresh
+    if (state.hasValue) {
+      final currentState = state.value!;
+      
+      OrderDetailModel updateItem(OrderDetailModel item) {
+        if (item.orderID == orderId && item.productId == orderItemId) {
+          return item.copyWith(itemStatus: status);
         }
-      },
-    );
+        return item;
+      }
+
+      state = AsyncValue.data(currentState.copyWith(
+        pendingOrders: currentState.pendingOrders.map(updateItem).toList(),
+        confirmedOrders: currentState.confirmedOrders.map(updateItem).toList(),
+        readyOrders: currentState.readyOrders.map(updateItem).toList(),
+        completedOrders: currentState.completedOrders.map(updateItem).toList(),
+        cancelledOrders: currentState.cancelledOrders.map(updateItem).toList(),
+      ));
+
+      // Check all items for this order in the current state
+      final allItemsInOrder = [
+        ...currentState.confirmedOrders,
+        ...currentState.readyOrders,
+        ...currentState.pendingOrders,
+      ].where((o) => o.orderID == orderId).toList();
+
+      if (allItemsInOrder.isNotEmpty) {
+        final currentOrderStatus = allItemsInOrder.first.orderStatus;
+
+        // Check for Auto-Complete Logic first
+        final allServedOrCancelled = allItemsInOrder.every((item) {
+          final itemStatus = (item.productId == orderItemId) ? status : item.itemStatus;
+          return itemStatus == 'Served' || itemStatus == 'Cancelled';
+        });
+
+        if (allServedOrCancelled) {
+          if (currentOrderStatus != 'Completed') {
+            await updateOrderStatus(orderId, 'Completed');
+          }
+          return;
+        }
+
+        // Then check for Auto-Ready Logic
+        final allReady = allItemsInOrder.every((item) {
+          final itemStatus = (item.productId == orderItemId) ? status : item.itemStatus;
+          return itemStatus == 'Ready' || itemStatus == 'Served';
+        });
+
+        if (allReady) {
+          if (currentOrderStatus != 'Ready' && currentOrderStatus != 'Completed') {
+            await updateOrderStatus(orderId, 'Ready');
+          }
+          return;
+        }
+      }
+    }
   }
 
   Future<void> updateOrderStatus(int orderId, String status) async {

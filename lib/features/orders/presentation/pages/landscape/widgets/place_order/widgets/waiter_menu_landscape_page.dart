@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
@@ -10,8 +8,8 @@ import 'package:nextrestro/features/orders/presentation/providers/place_order_pr
 import 'package:nextrestro/features/menu/data/models/menu_item_model.dart';
 import '../../../../../../data/models/place_order_request.dart';
 
-class MenuLandscapePage extends ConsumerWidget {
-  const MenuLandscapePage({super.key});
+class WaiterMenuLandscapePage extends ConsumerWidget {
+  const WaiterMenuLandscapePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,7 +33,7 @@ class MenuLandscapePage extends ConsumerWidget {
                   flex: 2,
                   child: Text(
                     'Menu Items',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'Manrope'),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Manrope'),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -49,7 +47,7 @@ class MenuLandscapePage extends ConsumerWidget {
                       hintStyle: const TextStyle(fontSize: 12),
                       prefixIcon: const Icon(Icons.search, size: 16),
                       isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                   ),
@@ -58,10 +56,9 @@ class MenuLandscapePage extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 8,),
           // Categories Horizontal List
           SizedBox(
-            height: 24,
+            height: 36,
             child: categoriesAsync.when(
               data: (categories) {
                 if (categories.isEmpty) return const SizedBox.shrink();
@@ -108,7 +105,7 @@ class MenuLandscapePage extends ConsumerWidget {
                             children: [
                               Iconify(
                                 icon,
-                                size: 12,
+                                size: 16,
                                 color: isSelected ? Colors.white : AppColors.blackGrey,
                               ),
                               const SizedBox(width: 8),
@@ -117,7 +114,7 @@ class MenuLandscapePage extends ConsumerWidget {
                                 style: TextStyle(
                                   color: isSelected ? Colors.white : AppColors.blackGrey,
                                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                  fontSize: 11,
+                                  fontSize: 14,
                                   fontFamily: 'Manrope',
                                 ),
                               ),
@@ -134,12 +131,12 @@ class MenuLandscapePage extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
 
           // SubCategories Horizontal List
           if (subCategories.length > 1)
             Container(
-              height: 32,
+              height: 36,
               margin: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 color: AppColors.ashGrey.withValues(alpha: 0.2),
@@ -180,7 +177,7 @@ class MenuLandscapePage extends ConsumerWidget {
                           children: [
                             Iconify(
                               icon,
-                              size: 12,
+                              size: 16,
                               color: isSelected ? AppColors.primary : AppColors.grey,
                             ),
                             const SizedBox(width: 6),
@@ -189,7 +186,7 @@ class MenuLandscapePage extends ConsumerWidget {
                               style: TextStyle(
                                 color: isSelected ? AppColors.primary : AppColors.grey,
                                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                fontSize: 11,
+                                fontSize: 14,
                                 fontFamily: 'Manrope',
                               ),
                             ),
@@ -212,13 +209,13 @@ class MenuLandscapePage extends ConsumerWidget {
                 return GridView.builder(
                   padding: const EdgeInsets.all(8),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
+                    crossAxisCount: 5,
                     childAspectRatio: 1,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
                   ),
                   itemCount: filteredItems.length,
-                  itemBuilder: (context, index) => _MenuSelectionItemCard(item: filteredItems[index]),
+                  itemBuilder: (context, index) => _WaiterMenuSelectionItemCard(item: filteredItems[index]),
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -231,9 +228,9 @@ class MenuLandscapePage extends ConsumerWidget {
   }
 }
 
-class _MenuSelectionItemCard extends ConsumerWidget {
+class _WaiterMenuSelectionItemCard extends ConsumerWidget {
   final MenuItemModel item;
-  const _MenuSelectionItemCard({required this.item});
+  const _WaiterMenuSelectionItemCard({required this.item});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

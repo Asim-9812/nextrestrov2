@@ -5,8 +5,8 @@ import 'package:nextrestro/core/network/session_service.dart';
 import 'package:nextrestro/features/login/presentation/login_page.dart';
 import 'package:nextrestro/features/menu/presentation/pages/menu_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/orders_page.dart';
-import 'package:nextrestro/features/orders/presentation/pages/landscape/widgets/place_order/widgets/menu_landscape_page.dart';
-import 'package:nextrestro/features/orders/presentation/pages/landscape/widgets/place_order/widgets/table_selection_landscape_page.dart';
+import 'package:nextrestro/features/orders/presentation/pages/landscape/widgets/place_order/widgets/waiter_menu_landscape_page.dart';
+import 'package:nextrestro/features/orders/presentation/pages/landscape/widgets/place_order/widgets/waiter_table_selection_landscape_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/landscape/widgets/place_order/widgets/order_summary_landscape_page.dart';
 import 'package:nextrestro/features/orders/presentation/providers/place_order_provider.dart';
 import 'package:nextrestro/features/profile/presentation/profile_page.dart';
@@ -184,14 +184,14 @@ class _WaiterDashboardLandscapePageState extends ConsumerState<WaiterDashboardLa
                   children: const [
                     // Table Selection Section
                     Expanded(
-                      flex: 1,
-                      child: TableSelectionLandscapePage(),
+                      flex: 2,
+                      child: WaiterTableSelectionLandscapePage(),
                     ),
                     VerticalDivider(width: 1, thickness: 1, color: AppColors.ashGrey),
                     // Menu Section
                     Expanded(
-                      flex: 2,
-                      child: MenuLandscapePage(),
+                      flex: 5,
+                      child: WaiterMenuLandscapePage(),
                     ),
                   ],
                 ),

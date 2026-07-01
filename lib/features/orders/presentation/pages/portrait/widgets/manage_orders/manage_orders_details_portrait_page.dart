@@ -30,6 +30,7 @@ class ManageOrdersDetailsPortraitPage extends ConsumerWidget {
         ),
       ),
       body: detailsAsync.when(
+        skipLoadingOnRefresh: true,
         data: (items) {
           if (items == null || items.isEmpty) {
             return const Center(child: Text('No details available', style: TextStyle(color: AppColors.grey)));
@@ -272,8 +273,12 @@ class ManageOrdersDetailsPortraitPage extends ConsumerWidget {
               ref.read(manageOrdersItemLoadingProvider.notifier).set(productId, true);
               try {
                 await ref.read(orderDashboardProvider.notifier).updateOrderItemStatus(productId, item.orderID ?? 0, newStatus);
-                ref.read(orderDashboardProvider.notifier).refresh();
+                
+                await ref.read(orderDashboardProvider.notifier).refresh();
+                
+                // Wait for the next state from the future to ensure the list is updated
                 await ref.read(orderDashboardProvider.future);
+
                 if (context.mounted) Toaster.success(context: context, message: 'Item updated to $newStatus', isLandscape: false);
               } finally {
                 ref.read(manageOrdersItemLoadingProvider.notifier).set(productId, false);
@@ -300,7 +305,7 @@ class ManageOrdersDetailsPortraitPage extends ConsumerWidget {
               ref.read(manageOrdersBulkLoadingProvider.notifier).set('Served');
               try {
                 await ref.read(orderDashboardProvider.notifier).markAllItemsAsServed(order.orderID ?? 0, items);
-                ref.read(orderDashboardProvider.notifier).refresh();
+                await ref.read(orderDashboardProvider.notifier).refresh();
                 await ref.read(orderDashboardProvider.future);
                 if (context.mounted) Toaster.success(context: context, message: 'All items marked as served', isLandscape: false);
               } finally {
@@ -328,7 +333,7 @@ class ManageOrdersDetailsPortraitPage extends ConsumerWidget {
               ref.read(manageOrdersBulkLoadingProvider.notifier).set('Ready');
               try {
                 await ref.read(orderDashboardProvider.notifier).markAllItemsAsReady(order.orderID ?? 0, items);
-                ref.read(orderDashboardProvider.notifier).refresh();
+                await ref.read(orderDashboardProvider.notifier).refresh();
                 await ref.read(orderDashboardProvider.future);
                 if (context.mounted) Toaster.success(context: context, message: 'All items marked as ready', isLandscape: false);
               } finally {
@@ -383,6 +388,7 @@ class DiscountDialog extends StatefulWidget {
 class _DiscountDialogState extends State<DiscountDialog> {
   String _discountText = '0.00';
   bool _isPercentage = false;
+  bool _isLoading = false;
 
   void _onNumpadPressed(String val) {
     setState(() {
@@ -451,27 +457,43 @@ class _DiscountDialogState extends State<DiscountDialog> {
                   child: Consumer(
                     builder: (context, ref, child) {
                       return ElevatedButton(
-                        onPressed: () async {
-                          final repository = ref.read(orderRepositoryProvider);
-                          final result = await repository.getOrderPreview(widget.orderId, _discountValue);
-                          result.fold(
-                            (failure) => Toaster.error(context: context, message: failure.message, isLandscape: false),
-                            (preview) {
-                              Navigator.pop(context);
-                              showDialog(
-                                context: context,
-                                builder: (context) => CheckoutPreviewPortraitDialog(preview: preview, discount: _discountValue),
-                              );
-                            },
-                          );
-                        },
+                        onPressed: _isLoading
+                            ? null
+                            : () async {
+                                setState(() => _isLoading = true);
+                                final repository = ref.read(orderRepositoryProvider);
+                                final result = await repository.getOrderPreview(widget.orderId, _discountValue);
+                                if (!mounted) return;
+                                result.fold(
+                                  (failure) {
+                                    setState(() => _isLoading = false);
+                                    Toaster.error(context: context, message: failure.message, isLandscape: false);
+                                  },
+                                  (preview) {
+                                    Navigator.pop(context);
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => CheckoutPreviewPortraitDialog(preview: preview, discount: _discountValue),
+                                    );
+                                  },
+                                );
+                              },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text('CHECKOUT', style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: _isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text('CHECKOUT', style: TextStyle(fontWeight: FontWeight.bold)),
                       );
                     },
                   ),

@@ -4,7 +4,6 @@ import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/orders/presentation/providers/order_dashboard_provider.dart';
 import 'package:nextrestro/features/orders/presentation/providers/manage_orders_provider.dart';
 import 'package:nextrestro/features/orders/presentation/providers/order_dashboard_state.dart';
-import 'package:nextrestro/features/orders/presentation/providers/order_dashboard_state.dart';
 import 'package:nextrestro/features/orders/data/models/order_detail_model.dart';
 import 'package:nextrestro/features/shift/presentation/providers/shift_provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -20,6 +19,7 @@ class ManageOrdersLandscapePage extends ConsumerWidget {
     final shiftAsync = ref.watch(shiftControllerProvider);
 
     return dashboardAsync.when(
+      skipLoadingOnRefresh: true,
       data: (OrderDashboardState state) {
         // Filter orders by active shift opening time
         final activeShift = shiftAsync.maybeWhen(

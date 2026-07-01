@@ -26,6 +26,7 @@ class _SplitPaymentLandscapeDialogState extends ConsumerState<SplitPaymentLandsc
   final List<Map<String, dynamic>> _splits = [
     {'method': 1, 'amount': 0.0}
   ];
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -56,6 +57,7 @@ class _SplitPaymentLandscapeDialogState extends ConsumerState<SplitPaymentLandsc
       return;
     }
 
+    setState(() => _isLoading = true);
     final request = OrderCheckoutRequest(
       orderId: widget.orderId,
       paymentMethod: 3, // Split
@@ -69,8 +71,13 @@ class _SplitPaymentLandscapeDialogState extends ConsumerState<SplitPaymentLandsc
     final repository = ref.read(orderRepositoryProvider);
     final result = await repository.checkoutOrder(request);
 
+    if (!mounted) return;
+
     result.fold(
-      (failure) => Toaster.error(context: context, message: failure.message, isLandscape: true),
+      (failure) {
+        setState(() => _isLoading = false);
+        Toaster.error(context: context, message: failure.message, isLandscape: true);
+      },
       (_) async {
         await repository.updateOrderStatus(widget.orderId, 'Completed');
         
@@ -236,13 +243,22 @@ class _SplitPaymentLandscapeDialogState extends ConsumerState<SplitPaymentLandsc
                 TextButton(onPressed: () => Navigator.pop(context), child: const Text('Back')),
                 const SizedBox(width: 16),
                 ElevatedButton(
-                  onPressed: _confirmSplitPayment,
+                  onPressed: _isLoading ? null : _confirmSplitPayment,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange, 
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                   ),
-                  child: const Text('Confirm Split Payment'),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text('Confirm Split Payment'),
                 ),
               ],
             ),

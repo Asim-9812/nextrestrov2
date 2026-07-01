@@ -28,6 +28,7 @@ class PaymentMethodPortraitDialog extends ConsumerStatefulWidget {
 
 class _PaymentMethodPortraitDialogState extends ConsumerState<PaymentMethodPortraitDialog> {
   int _selectedMethod = 1; // 1: Cash, 2: Online, 3: Split
+  bool _isLoading = false;
 
   void _confirmPayment() async {
     if (_selectedMethod == 3) {
@@ -43,6 +44,7 @@ class _PaymentMethodPortraitDialogState extends ConsumerState<PaymentMethodPortr
       return;
     }
 
+    setState(() => _isLoading = true);
     final request = OrderCheckoutRequest(
       orderId: widget.orderId,
       paymentMethod: _selectedMethod,
@@ -52,8 +54,13 @@ class _PaymentMethodPortraitDialogState extends ConsumerState<PaymentMethodPortr
     final repository = ref.read(orderRepositoryProvider);
     final result = await repository.checkoutOrder(request);
 
+    if (!mounted) return;
+
     result.fold(
-      (failure) => Toaster.error(context: context, message: failure.message),
+      (failure) {
+        setState(() => _isLoading = false);
+        Toaster.error(context: context, message: failure.message);
+      },
       (_) async {
         await repository.updateOrderStatus(widget.orderId, 'Completed');
         ref.invalidate(orderDashboardProvider);
@@ -115,9 +122,22 @@ class _PaymentMethodPortraitDialogState extends ConsumerState<PaymentMethodPortr
               width: double.infinity,
               height: 52,
               child: ElevatedButton(
-                onPressed: _confirmPayment,
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                child: const Text('CONFIRM PAYMENT', style: TextStyle(fontWeight: FontWeight.bold)),
+                onPressed: _isLoading ? null : _confirmPayment,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: _isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text('CONFIRM PAYMENT', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
           ],

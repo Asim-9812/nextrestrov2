@@ -336,41 +336,6 @@ class _LoginPortraitPageState extends ConsumerState<LoginPortraitPage>
                           ),
                         ),
                         const SizedBox(height: AppGaps.gapXXLarge),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Divider(
-                                color: AppColors.primary.withAlpha(38),
-                                thickness: 1,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppGaps.gapMedium,
-                              ),
-                              child: Text(
-                                'Or continue with',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ),
-                            Expanded(
-                              child: Divider(
-                                color: AppColors.primary.withAlpha(38),
-                                thickness: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: AppGaps.gapXLarge),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _buildSocialButton(Icons.mail_outline, isLoading),
-                            const SizedBox(width: AppGaps.gapXLarge),
-                            _buildSocialButton(Icons.phone_outlined, isLoading),
-                          ],
-                        ),
-                        const SizedBox(height: AppGaps.gapXXLarge),
                       ],
                     ),
                   ),
@@ -379,21 +344,6 @@ class _LoginPortraitPageState extends ConsumerState<LoginPortraitPage>
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSocialButton(IconData icon, bool isLoading) {
-    return Container(
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.border),
-        borderRadius: BorderRadius.circular(AppDimensions.textFieldBorderRadius),
-      ),
-      child: IconButton(
-        icon: Icon(icon, color: AppColors.grey),
-        onPressed: isLoading ? null : () {},
       ),
     );
   }

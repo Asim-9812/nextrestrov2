@@ -232,7 +232,7 @@ class ManageMenuLandscapePage extends ConsumerWidget {
               return GridView.builder(
                 padding: const EdgeInsets.all(24),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
+                  crossAxisCount: 5,
                   childAspectRatio: 0.95,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
