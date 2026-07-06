@@ -33,7 +33,7 @@ final class OrderDashboardProvider
   OrderDashboard create() => OrderDashboard();
 }
 
-String _$orderDashboardHash() => r'0b5c4a36a186a73f8feec72bda33f9b1cf7b952b';
+String _$orderDashboardHash() => r'2043318c0f13a75313e3367715554c7a4a1b6dd8';
 
 abstract class _$OrderDashboard extends $StreamNotifier<OrderDashboardState> {
   Stream<OrderDashboardState> build();

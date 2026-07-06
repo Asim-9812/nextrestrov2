@@ -6,6 +6,7 @@ import '../../domain/repositories/menu_repository.dart';
 import '../models/category_model.dart';
 import '../models/menu_item_model.dart';
 import '../models/product_model.dart';
+import '../models/sub_category_model.dart';
 
 final menuRepositoryProvider = Provider<MenuRepository>((ref) {
   final apiClient = ref.watch(apiClientProvider);
@@ -120,6 +121,73 @@ class MenuRepositoryImpl implements MenuRepository {
       _logger.i('Category deletion successful');
     } catch (e) {
       _logger.e('Failed to delete category', error: e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<SubCategoryModel>> getSubCategories() async {
+    try {
+      _logger.i('Fetching subcategories');
+      final response = await _apiClient.get(ApiConstants.getSubCategoriesEndpoint);
+      if (response.data != null) {
+        final subCategoryResponse = SubCategoryResponse.fromJson(response.data as Map<String, dynamic>);
+        return subCategoryResponse.data;
+      }
+      return [];
+    } catch (e) {
+      _logger.e('Failed to fetch subcategories', error: e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> createSubCategory(int categoryId, String name) async {
+    try {
+      _logger.i('Creating subcategory: $name for category $categoryId');
+      await _apiClient.post(
+        ApiConstants.createSubCategoryEndpoint,
+        data: {
+          'subCategoryId': 0,
+          'categoryId': categoryId,
+          'subCategoryName': name,
+        },
+      );
+      _logger.i('Subcategory creation successful');
+    } catch (e) {
+      _logger.e('Failed to create subcategory', error: e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateSubCategory(int subCategoryId, int categoryId, String name) async {
+    try {
+      _logger.i('Updating subcategory: $subCategoryId');
+      await _apiClient.put(
+        ApiConstants.updateSubCategoryEndpoint,
+        data: {
+          'subCategoryId': subCategoryId,
+          'categoryId': categoryId,
+          'subCategoryName': name,
+        },
+      );
+      _logger.i('Subcategory update successful');
+    } catch (e) {
+      _logger.e('Failed to update subcategory', error: e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteSubCategory(int subCategoryId) async {
+    try {
+      _logger.i('Deleting subcategory: $subCategoryId');
+      final endpoint = ApiConstants.deleteSubCategoryEndpoint.replaceFirst(':id', subCategoryId.toString());
+      await _apiClient.delete(endpoint);
+      _logger.i('Subcategory deletion successful');
+    } catch (e) {
+      _logger.e('Failed to delete subcategory', error: e);
       rethrow;
     }
   }

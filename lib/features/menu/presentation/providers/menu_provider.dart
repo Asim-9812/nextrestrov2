@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/models/category_model.dart';
 import '../../data/models/menu_item_model.dart';
 import '../../data/models/product_model.dart';
+import '../../data/models/sub_category_model.dart';
 import '../../data/repositories/menu_repository_impl.dart';
 
 part 'menu_provider.g.dart';
@@ -233,6 +234,15 @@ Future<Map<int, List<MenuItemModel>>> categoryItemsMap(Ref ref) async {
 }
 
 @riverpod
+Map<int, String> categoryNameMap(Ref ref) {
+  final categoriesAsync = ref.watch(categoriesProvider);
+  return categoriesAsync.maybeWhen(
+    data: (categories) => {for (final c in categories) c.categoryId: c.categoryName},
+    orElse: () => {},
+  );
+}
+
+@riverpod
 List<CategoryModel> filteredManageCategories(Ref ref) {
   final categoriesAsync = ref.watch(categoriesProvider);
   final search = ref.watch(manageCategorySearchQueryProvider).toLowerCase();
@@ -241,6 +251,118 @@ List<CategoryModel> filteredManageCategories(Ref ref) {
     data: (categories) {
       return categories.where((cat) {
         return cat.categoryName.toLowerCase().contains(search);
+      }).toList();
+    },
+    orElse: () => [],
+  );
+}
+
+// SubCategory Providers
+@riverpod
+Future<List<SubCategoryModel>> subCategoryEntities(Ref ref) async {
+  final repository = ref.watch(menuRepositoryProvider);
+  return repository.getSubCategories();
+}
+
+@riverpod
+class ManageSubCategorySearchQuery extends _$ManageSubCategorySearchQuery {
+  @override
+  String build() => '';
+
+  void set(String query) => state = query;
+}
+
+@riverpod
+class IsAddingSubCategory extends _$IsAddingSubCategory {
+  @override
+  bool build() => false;
+
+  void set(bool value) => state = value;
+}
+
+@Riverpod(keepAlive: true)
+class SelectedSubCategoryForEdit extends _$SelectedSubCategoryForEdit {
+  @override
+  SubCategoryModel? build() => null;
+
+  void select(SubCategoryModel? subCategory) => state = subCategory;
+}
+
+@riverpod
+class CreateSubCategoryState extends _$CreateSubCategoryState {
+  @override
+  AsyncValue<void> build() => const AsyncValue.data(null);
+
+  Future<void> createSubCategory(int categoryId, String name) async {
+    final link = ref.keepAlive();
+    state = const AsyncValue.loading();
+    try {
+      final repository = ref.read(menuRepositoryProvider);
+      await repository.createSubCategory(categoryId, name);
+      ref.invalidate(subCategoryEntitiesProvider);
+      state = const AsyncValue.data(null);
+    } catch (e, stack) {
+      state = AsyncValue.error(e, stack);
+      rethrow;
+    } finally {
+      link.close();
+    }
+  }
+}
+
+@riverpod
+class UpdateSubCategoryState extends _$UpdateSubCategoryState {
+  @override
+  AsyncValue<void> build() => const AsyncValue.data(null);
+
+  Future<void> updateSubCategory(int subCategoryId, int categoryId, String name) async {
+    final link = ref.keepAlive();
+    state = const AsyncValue.loading();
+    try {
+      final repository = ref.read(menuRepositoryProvider);
+      await repository.updateSubCategory(subCategoryId, categoryId, name);
+      ref.invalidate(subCategoryEntitiesProvider);
+      state = const AsyncValue.data(null);
+    } catch (e, stack) {
+      state = AsyncValue.error(e, stack);
+      rethrow;
+    } finally {
+      link.close();
+    }
+  }
+}
+
+@riverpod
+class DeleteSubCategoryState extends _$DeleteSubCategoryState {
+  @override
+  AsyncValue<void> build() => const AsyncValue.data(null);
+
+  Future<void> deleteSubCategory(int subCategoryId) async {
+    final link = ref.keepAlive();
+    state = const AsyncValue.loading();
+    try {
+      final repository = ref.read(menuRepositoryProvider);
+      await repository.deleteSubCategory(subCategoryId);
+      ref.invalidate(subCategoryEntitiesProvider);
+      state = const AsyncValue.data(null);
+    } catch (e, stack) {
+      state = AsyncValue.error(e, stack);
+      rethrow;
+    } finally {
+      link.close();
+    }
+  }
+}
+
+@riverpod
+List<SubCategoryModel> filteredManageSubCategories(Ref ref) {
+  final subCategoriesAsync = ref.watch(subCategoryEntitiesProvider);
+  final search = ref.watch(manageSubCategorySearchQueryProvider).toLowerCase();
+
+  return subCategoriesAsync.maybeWhen(
+    data: (subCategories) {
+      return subCategories.where((sub) {
+        return sub.subCategoryName.toLowerCase().contains(search);
       }).toList();
     },
     orElse: () => [],

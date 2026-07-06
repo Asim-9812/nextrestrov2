@@ -904,6 +904,52 @@ final class CategoryItemsMapProvider
 
 String _$categoryItemsMapHash() => r'91b9e30a59287755ea80222e192f6fe9a50a022a';
 
+@ProviderFor(categoryNameMap)
+final categoryNameMapProvider = CategoryNameMapProvider._();
+
+final class CategoryNameMapProvider
+    extends
+        $FunctionalProvider<
+          Map<int, String>,
+          Map<int, String>,
+          Map<int, String>
+        >
+    with $Provider<Map<int, String>> {
+  CategoryNameMapProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'categoryNameMapProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$categoryNameMapHash();
+
+  @$internal
+  @override
+  $ProviderElement<Map<int, String>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Map<int, String> create(Ref ref) {
+    return categoryNameMap(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<int, String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<int, String>>(value),
+    );
+  }
+}
+
+String _$categoryNameMapHash() => r'7cad7f99fa381f35a032a5301b408a493c1d67c0';
+
 @ProviderFor(filteredManageCategories)
 final filteredManageCategoriesProvider = FilteredManageCategoriesProvider._();
 
@@ -951,6 +997,418 @@ final class FilteredManageCategoriesProvider
 
 String _$filteredManageCategoriesHash() =>
     r'e8a432f3fcb8281e28d54df49ab42b3d8b2880e9';
+
+@ProviderFor(subCategoryEntities)
+final subCategoryEntitiesProvider = SubCategoryEntitiesProvider._();
+
+final class SubCategoryEntitiesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<SubCategoryModel>>,
+          List<SubCategoryModel>,
+          FutureOr<List<SubCategoryModel>>
+        >
+    with
+        $FutureModifier<List<SubCategoryModel>>,
+        $FutureProvider<List<SubCategoryModel>> {
+  SubCategoryEntitiesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'subCategoryEntitiesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$subCategoryEntitiesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<SubCategoryModel>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<SubCategoryModel>> create(Ref ref) {
+    return subCategoryEntities(ref);
+  }
+}
+
+String _$subCategoryEntitiesHash() =>
+    r'25a5fc9ea51d52d3ad021dce7c74436d185ea3d4';
+
+@ProviderFor(ManageSubCategorySearchQuery)
+final manageSubCategorySearchQueryProvider =
+    ManageSubCategorySearchQueryProvider._();
+
+final class ManageSubCategorySearchQueryProvider
+    extends $NotifierProvider<ManageSubCategorySearchQuery, String> {
+  ManageSubCategorySearchQueryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'manageSubCategorySearchQueryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$manageSubCategorySearchQueryHash();
+
+  @$internal
+  @override
+  ManageSubCategorySearchQuery create() => ManageSubCategorySearchQuery();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
+String _$manageSubCategorySearchQueryHash() =>
+    r'a86ab0530712102a78aa40a0a32f9af65f2c8183';
+
+abstract class _$ManageSubCategorySearchQuery extends $Notifier<String> {
+  String build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<String, String>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<String, String>,
+              String,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(IsAddingSubCategory)
+final isAddingSubCategoryProvider = IsAddingSubCategoryProvider._();
+
+final class IsAddingSubCategoryProvider
+    extends $NotifierProvider<IsAddingSubCategory, bool> {
+  IsAddingSubCategoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'isAddingSubCategoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$isAddingSubCategoryHash();
+
+  @$internal
+  @override
+  IsAddingSubCategory create() => IsAddingSubCategory();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$isAddingSubCategoryHash() =>
+    r'1463ad74d6baaee0e85e2719b43c281f52bdbf72';
+
+abstract class _$IsAddingSubCategory extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(SelectedSubCategoryForEdit)
+final selectedSubCategoryForEditProvider =
+    SelectedSubCategoryForEditProvider._();
+
+final class SelectedSubCategoryForEditProvider
+    extends $NotifierProvider<SelectedSubCategoryForEdit, SubCategoryModel?> {
+  SelectedSubCategoryForEditProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'selectedSubCategoryForEditProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$selectedSubCategoryForEditHash();
+
+  @$internal
+  @override
+  SelectedSubCategoryForEdit create() => SelectedSubCategoryForEdit();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SubCategoryModel? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SubCategoryModel?>(value),
+    );
+  }
+}
+
+String _$selectedSubCategoryForEditHash() =>
+    r'7de588e4a4ed5bce5938225eb8c67c2e10049590';
+
+abstract class _$SelectedSubCategoryForEdit
+    extends $Notifier<SubCategoryModel?> {
+  SubCategoryModel? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<SubCategoryModel?, SubCategoryModel?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<SubCategoryModel?, SubCategoryModel?>,
+              SubCategoryModel?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(CreateSubCategoryState)
+final createSubCategoryStateProvider = CreateSubCategoryStateProvider._();
+
+final class CreateSubCategoryStateProvider
+    extends $NotifierProvider<CreateSubCategoryState, AsyncValue<void>> {
+  CreateSubCategoryStateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'createSubCategoryStateProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$createSubCategoryStateHash();
+
+  @$internal
+  @override
+  CreateSubCategoryState create() => CreateSubCategoryState();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AsyncValue<void> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AsyncValue<void>>(value),
+    );
+  }
+}
+
+String _$createSubCategoryStateHash() =>
+    r'098cc59cc5a9582f7ad8a39f9f52906de25d2d61';
+
+abstract class _$CreateSubCategoryState extends $Notifier<AsyncValue<void>> {
+  AsyncValue<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, AsyncValue<void>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, AsyncValue<void>>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(UpdateSubCategoryState)
+final updateSubCategoryStateProvider = UpdateSubCategoryStateProvider._();
+
+final class UpdateSubCategoryStateProvider
+    extends $NotifierProvider<UpdateSubCategoryState, AsyncValue<void>> {
+  UpdateSubCategoryStateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'updateSubCategoryStateProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$updateSubCategoryStateHash();
+
+  @$internal
+  @override
+  UpdateSubCategoryState create() => UpdateSubCategoryState();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AsyncValue<void> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AsyncValue<void>>(value),
+    );
+  }
+}
+
+String _$updateSubCategoryStateHash() =>
+    r'b5df6fe3acc227595c21bc3ee0e7c81d18461934';
+
+abstract class _$UpdateSubCategoryState extends $Notifier<AsyncValue<void>> {
+  AsyncValue<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, AsyncValue<void>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, AsyncValue<void>>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(DeleteSubCategoryState)
+final deleteSubCategoryStateProvider = DeleteSubCategoryStateProvider._();
+
+final class DeleteSubCategoryStateProvider
+    extends $NotifierProvider<DeleteSubCategoryState, AsyncValue<void>> {
+  DeleteSubCategoryStateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'deleteSubCategoryStateProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$deleteSubCategoryStateHash();
+
+  @$internal
+  @override
+  DeleteSubCategoryState create() => DeleteSubCategoryState();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AsyncValue<void> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AsyncValue<void>>(value),
+    );
+  }
+}
+
+String _$deleteSubCategoryStateHash() =>
+    r'097771871d6c0ec37c66f189ced770dd0c91570a';
+
+abstract class _$DeleteSubCategoryState extends $Notifier<AsyncValue<void>> {
+  AsyncValue<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, AsyncValue<void>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, AsyncValue<void>>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(filteredManageSubCategories)
+final filteredManageSubCategoriesProvider =
+    FilteredManageSubCategoriesProvider._();
+
+final class FilteredManageSubCategoriesProvider
+    extends
+        $FunctionalProvider<
+          List<SubCategoryModel>,
+          List<SubCategoryModel>,
+          List<SubCategoryModel>
+        >
+    with $Provider<List<SubCategoryModel>> {
+  FilteredManageSubCategoriesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'filteredManageSubCategoriesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$filteredManageSubCategoriesHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<SubCategoryModel>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  List<SubCategoryModel> create(Ref ref) {
+    return filteredManageSubCategories(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<SubCategoryModel> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<SubCategoryModel>>(value),
+    );
+  }
+}
+
+String _$filteredManageSubCategoriesHash() =>
+    r'8189502a555709819cd58f2ec3e3f6a5be8a7421';
 
 @ProviderFor(products)
 final productsProvider = ProductsProvider._();

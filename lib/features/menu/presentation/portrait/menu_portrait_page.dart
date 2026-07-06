@@ -6,6 +6,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import '../providers/menu_provider.dart';
 import 'sections/manage_menu_portrait_page.dart';
 import 'sections/manage_category_portrait_page.dart';
+import 'sections/manage_sub_category_portrait_page.dart';
 import 'sections/manage_products_portrait_page.dart';
 
 class MenuPortraitPage extends ConsumerWidget {
@@ -82,8 +83,9 @@ class MenuPortraitPage extends ConsumerWidget {
       case 0:
         return const ManageMenuPortraitPage();
       case 1:
-      case 3:
         return const ManageCategoryPortraitPage();
+      case 3:
+        return const ManageSubCategoryPortraitPage();
       case 5:
         return const ManageProductsPortraitPage();
       default:

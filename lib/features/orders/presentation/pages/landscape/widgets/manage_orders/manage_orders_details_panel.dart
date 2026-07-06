@@ -410,9 +410,6 @@ class ManageOrdersDetailsPanel extends ConsumerWidget {
         if (isCompleted)
         Row(
           children: [
-
-
-
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: () => _showDiscountDialog(context, ref, order),

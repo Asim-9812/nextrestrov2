@@ -8,6 +8,7 @@ import 'widgets/menu_sidebar_item.dart';
 import 'widgets/menu_sidebar_dropdown.dart';
 import 'sections/manage_menu_landscape_page.dart';
 import 'sections/manage_category_landscape_page.dart';
+import 'sections/manage_sub_category_landscape_page.dart';
 import 'sections/manage_products_landscape_page.dart';
 
 class MenuLandscapePage extends ConsumerWidget {
@@ -103,7 +104,7 @@ class MenuLandscapePage extends ConsumerWidget {
       case 1:
         return const ManageCategoryLandscapePage();
       case 3:
-        return const Center(child: Text('Manage Sub Category (Placeholder)'));
+        return const ManageSubCategoryLandscapePage();
       case 5:
         return const ManageProductsLandscapePage();
       default:

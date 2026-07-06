@@ -1,6 +1,6 @@
 class ApiConstants {
   // Base URL
-  static const String baseUrl = 'https://mcbmg-103-1-93-10.free.pinggy.net';
+  static const String baseUrl = 'https://nhngu-103-1-93-10.free.pinggy.net';
 
   // Timeouts (in milliseconds)
   static const Duration connectionTimeout = Duration(seconds: 30);
@@ -86,6 +86,12 @@ class ApiConstants {
   static const String openShiftEndpoint = '/api/Shift/open-shift';
   static const String getAllShiftsEndpoint = '/api/Shift/get-all';
   static const String closeShiftEndpoint = '/api/Shift/close-shift';
+
+  // Endpoints - SubCategory
+  static const String createSubCategoryEndpoint = '/api/SubCategory';
+  static const String getSubCategoriesEndpoint = '/api/SubCategory';
+  static const String updateSubCategoryEndpoint = '/api/SubCategory';
+  static const String deleteSubCategoryEndpoint = '/api/SubCategory/:id';
 
   // Endpoints - Table
   static const String getTableByIdEndpoint = '/api/Table/:id';
