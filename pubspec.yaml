@@ -72,6 +72,7 @@ dependencies:
   hive_flutter: ^1.1.0
   dropdown_search: ^7.0.0
   timeago: ^3.7.1
+  syncfusion_flutter_charts: ^34.1.29
 
 dev_dependencies:
   flutter_test:

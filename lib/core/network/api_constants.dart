@@ -1,6 +1,6 @@
 class ApiConstants {
   // Base URL
-  static const String baseUrl = 'https://nhngu-103-1-93-10.free.pinggy.net';
+  static const String baseUrl = 'https://tbfhh-103-1-93-10.free.pinggy.net';
 
   // Timeouts (in milliseconds)
   static const Duration connectionTimeout = Duration(seconds: 30);
@@ -43,6 +43,9 @@ class ApiConstants {
   static const String getCustomersEndpoint = '/api/Customer';
   static const String updateCustomerEndpoint = '/api/Customer';
   static const String deleteCustomerEndpoint = '/api/Customer/:id';
+
+  // Endpoints - Dashboard
+  static const String getDashboardSummaryEndpoint = '/api/Dashboard/summary';
 
   // Endpoints - Department
   static const String getDepartmentByIdEndpoint = '/api/Department/:id';

@@ -11,6 +11,13 @@ import 'package:nextrestro/features/tables/presentation/tables_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/orders_page.dart';
 import 'package:nextrestro/features/customer/presentation/pages/customer_page.dart';
 import 'package:nextrestro/features/users/presentation/pages/staff_page.dart';
+import 'package:intl/intl.dart';
+import 'package:nextrestro/features/admin_dashboard/data/models/dashboard_summary_model.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/pages/dashboard_charts_page.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/providers/dashboard_controller.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/providers/dashboard_state.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/widgets/summary_bento_box.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/widgets/top_selling_section.dart';
 import 'package:nextrestro/features/department/presentation/pages/department_page.dart';
 import 'widgets/admin_sidebar.dart';
 import 'widgets/admin_header.dart';
@@ -155,67 +162,214 @@ class _AdminDashboardLandscapePageState
 
   Widget _buildHomeTab() {
     final shiftState = ref.watch(shiftManagementControllerProvider);
+    final dashboardState = ref.watch(dashboardControllerProvider);
 
-    return shiftState.when(
-      data: (state) {
-        final shift = state.shifts.isNotEmpty && state.shifts.first.shiftStatus == 1 ? state.shifts.first : null;
-        final openerName = state.selectedShiftOpenerName;
-
-        if (shift == null) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.schedule, size: 64, color: AppColors.lightGrey),
-                const SizedBox(height: 16),
-                const Text(
-                  'No shift open',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.grey,
-                  ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Shift and Date Range Row
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: shiftState.when(
+                  data: (state) {
+                    final shift = state.shifts.isNotEmpty && state.shifts.first.shiftStatus == 1 ? state.shifts.first : null;
+                    if (shift == null) {
+                      return _buildNoShiftCard();
+                    }
+                    return ActiveShiftCard(
+                      shift: shift,
+                      openerName: state.selectedShiftOpenerName,
+                    );
+                  },
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) => Text('Shift Error: $error'),
                 ),
-                const SizedBox(height: 24),
-                ElevatedButton.icon(
-                  onPressed: () => _showOpenShiftDialog(context, ref, state.shifts),
-                  icon: const Icon(Icons.add),
-                  label: const Text('Open Shift'),
+              ),
+              const SizedBox(width: 24),
+              Expanded(
+                flex: 1,
+                child: _buildDateRangeSelector(dashboardState),
+              ),
+            ],
+          ),
+          const SizedBox(height: 32),
+          
+          // Dashboard Summary
+          dashboardState.when(
+            data: (state) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SummaryBentoBox(
+                  current: state.currentSummary ?? DashboardSummaryModel(),
+                  previous: state.previousSummary,
+                  onShowChart: (metric) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DashboardChartsPage(
+                          metricName: metric,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 32),
+                TopSellingSection(
+                  products: state.currentSummary?.topSellingProducts ?? [],
+                  categories: state.currentSummary?.topSellingCategories ?? [],
                 ),
               ],
             ),
-          );
-        }
+            loading: () => const Center(child: Padding(
+              padding: EdgeInsets.all(64.0),
+              child: CircularProgressIndicator(),
+            )),
+            error: (error, stack) => Center(child: Text('Dashboard Error: $error')),
+          ),
+          
+          const SizedBox(height: 32),
+          const RecentOrdersSection(),
+        ],
+      ),
+    );
+  }
 
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
+  Widget _buildNoShiftCard() {
+    return Container(
+      height: 140,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.schedule, size: 48, color: AppColors.lightGrey),
+          const SizedBox(width: 16),
+          const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ActiveShiftCard(
-                shift: shift,
-                openerName: openerName,
+              Text(
+                'No active shift',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 32),
-              const Text(
-                'Overview',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.black,
-                ),
+              Text(
+                'Open a shift to start recording sales.',
+                style: TextStyle(color: AppColors.grey),
               ),
-              const SizedBox(height: 16),
-              DashboardOverviewRow(shift: shift),
-              const SizedBox(height: 32),
-              const RecentOrdersSection(),
             ],
           ),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('Error: $error')),
+          const Spacer(),
+          ElevatedButton(
+            onPressed: () => _showOpenShiftDialog(context, ref, []),
+            child: const Text('Open Shift'),
+          ),
+        ],
+      ),
     );
+  }
+
+  Widget _buildDateRangeSelector(AsyncValue<DashboardState> state) {
+    return Container(
+      height: 140,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Statistics Range',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  ref.read(dashboardControllerProvider.notifier).setDateRange(state.asData!.value.dateRange);
+                  ref.invalidate(shiftManagementControllerProvider);
+                },
+                icon: const Icon(Icons.refresh, size: 16),
+                label: const Text('Refresh', style: TextStyle(fontSize: 12)),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          state.when(
+            data: (data) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DropdownButtonFormField<DashboardDateRange>(
+                  initialValue: data.dateRange,
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                  items: DashboardDateRange.values.map((range) {
+                    return DropdownMenuItem(
+                      value: range,
+                      child: Text(range.name.toUpperCase(), style: const TextStyle(fontSize: 13)),
+                    );
+                  }).toList(),
+                  onChanged: (val) {
+                    if (val == DashboardDateRange.custom) {
+                      _showCustomDateRangePicker(data.fromDate, data.toDate);
+                    } else if (val != null) {
+                      ref.read(dashboardControllerProvider.notifier).setDateRange(val);
+                    }
+                  },
+                ),
+                if (data.dateRange == DashboardDateRange.custom) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    '${DateFormat('MMM dd').format(data.fromDate!)} - ${DateFormat('MMM dd').format(data.toDate!)}',
+                    style: const TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ],
+            ),
+            loading: () => const LinearProgressIndicator(),
+            error: (_, stack) => const Text('Error loading range'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showCustomDateRangePicker(DateTime? currentFrom, DateTime? currentTo) async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+      initialDateRange: DateTimeRange(
+        start: currentFrom ?? DateTime.now(),
+        end: currentTo ?? DateTime.now(),
+      ),
+    );
+    if (picked != null) {
+      ref.read(dashboardControllerProvider.notifier).setDateRange(
+        DashboardDateRange.custom,
+        customFrom: picked.start,
+        customTo: picked.end,
+      );
+    }
   }
 
   void _showOpenShiftDialog(BuildContext context, WidgetRef ref, List<ShiftModel> allShifts) {

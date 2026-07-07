@@ -15,84 +15,89 @@ class ActiveShiftCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      shift.shiftName ?? 'Active Shift',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Opened ${TimeFormatter.formatFullDate(shift.openingTime)}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: AppColors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade50,
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: Colors.green.shade200),
-                  ),
-                  child: const Text(
-                    'OPEN',
-                    style: TextStyle(
-                      fontSize: 12,
+    return Container(
+      height: 140,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    shift.shiftName ?? 'Active Shift',
+                    style: const TextStyle(
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.green,
+                      color: AppColors.black,
                     ),
                   ),
+                  Text(
+                    'Opened ${TimeFormatter.formatFullDate(shift.openingTime)}',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: AppColors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.green.shade200),
                 ),
-              ],
-            ),
-            const Divider(height: 32),
-            Row(
-              children: [
-                _buildShiftDetailItem(
-                  'Opened By',
-                  openerName ?? 'User #${shift.openedByUserID}',
-                  Icons.person_outline,
+                child: const Text(
+                  'OPEN',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
                 ),
-                const SizedBox(width: 48),
-                _buildShiftDetailItem(
-                  'Opening Amount',
-                  '\$${shift.openingAmount}',
-                  Icons.account_balance_wallet_outlined,
-                ),
-                const SizedBox(width: 48),
-                _buildShiftDetailItem(
-                  'Current Sales',
-                  '\$${shift.totalSales}',
-                  Icons.payments_outlined,
-                ),
-                const SizedBox(width: 48),
-                _buildShiftDetailItem(
-                  'Status',
-                  'Running',
-                  Icons.trending_up,
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          const Divider(height: 1),
+          const Spacer(),
+          Row(
+            children: [
+              _buildShiftDetailItem(
+                'Opened By',
+                openerName ?? 'User #${shift.openedByUserID}',
+                Icons.person_outline,
+              ),
+              const Spacer(),
+              _buildShiftDetailItem(
+                'Opening',
+                'Rs. ${shift.openingAmount?.toStringAsFixed(2)}',
+                Icons.account_balance_wallet_outlined,
+              ),
+              const Spacer(),
+              _buildShiftDetailItem(
+                'Sales',
+                'Rs. ${shift.totalSales.toStringAsFixed(2)}',
+                Icons.payments_outlined,
+              ),
+              const Spacer(),
+              _buildShiftDetailItem(
+                'Status',
+                'Running',
+                Icons.trending_up,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -101,28 +106,29 @@ class ActiveShiftCard extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
             color: AppColors.bg,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(6),
           ),
-          child: Icon(icon, size: 20, color: AppColors.grey),
+          child: Icon(icon, size: 16, color: AppColors.grey),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               label,
               style: const TextStyle(
-                fontSize: 12,
+                fontSize: 10,
                 color: AppColors.grey,
               ),
             ),
             Text(
               value,
               style: const TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: AppColors.black,
               ),

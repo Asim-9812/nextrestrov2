@@ -18,7 +18,16 @@ import 'package:nextrestro/features/shift/presentation/shift_page.dart';
 import 'package:nextrestro/features/tables/presentation/tables_page.dart';
 import 'package:nextrestro/features/customer/presentation/pages/customer_page.dart';
 import 'package:nextrestro/features/users/presentation/pages/staff_page.dart';
+import 'package:intl/intl.dart';
+import 'package:nextrestro/features/shift/data/models/shift_model.dart';
+import 'package:nextrestro/features/admin_dashboard/data/models/dashboard_summary_model.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/pages/dashboard_charts_page.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/providers/dashboard_controller.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/providers/dashboard_state.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/widgets/summary_bento_box.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/widgets/top_selling_section.dart';
 import 'package:nextrestro/features/department/presentation/pages/department_page.dart';
+import 'package:nextrestro/features/shift/presentation/providers/shift_management_provider.dart';
 
 class AdminDashboardPotraitPage extends ConsumerStatefulWidget {
   const AdminDashboardPotraitPage({super.key});
@@ -107,6 +116,15 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
         backgroundColor: AppColors.primary,
         elevation: 1,
         shadowColor: AppColors.border,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              ref.invalidate(dashboardControllerProvider);
+              ref.invalidate(shiftManagementControllerProvider);
+            },
+          ),
+        ],
       ),
       drawer: _buildDrawer(),
       body: IndexedStack(
@@ -123,6 +141,142 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
           _buildPlaceholderTab('Branch Management', MaterialSymbols.store),
           const DepartmentPage(),
         ],
+      ),
+    );
+  }
+
+  void _showEndShiftDialog(BuildContext context, WidgetRef ref, ShiftModel shift) {
+    final TextEditingController amountController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('End Shift'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Enter closing amount to end the shift.'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: amountController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Closing Amount',
+                prefixText: 'Rs. ',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final amount = double.tryParse(amountController.text) ?? 0.0;
+              ref.read(shiftManagementControllerProvider.notifier).endShift(shift, amount);
+              Navigator.pop(context);
+            },
+            child: const Text('End Shift'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showOpenShiftDialog(BuildContext context, WidgetRef ref, List<ShiftModel> allShifts) {
+    final lastClosedShift = allShifts.firstWhere((s) => s.shiftStatus == 2, orElse: () => ShiftModel());
+    final existingNames = allShifts.map((s) => s.shiftName ?? '').where((name) => name.isNotEmpty).toSet().toList().cast<String>();
+
+    final TextEditingController amountController = TextEditingController(text: lastClosedShift.closingAmount?.toStringAsFixed(2) ?? '0.00');
+    final TextEditingController nameController = TextEditingController();
+    String? selectedName = existingNames.isNotEmpty ? existingNames.first : null;
+    bool isAddingNewName = existingNames.isEmpty;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Open New Shift'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Shift Name', style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: isAddingNewName
+                          ? TextField(
+                              controller: nameController,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Enter shift name',
+                              ),
+                            )
+                          : DropdownButtonFormField<String>(
+                              initialValue: selectedName,
+                              decoration: const InputDecoration(border: OutlineInputBorder()),
+                              items: existingNames.map((name) => DropdownMenuItem(value: name, child: Text(name))).toList(),
+                              onChanged: (val) => setState(() => selectedName = val),
+                            ),
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      icon: Icon(isAddingNewName ? Icons.list_rounded : Icons.add_rounded),
+                      onPressed: () => setState(() => isAddingNewName = !isAddingNewName),
+                      tooltip: isAddingNewName ? 'Choose from list' : 'Add new shift name',
+                      style: IconButton.styleFrom(
+                        backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                        foregroundColor: AppColors.primary,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Text('Opening Amount', style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: amountController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    prefixText: 'Rs. ',
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter opening amount',
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'This is pre-filled from the last shift\'s closing amount.',
+                  style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+              onPressed: () {
+                final name = isAddingNewName ? nameController.text : selectedName;
+                if (name == null || name.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter or select a shift name')));
+                  return;
+                }
+                final amount = double.tryParse(amountController.text) ?? 0.0;
+                ref.read(shiftManagementControllerProvider.notifier).openShift(name, amount);
+                Navigator.pop(context);
+              },
+              child: const Text('Open Shift'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -215,7 +369,7 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
         ),
       ),
       selected: isSelected,
-      selectedTileColor: AppColors.primary.withOpacity(0.1),
+      selectedTileColor: AppColors.primary.withValues(alpha: 0.1),
       onTap: () {
         setState(() {
           _selectedIndex = index;
@@ -226,75 +380,199 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
   }
 
   Widget _buildHomeTab() {
-    final shiftState = ref.watch(shiftControllerProvider);
+    final shiftState = ref.watch(shiftManagementControllerProvider);
+    final dashboardState = ref.watch(dashboardControllerProvider);
 
-    return shiftState.when(
-      data: (data) {
-        final shift = data.$1;
-        final openerName = data.$2;
-
-        if (shift == null) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 64),
-                const Icon(Icons.schedule, size: 64, color: AppColors.lightGrey),
-                const SizedBox(height: 16),
-                const Text(
-                  'No shift open',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.grey,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(height: 12),
+          // Range Selector in Portrait
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: _buildDateRangeSelector(dashboardState),
+          ),
+          const SizedBox(height: 12),
+          
+          shiftState.when(
+            data: (data) {
+              final shift = data.shifts.isNotEmpty && data.shifts.first.shiftStatus == 1 ? data.shifts.first : null;
+              if (shift == null) {
+                return _buildNoShiftCard(data.shifts);
+              }
+              return Column(
+                children: [
+                  PortraitShiftHeader(
+                    shift: shift,
+                    onEndShift: () {
+                      _showEndShiftDialog(context, ref, shift);
+                    },
                   ),
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // TODO: Implement Open Shift
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('Open Shift'),
-                ),
-              ],
-            ),
-          );
-        }
+                  const SizedBox(height: 12),
+                  PortraitShiftDetailsCard(
+                    shift: shift,
+                    openerName: data.selectedShiftOpenerName,
+                  ),
+                ],
+              );
+            },
+            loading: () => const CircularProgressIndicator(),
+            error: (e, _) => Text('Shift Error: $e'),
+          ),
 
-        return SingleChildScrollView(
-          child: Column(
+          const SizedBox(height: 12),
+          
+          dashboardState.when(
+            data: (state) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Column(
+                children: [
+                  SummaryBentoBox(
+                    current: state.currentSummary ?? DashboardSummaryModel(),
+                    previous: state.previousSummary,
+                    onShowChart: (metric) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DashboardChartsPage(
+                            metricName: metric,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  // In portrait, we might need a modified TopSellingSection or scrollable
+                  TopSellingSection(
+                    products: state.currentSummary?.topSellingProducts ?? [],
+                    categories: state.currentSummary?.topSellingCategories ?? [],
+                  ),
+                ],
+              ),
+            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, _) => Text('Dashboard Error: $e'),
+          ),
+
+          const SizedBox(height: 12),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            child: RecentOrdersSectionPortrait(),
+          ),
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDateRangeSelector(AsyncValue<DashboardState> state) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+      ),
+      child: Column(
+        children: [
+          Row(
             children: [
-              const SizedBox(height: 12),
-              PortraitShiftHeader(
-                shift: shift,
-                onEndShift: () {
-                  // TODO: Implement End Shift via provider
-                },
+              const Icon(Icons.calendar_today, size: 16, color: AppColors.primary),
+              const SizedBox(width: 12),
+              Expanded(
+                child: state.when(
+                  data: (data) => DropdownButton<DashboardDateRange>(
+                    value: data.dateRange,
+                    isExpanded: true,
+                    underline: const SizedBox(),
+                    style: const TextStyle(fontSize: 14, color: AppColors.black, fontWeight: FontWeight.bold),
+                    items: DashboardDateRange.values.map((range) {
+                      return DropdownMenuItem(
+                        value: range,
+                        child: Text(range.name.toUpperCase()),
+                      );
+                    }).toList(),
+                    onChanged: (val) {
+                      if (val == DashboardDateRange.custom) {
+                        _showCustomDateRangePicker(data.fromDate, data.toDate);
+                      } else if (val != null) {
+                        ref.read(dashboardControllerProvider.notifier).setDateRange(val);
+                      }
+                    },
+                  ),
+                  loading: () => const LinearProgressIndicator(),
+                  error: (_, stack) => const Text('Error'),
+                ),
               ),
-              const SizedBox(height: 12),
-              PortraitShiftDetailsCard(
-                shift: shift,
-                openerName: openerName,
-              ),
-              const SizedBox(height: 12),
-              PortraitOverviewRow(shift: shift),
-              const SizedBox(height: 12),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.0),
-                child: RecentOrdersSectionPortrait(),
-              ),
+              if (state.asData?.value.dateRange == DashboardDateRange.custom)
+                Text(
+                  '${DateFormat('MM/dd').format(state.asData!.value.fromDate!)} - ${DateFormat('MM/dd').format(state.asData!.value.toDate!)}',
+                  style: const TextStyle(fontSize: 12, color: AppColors.primary),
+                ),
             ],
           ),
-        );
-      },
-      loading: () => const Center(
-        child: Padding(
-          padding: EdgeInsets.all(32.0),
-          child: CircularProgressIndicator(),
-        ),
+          const Divider(height: 1),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: () {
+                ref.read(dashboardControllerProvider.notifier).setDateRange(state.asData!.value.dateRange);
+                ref.invalidate(shiftManagementControllerProvider);
+              },
+              icon: const Icon(Icons.refresh, size: 14),
+              label: const Text('Refresh Dashboard', style: TextStyle(fontSize: 11)),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+            ),
+          ),
+        ],
       ),
-      error: (error, stack) => Center(child: Text('Error: $error')),
+    );
+  }
+
+  Future<void> _showCustomDateRangePicker(DateTime? currentFrom, DateTime? currentTo) async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+      initialDateRange: DateTimeRange(
+        start: currentFrom ?? DateTime.now(),
+        end: currentTo ?? DateTime.now(),
+      ),
+    );
+    if (picked != null) {
+      ref.read(dashboardControllerProvider.notifier).setDateRange(
+        DashboardDateRange.custom,
+        customFrom: picked.start,
+        customTo: picked.end,
+      );
+    }
+  }
+
+  Widget _buildNoShiftCard(List<ShiftModel> allShifts) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.schedule, color: AppColors.lightGrey),
+          const SizedBox(width: 12),
+          const Expanded(child: Text('No active shift', style: TextStyle(fontWeight: FontWeight.bold))),
+          ElevatedButton(
+            onPressed: () => _showOpenShiftDialog(context, ref, allShifts),
+            style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0)),
+            child: const Text('Open'),
+          ),
+        ],
+      ),
     );
   }
 }

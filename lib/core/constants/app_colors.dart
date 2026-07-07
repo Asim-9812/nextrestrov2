@@ -18,7 +18,7 @@ class AppColors {
   static const Color ashGrey = Color(0xFFCDCFD1);
   
   // Border (FD872A at 15% opacity)
-  static final Color border = const Color(0xFFFD872A).withOpacity(0.15);
+  static final Color border = const Color(0xFFFD872A).withValues(alpha: 0.15);
   
   // Feedback
   static const Color error = Colors.red;
