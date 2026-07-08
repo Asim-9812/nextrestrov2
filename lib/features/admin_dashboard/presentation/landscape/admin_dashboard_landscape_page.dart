@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/core/network/session_service.dart';
+import 'package:nextrestro/features/branch/presentation/pages/branch_page.dart';
 import 'package:nextrestro/features/login/presentation/login_page.dart';
 import 'package:nextrestro/features/menu/presentation/pages/menu_page.dart';
 import 'package:nextrestro/features/shift/data/models/shift_model.dart';
@@ -16,13 +17,14 @@ import 'package:nextrestro/features/admin_dashboard/data/models/dashboard_summar
 import 'package:nextrestro/features/admin_dashboard/presentation/pages/dashboard_charts_page.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/providers/dashboard_controller.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/providers/dashboard_state.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/widgets/sales_breakdown_grid.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/widgets/summary_bento_box.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/widgets/top_selling_section.dart';
 import 'package:nextrestro/features/department/presentation/pages/department_page.dart';
+import 'package:nextrestro/features/reports/presentation/pages/reports_page.dart';
 import 'widgets/admin_sidebar.dart';
 import 'widgets/admin_header.dart';
 import 'widgets/active_shift_card.dart';
-import 'widgets/dashboard_overview_row.dart';
 import 'widgets/recent_orders_section.dart';
 
 class AdminDashboardLandscapePage extends ConsumerStatefulWidget {
@@ -36,6 +38,7 @@ class AdminDashboardLandscapePage extends ConsumerStatefulWidget {
 class _AdminDashboardLandscapePageState
     extends ConsumerState<AdminDashboardLandscapePage> {
   int _selectedIndex = 0;
+  bool _isSalesExpanded = false;
 
   void _handleLogout() {
     showDialog(
@@ -97,10 +100,10 @@ class _AdminDashboardLandscapePageState
                       const TablesPage(),
                       const MenuPage(),
                       const ShiftPage(),
-                      _buildPlaceholderTab('Reports', Icons.bar_chart),
+                      const ReportsPage(),
                       const CustomerPage(),
                       const StaffPage(),
-                      _buildPlaceholderTab('Branch Management', Icons.store),
+                      const BranchPage(),
                       const DepartmentPage(),
                     ],
                   ),
@@ -197,7 +200,7 @@ class _AdminDashboardLandscapePageState
               ),
             ],
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 8),
           
           // Dashboard Summary
           dashboardState.when(
@@ -217,11 +220,32 @@ class _AdminDashboardLandscapePageState
                       ),
                     );
                   },
+                  onExpandSales: () {
+                    setState(() {
+                      _isSalesExpanded = !_isSalesExpanded;
+                    });
+                  },
+                  isSalesExpanded: _isSalesExpanded,
+                ),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: _isSalesExpanded
+                      ? Column(
+                          children: [
+                            SalesBreakdownGrid(
+                              current: state.currentSummary ?? DashboardSummaryModel(),
+                              previous: state.previousSummary,
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
                 ),
                 const SizedBox(height: 32),
                 TopSellingSection(
                   products: state.currentSummary?.topSellingProducts ?? [],
                   categories: state.currentSummary?.topSellingCategories ?? [],
+                  isPortrait: false,
                 ),
               ],
             ),

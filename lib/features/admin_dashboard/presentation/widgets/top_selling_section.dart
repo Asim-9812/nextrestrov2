@@ -5,15 +5,27 @@ import 'package:nextrestro/features/admin_dashboard/data/models/dashboard_summar
 class TopSellingSection extends StatelessWidget {
   final List<TopSellingProduct> products;
   final List<TopSellingCategory> categories;
+  final bool isPortrait;
 
   const TopSellingSection({
     super.key,
     required this.products,
     required this.categories,
+    this.isPortrait = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (isPortrait) {
+      return Column(
+        children: [
+          _buildProductCard(),
+          const SizedBox(height: 24),
+          _buildCategoryPlaceholder(),
+        ],
+      );
+    }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

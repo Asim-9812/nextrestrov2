@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "d45142b5-ef41-45ed-bc39-e087af5b678e",
+    "_postman_id": "e2b966d0-60c7-41cd-8643-8935dbee6918",
     "name": "TheNextRestro",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "37124649",
-    "_collection_link": "https://go.postman.co/collection/37124649-d45142b5-ef41-45ed-bc39-e087af5b678e?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/37124649-e2b966d0-60c7-41cd-8643-8935dbee6918?source=collection_link"
   },
   "item": [
     {
@@ -28,7 +28,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"userId\": 6291,\n  \"username\": \"string\",\n  \"password\": \"string\",\n  \"role\": \"string\"\n}",
+                      "raw": "{\n  \"userId\": 5791,\n  \"username\": \"string\",\n  \"password\": \"string\",\n  \"role\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -66,7 +66,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"userId\": 6291,\n  \"username\": \"string\",\n  \"password\": \"string\",\n  \"role\": \"string\"\n}",
+                          "raw": "{\n  \"userId\": 5791,\n  \"username\": \"string\",\n  \"password\": \"string\",\n  \"role\": \"string\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -462,7 +462,7 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{baseUrl}}/api/Auth/getuserbyId?userId=5286",
+                      "raw": "{{baseUrl}}/api/Auth/getuserbyId?userId=9170",
                       "host": [
                         "{{baseUrl}}"
                       ],
@@ -474,7 +474,7 @@
                       "query": [
                         {
                           "key": "userId",
-                          "value": "5286"
+                          "value": "9170"
                         }
                       ]
                     }
@@ -492,7 +492,7 @@
                           }
                         ],
                         "url": {
-                          "raw": "{{baseUrl}}/api/Auth/getuserbyId?userId=5286",
+                          "raw": "{{baseUrl}}/api/Auth/getuserbyId?userId=9170",
                           "host": [
                             "{{baseUrl}}"
                           ],
@@ -504,7 +504,7 @@
                           "query": [
                             {
                               "key": "userId",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -546,7 +546,7 @@
                       "variable": [
                         {
                           "key": "companyId",
-                          "value": "5286"
+                          "value": "9170"
                         }
                       ]
                     }
@@ -576,7 +576,7 @@
                           "variable": [
                             {
                               "key": "companyId",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -617,7 +617,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -648,7 +648,7 @@
                               "variable": [
                                 {
                                   "key": "id",
-                                  "value": "5286"
+                                  "value": "9170"
                                 }
                               ]
                             }
@@ -681,7 +681,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"companyID\": 7042,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "raw": "{\n  \"companyID\": 7771,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -702,7 +702,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "5286"
+                          "value": "9170"
                         }
                       ]
                     }
@@ -725,7 +725,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"companyID\": 7042,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                          "raw": "{\n  \"companyID\": 7771,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -746,7 +746,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -778,7 +778,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "5286"
+                          "value": "9170"
                         }
                       ]
                     }
@@ -808,7 +808,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -836,7 +836,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"companyID\": 7042,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                  "raw": "{\n  \"companyID\": 7771,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -873,7 +873,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"companyID\": 7042,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "raw": "{\n  \"companyID\": 7771,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -918,7 +918,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"categoryId\": 8692,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
+                  "raw": "{\n  \"categoryId\": 4843,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -955,7 +955,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"categoryId\": 8692,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
+                      "raw": "{\n  \"categoryId\": 4843,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1043,7 +1043,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"categoryId\": 8692,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
+                  "raw": "{\n  \"categoryId\": 4843,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1080,7 +1080,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"categoryId\": 8692,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
+                      "raw": "{\n  \"categoryId\": 4843,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1149,7 +1149,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "5286"
+                          "value": "9170"
                         }
                       ]
                     }
@@ -1193,7 +1193,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -1360,7 +1360,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "5286"
+                          "value": "9170"
                         }
                       ]
                     }
@@ -1390,7 +1390,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -1422,7 +1422,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "5286"
+                          "value": "9170"
                         }
                       ]
                     }
@@ -1452,7 +1452,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -1480,7 +1480,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"customerID\": 9228,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 6279,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2014-08-10T15:45:19.697Z\"\n}",
+                  "raw": "{\n  \"customerID\": 1293,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 192,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2024-10-18T04:30:10.379Z\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1517,7 +1517,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"customerID\": 9228,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 6279,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2014-08-10T15:45:19.697Z\"\n}",
+                      "raw": "{\n  \"customerID\": 1293,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 192,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2024-10-18T04:30:10.379Z\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1605,7 +1605,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"customerID\": 9228,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 6279,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2014-08-10T15:45:19.697Z\"\n}",
+                  "raw": "{\n  \"customerID\": 1293,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 192,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2024-10-18T04:30:10.379Z\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1642,7 +1642,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"customerID\": 9228,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 6279,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2014-08-10T15:45:19.697Z\"\n}",
+                      "raw": "{\n  \"customerID\": 1293,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 192,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2024-10-18T04:30:10.379Z\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1690,7 +1690,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"fromDate\": \"2015-03-01T00:09:39.289Z\",\n  \"toDate\": \"2004-02-22T06:09:07.144Z\"\n}",
+                      "raw": "{\n  \"fromDate\": \"1985-11-10T17:51:33.741Z\",\n  \"toDate\": \"2020-07-11T06:05:27.443Z\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1728,7 +1728,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"fromDate\": \"2015-03-01T00:09:39.289Z\",\n  \"toDate\": \"2004-02-22T06:09:07.144Z\"\n}",
+                          "raw": "{\n  \"fromDate\": \"1985-11-10T17:51:33.741Z\",\n  \"toDate\": \"2020-07-11T06:05:27.443Z\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -1785,7 +1785,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "5286"
+                          "value": "9170"
                         }
                       ]
                     }
@@ -1815,7 +1815,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -1847,7 +1847,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "5286"
+                          "value": "9170"
                         }
                       ]
                     }
@@ -1877,7 +1877,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -1905,7 +1905,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"departmentID\": 8938,\n  \"departmentName\": \"string\",\n  \"status\": true\n}",
+                  "raw": "{\n  \"departmentID\": 9442,\n  \"departmentName\": \"string\",\n  \"status\": true\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1942,7 +1942,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"departmentID\": 8938,\n  \"departmentName\": \"string\",\n  \"status\": true\n}",
+                      "raw": "{\n  \"departmentID\": 9442,\n  \"departmentName\": \"string\",\n  \"status\": true\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2030,7 +2030,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"departmentID\": 8938,\n  \"departmentName\": \"string\",\n  \"status\": true\n}",
+                  "raw": "{\n  \"departmentID\": 9442,\n  \"departmentName\": \"string\",\n  \"status\": true\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -2067,7 +2067,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"departmentID\": 8938,\n  \"departmentName\": \"string\",\n  \"status\": true\n}",
+                      "raw": "{\n  \"departmentID\": 9442,\n  \"departmentName\": \"string\",\n  \"status\": true\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2083,6 +2083,356 @@
                       "path": [
                         "api",
                         "Department"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "FiscalYear",
+          "item": [
+            {
+              "name": "{id}",
+              "item": [
+                {
+                  "name": "/api/FiscalYear/:id",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/FiscalYear/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "FiscalYear",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "9170"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/FiscalYear/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "FiscalYear",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "9170"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                },
+                {
+                  "name": "/api/FiscalYear/:id",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"fromDate\": \"1972-05-17T14:26:41.874Z\",\n  \"toDate\": \"1983-07-02T23:39:20.442Z\",\n  \"fiscalYearName\": \"string\",\n  \"shortDate\": \"string\",\n  \"userId\": 3,\n  \"bookClose\": 4466\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/FiscalYear/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "FiscalYear",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "9170"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"fromDate\": \"1972-05-17T14:26:41.874Z\",\n  \"toDate\": \"1983-07-02T23:39:20.442Z\",\n  \"fiscalYearName\": \"string\",\n  \"shortDate\": \"string\",\n  \"userId\": 3,\n  \"bookClose\": 4466\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/FiscalYear/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "FiscalYear",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "9170"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                },
+                {
+                  "name": "/api/FiscalYear/:id",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/FiscalYear/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "FiscalYear",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "9170"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/FiscalYear/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "FiscalYear",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "9170"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "/api/FiscalYear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fromDate\": \"1972-05-17T14:26:41.874Z\",\n  \"toDate\": \"1983-07-02T23:39:20.442Z\",\n  \"fiscalYearName\": \"string\",\n  \"shortDate\": \"string\",\n  \"userId\": 3,\n  \"bookClose\": 4466\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/FiscalYear",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "FiscalYear"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"fromDate\": \"1972-05-17T14:26:41.874Z\",\n  \"toDate\": \"1983-07-02T23:39:20.442Z\",\n  \"fiscalYearName\": \"string\",\n  \"shortDate\": \"string\",\n  \"userId\": 3,\n  \"bookClose\": 4466\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/FiscalYear",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "FiscalYear"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                }
+              ]
+            },
+            {
+              "name": "/api/FiscalYear",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/FiscalYear",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "FiscalYear"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/FiscalYear",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "FiscalYear"
                       ]
                     }
                   },
@@ -2125,7 +2475,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -2156,7 +2506,7 @@
                               "variable": [
                                 {
                                   "key": "id",
-                                  "value": "5286"
+                                  "value": "9170"
                                 }
                               ]
                             }
@@ -2199,7 +2549,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -2230,7 +2580,7 @@
                               "variable": [
                                 {
                                   "key": "id",
-                                  "value": "5286"
+                                  "value": "9170"
                                 }
                               ]
                             }
@@ -2383,7 +2733,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"customerId\": 5515,\n  \"tableId\": 540,\n  \"waiterId\": 8058,\n  \"orderType\": \"string\",\n  \"items\": [\n    {\n      \"productId\": 3742,\n      \"itemName\": \"string\",\n      \"quantity\": 6593,\n      \"unitPrice\": 7083.307426902774,\n      \"subtotal\": 944.7746146145075,\n      \"specialInstructions\": \"string\"\n    },\n    {\n      \"productId\": 6121,\n      \"itemName\": \"string\",\n      \"quantity\": 4792,\n      \"unitPrice\": 1100.7452573724752,\n      \"subtotal\": 3633.0744423376204,\n      \"specialInstructions\": \"string\"\n    }\n  ]\n}",
+                      "raw": "{\n  \"customerId\": 5873,\n  \"tableId\": 5798,\n  \"waiterId\": 1085,\n  \"orderType\": \"string\",\n  \"items\": [\n    {\n      \"productId\": 8010,\n      \"itemName\": \"string\",\n      \"quantity\": 9696,\n      \"unitPrice\": 1794.9956630922447,\n      \"subtotal\": 1072.458636858844,\n      \"specialInstructions\": \"string\"\n    },\n    {\n      \"productId\": 1725,\n      \"itemName\": \"string\",\n      \"quantity\": 9979,\n      \"unitPrice\": 1423.486757966932,\n      \"subtotal\": 7376.5419968733695,\n      \"specialInstructions\": \"string\"\n    }\n  ]\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2421,7 +2771,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"customerId\": 5515,\n  \"tableId\": 540,\n  \"waiterId\": 8058,\n  \"orderType\": \"string\",\n  \"items\": [\n    {\n      \"productId\": 3742,\n      \"itemName\": \"string\",\n      \"quantity\": 6593,\n      \"unitPrice\": 7083.307426902774,\n      \"subtotal\": 944.7746146145075,\n      \"specialInstructions\": \"string\"\n    },\n    {\n      \"productId\": 6121,\n      \"itemName\": \"string\",\n      \"quantity\": 4792,\n      \"unitPrice\": 1100.7452573724752,\n      \"subtotal\": 3633.0744423376204,\n      \"specialInstructions\": \"string\"\n    }\n  ]\n}",
+                          "raw": "{\n  \"customerId\": 5873,\n  \"tableId\": 5798,\n  \"waiterId\": 1085,\n  \"orderType\": \"string\",\n  \"items\": [\n    {\n      \"productId\": 8010,\n      \"itemName\": \"string\",\n      \"quantity\": 9696,\n      \"unitPrice\": 1794.9956630922447,\n      \"subtotal\": 1072.458636858844,\n      \"specialInstructions\": \"string\"\n    },\n    {\n      \"productId\": 1725,\n      \"itemName\": \"string\",\n      \"quantity\": 9979,\n      \"unitPrice\": 1423.486757966932,\n      \"subtotal\": 7376.5419968733695,\n      \"specialInstructions\": \"string\"\n    }\n  ]\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -2467,7 +2817,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"orderId\": 8140,\n  \"status\": \"string\"\n}",
+                      "raw": "{\n  \"orderId\": 3497,\n  \"status\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2505,7 +2855,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"orderId\": 8140,\n  \"status\": \"string\"\n}",
+                          "raw": "{\n  \"orderId\": 3497,\n  \"status\": \"string\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -2551,7 +2901,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"orderItemId\": 1548,\n  \"orderId\": 3565,\n  \"status\": \"string\"\n}",
+                      "raw": "{\n  \"orderItemId\": 9793,\n  \"orderId\": 9058,\n  \"status\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2589,7 +2939,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"orderItemId\": 1548,\n  \"orderId\": 3565,\n  \"status\": \"string\"\n}",
+                          "raw": "{\n  \"orderItemId\": 9793,\n  \"orderId\": 9058,\n  \"status\": \"string\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -2702,7 +3052,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"orderId\": 1725,\n  \"paymentMethod\": 217,\n  \"discount\": 2912.3647766443382,\n  \"splitPayments\": [\n    {\n      \"paymentMethod\": 8575,\n      \"amount\": 4752.074277496831\n    },\n    {\n      \"paymentMethod\": 6049,\n      \"amount\": 9411.606711233997\n    }\n  ]\n}",
+                      "raw": "{\n  \"orderId\": 7059,\n  \"paymentMethod\": 653,\n  \"discount\": 7100.41010437034,\n  \"splitPayments\": [\n    {\n      \"paymentMethod\": 8699,\n      \"amount\": 2388.6864713250366\n    },\n    {\n      \"paymentMethod\": 3087,\n      \"amount\": 9152.54160537915\n    }\n  ]\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2740,7 +3090,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"orderId\": 1725,\n  \"paymentMethod\": 217,\n  \"discount\": 2912.3647766443382,\n  \"splitPayments\": [\n    {\n      \"paymentMethod\": 8575,\n      \"amount\": 4752.074277496831\n    },\n    {\n      \"paymentMethod\": 6049,\n      \"amount\": 9411.606711233997\n    }\n  ]\n}",
+                          "raw": "{\n  \"orderId\": 7059,\n  \"paymentMethod\": 653,\n  \"discount\": 7100.41010437034,\n  \"splitPayments\": [\n    {\n      \"paymentMethod\": 8699,\n      \"amount\": 2388.6864713250366\n    },\n    {\n      \"paymentMethod\": 3087,\n      \"amount\": 9152.54160537915\n    }\n  ]\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -2802,7 +3152,7 @@
                           "variable": [
                             {
                               "key": "orderId",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -2839,7 +3189,7 @@
                               "variable": [
                                 {
                                   "key": "orderId",
-                                  "value": "5286"
+                                  "value": "9170"
                                 }
                               ]
                             }
@@ -2882,7 +3232,7 @@
                           "variable": [
                             {
                               "key": "orderId",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -2913,7 +3263,7 @@
                               "variable": [
                                 {
                                   "key": "orderId",
-                                  "value": "5286"
+                                  "value": "9170"
                                 }
                               ]
                             }
@@ -3019,7 +3369,7 @@
                     "method": "POST",
                     "header": [],
                     "url": {
-                      "raw": "{{baseUrl}}/api/PaymentSession/create-session?orderId=5286&tableId=5286&amount=4226.919263086808",
+                      "raw": "{{baseUrl}}/api/PaymentSession/create-session?orderId=9170&tableId=9170&amount=1769.476274904549",
                       "host": [
                         "{{baseUrl}}"
                       ],
@@ -3031,15 +3381,15 @@
                       "query": [
                         {
                           "key": "orderId",
-                          "value": "5286"
+                          "value": "9170"
                         },
                         {
                           "key": "tableId",
-                          "value": "5286"
+                          "value": "9170"
                         },
                         {
                           "key": "amount",
-                          "value": "4226.919263086808"
+                          "value": "1769.476274904549"
                         }
                       ]
                     }
@@ -3057,7 +3407,7 @@
                           }
                         ],
                         "url": {
-                          "raw": "{{baseUrl}}/api/PaymentSession/create-session?orderId=5286&tableId=5286&amount=4226.919263086808",
+                          "raw": "{{baseUrl}}/api/PaymentSession/create-session?orderId=9170&tableId=9170&amount=1769.476274904549",
                           "host": [
                             "{{baseUrl}}"
                           ],
@@ -3069,15 +3419,15 @@
                           "query": [
                             {
                               "key": "orderId",
-                              "value": "5286"
+                              "value": "9170"
                             },
                             {
                               "key": "tableId",
-                              "value": "5286"
+                              "value": "9170"
                             },
                             {
                               "key": "amount",
-                              "value": "4226.919263086808"
+                              "value": "1769.476274904549"
                             }
                           ]
                         }
@@ -3090,6 +3440,294 @@
                       "body": ""
                     }
                   ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "PrefixSuffix",
+          "item": [
+            {
+              "name": "{id}",
+              "item": [
+                {
+                  "name": "/api/PrefixSuffix/:id",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"voucherTypeID\": 6584,\n  \"financialYearID\": 9073,\n  \"startIndex\": 6463.414476044669,\n  \"prefix\": \"string\",\n  \"suffix\": \"string\",\n  \"narration\": \"string\",\n  \"status\": true,\n  \"createdBy\": 7588\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/PrefixSuffix/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "PrefixSuffix",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "9170"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"voucherTypeID\": 6584,\n  \"financialYearID\": 9073,\n  \"startIndex\": 6463.414476044669,\n  \"prefix\": \"string\",\n  \"suffix\": \"string\",\n  \"narration\": \"string\",\n  \"status\": true,\n  \"createdBy\": 7588\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/PrefixSuffix/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "PrefixSuffix",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "9170"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                },
+                {
+                  "name": "/api/PrefixSuffix/:id",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/PrefixSuffix/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "PrefixSuffix",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "9170"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/PrefixSuffix/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "PrefixSuffix",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "9170"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "/api/PrefixSuffix",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"voucherTypeID\": 6584,\n  \"financialYearID\": 9073,\n  \"startIndex\": 6463.414476044669,\n  \"prefix\": \"string\",\n  \"suffix\": \"string\",\n  \"narration\": \"string\",\n  \"status\": true,\n  \"createdBy\": 7588\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/PrefixSuffix",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "PrefixSuffix"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"voucherTypeID\": 6584,\n  \"financialYearID\": 9073,\n  \"startIndex\": 6463.414476044669,\n  \"prefix\": \"string\",\n  \"suffix\": \"string\",\n  \"narration\": \"string\",\n  \"status\": true,\n  \"createdBy\": 7588\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/PrefixSuffix",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "PrefixSuffix"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                }
+              ]
+            },
+            {
+              "name": "/api/PrefixSuffix",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/PrefixSuffix",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "PrefixSuffix"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/PrefixSuffix",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "PrefixSuffix"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
                 }
               ]
             }
@@ -3110,7 +3748,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"productId\": 6925,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 4413.471131485807,\n  \"categoryId\": 1805,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 7378\n}",
+                  "raw": "{\n  \"productId\": 5285,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 8273.011127966358,\n  \"categoryId\": 897,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 5575\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -3147,7 +3785,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"productId\": 6925,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 4413.471131485807,\n  \"categoryId\": 1805,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 7378\n}",
+                      "raw": "{\n  \"productId\": 5285,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 8273.011127966358,\n  \"categoryId\": 897,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 5575\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -3235,7 +3873,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"productId\": 6925,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 4413.471131485807,\n  \"categoryId\": 1805,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 7378\n}",
+                  "raw": "{\n  \"productId\": 5285,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 8273.011127966358,\n  \"categoryId\": 897,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 5575\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -3272,7 +3910,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"productId\": 6925,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 4413.471131485807,\n  \"categoryId\": 1805,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 7378\n}",
+                      "raw": "{\n  \"productId\": 5285,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 8273.011127966358,\n  \"categoryId\": 897,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 5575\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -3320,7 +3958,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"customerID\": 9785,\n  \"reservationDate\": \"2018-02-17T21:16:16.087Z\",\n  \"specialRequest\": \"string\",\n  \"advanceAmount\": 9253.924180378835,\n  \"createdBy\": 3205,\n  \"reservationDetails\": [\n    {\n      \"tableID\": 3761,\n      \"noOfPersons\": 7445,\n      \"reservationStatus\": 61,\n      \"remarks\": \"string\"\n    },\n    {\n      \"tableID\": 1469,\n      \"noOfPersons\": 534,\n      \"reservationStatus\": 2147,\n      \"remarks\": \"string\"\n    }\n  ]\n}",
+                      "raw": "{\n  \"customerID\": 2989,\n  \"reservationDate\": \"2014-08-08T14:51:08.116Z\",\n  \"specialRequest\": \"string\",\n  \"advanceAmount\": 3838.5428784858177,\n  \"createdBy\": 8559,\n  \"reservationDetails\": [\n    {\n      \"tableID\": 9301,\n      \"noOfPersons\": 1028,\n      \"reservationStatus\": 2410,\n      \"remarks\": \"string\"\n    },\n    {\n      \"tableID\": 3988,\n      \"noOfPersons\": 9932,\n      \"reservationStatus\": 842,\n      \"remarks\": \"string\"\n    }\n  ]\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -3358,7 +3996,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"customerID\": 9785,\n  \"reservationDate\": \"2018-02-17T21:16:16.087Z\",\n  \"specialRequest\": \"string\",\n  \"advanceAmount\": 9253.924180378835,\n  \"createdBy\": 3205,\n  \"reservationDetails\": [\n    {\n      \"tableID\": 3761,\n      \"noOfPersons\": 7445,\n      \"reservationStatus\": 61,\n      \"remarks\": \"string\"\n    },\n    {\n      \"tableID\": 1469,\n      \"noOfPersons\": 534,\n      \"reservationStatus\": 2147,\n      \"remarks\": \"string\"\n    }\n  ]\n}",
+                          "raw": "{\n  \"customerID\": 2989,\n  \"reservationDate\": \"2014-08-08T14:51:08.116Z\",\n  \"specialRequest\": \"string\",\n  \"advanceAmount\": 3838.5428784858177,\n  \"createdBy\": 8559,\n  \"reservationDetails\": [\n    {\n      \"tableID\": 9301,\n      \"noOfPersons\": 1028,\n      \"reservationStatus\": 2410,\n      \"remarks\": \"string\"\n    },\n    {\n      \"tableID\": 3988,\n      \"noOfPersons\": 9932,\n      \"reservationStatus\": 842,\n      \"remarks\": \"string\"\n    }\n  ]\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -3469,7 +4107,7 @@
                           "variable": [
                             {
                               "key": "reservationId",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -3500,7 +4138,7 @@
                               "variable": [
                                 {
                                   "key": "reservationId",
-                                  "value": "5286"
+                                  "value": "9170"
                                 }
                               ]
                             }
@@ -3527,7 +4165,7 @@
                     "method": "PUT",
                     "header": [],
                     "url": {
-                      "raw": "{{baseUrl}}/api/Reservation/cancel-detail?reservationDetailsId=5286&cancelledBy=5286&reason=string",
+                      "raw": "{{baseUrl}}/api/Reservation/cancel-detail?reservationDetailsId=9170&cancelledBy=9170&reason=string",
                       "host": [
                         "{{baseUrl}}"
                       ],
@@ -3539,11 +4177,11 @@
                       "query": [
                         {
                           "key": "reservationDetailsId",
-                          "value": "5286"
+                          "value": "9170"
                         },
                         {
                           "key": "cancelledBy",
-                          "value": "5286"
+                          "value": "9170"
                         },
                         {
                           "key": "reason",
@@ -3565,7 +4203,7 @@
                           }
                         ],
                         "url": {
-                          "raw": "{{baseUrl}}/api/Reservation/cancel-detail?reservationDetailsId=5286&cancelledBy=5286&reason=string",
+                          "raw": "{{baseUrl}}/api/Reservation/cancel-detail?reservationDetailsId=9170&cancelledBy=9170&reason=string",
                           "host": [
                             "{{baseUrl}}"
                           ],
@@ -3577,16 +4215,105 @@
                           "query": [
                             {
                               "key": "reservationDetailsId",
-                              "value": "5286"
+                              "value": "9170"
                             },
                             {
                               "key": "cancelledBy",
-                              "value": "5286"
+                              "value": "9170"
                             },
                             {
                               "key": "reason",
                               "value": "string"
                             }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "reports",
+          "item": [
+            {
+              "name": "sales",
+              "item": [
+                {
+                  "name": "/api/reports/sales",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"fromDate\": \"2021-03-27T00:54:00.643Z\",\n  \"toDate\": \"2022-05-10T13:38:26.761Z\",\n  \"customerID\": 9283,\n  \"tableID\": 406,\n  \"paymentMethod\": 1482,\n  \"invoiceNo\": \"string\",\n  \"branchID\": 2684,\n  \"fiscalYearID\": 2239\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/reports/sales",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "reports",
+                        "sales"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"fromDate\": \"2021-03-27T00:54:00.643Z\",\n  \"toDate\": \"2022-05-10T13:38:26.761Z\",\n  \"customerID\": 9283,\n  \"tableID\": 406,\n  \"paymentMethod\": 1482,\n  \"invoiceNo\": \"string\",\n  \"branchID\": 2684,\n  \"fiscalYearID\": 2239\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/reports/sales",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "reports",
+                            "sales"
                           ]
                         }
                       },
@@ -3621,7 +4348,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"shiftID\": 7672,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 3996,\n  \"openingAmount\": 9442.155565126242,\n  \"openingTime\": \"1968-12-31T20:39:11.904Z\",\n  \"closedByUserID\": 8210,\n  \"closingAmount\": 2255.323316787594,\n  \"closingTime\": \"1948-06-27T23:43:45.831Z\",\n  \"totalSales\": 7396.091858511662,\n  \"cashSales\": 2281.2550556446,\n  \"cardSales\": 2088.710325126095,\n  \"qrSales\": 3803.0434344245377,\n  \"creditSales\": 8899.628519180376,\n  \"shiftStatus\": 7557\n}",
+                      "raw": "{\n  \"shiftID\": 9497,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 1934,\n  \"openingAmount\": 2611.079281397106,\n  \"openingTime\": \"2007-01-05T06:52:45.036Z\",\n  \"closedByUserID\": 9744,\n  \"closingAmount\": 7774.526995683289,\n  \"closingTime\": \"1960-08-04T01:36:22.421Z\",\n  \"totalSales\": 8816.213753151605,\n  \"cashSales\": 9215.466715724324,\n  \"cardSales\": 8065.829347923393,\n  \"qrSales\": 6470.29679300728,\n  \"creditSales\": 7716.481783900735,\n  \"shiftStatus\": 3354\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -3659,7 +4386,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"shiftID\": 7672,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 3996,\n  \"openingAmount\": 9442.155565126242,\n  \"openingTime\": \"1968-12-31T20:39:11.904Z\",\n  \"closedByUserID\": 8210,\n  \"closingAmount\": 2255.323316787594,\n  \"closingTime\": \"1948-06-27T23:43:45.831Z\",\n  \"totalSales\": 7396.091858511662,\n  \"cashSales\": 2281.2550556446,\n  \"cardSales\": 2088.710325126095,\n  \"qrSales\": 3803.0434344245377,\n  \"creditSales\": 8899.628519180376,\n  \"shiftStatus\": 7557\n}",
+                          "raw": "{\n  \"shiftID\": 9497,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 1934,\n  \"openingAmount\": 2611.079281397106,\n  \"openingTime\": \"2007-01-05T06:52:45.036Z\",\n  \"closedByUserID\": 9744,\n  \"closingAmount\": 7774.526995683289,\n  \"closingTime\": \"1960-08-04T01:36:22.421Z\",\n  \"totalSales\": 8816.213753151605,\n  \"cashSales\": 9215.466715724324,\n  \"cardSales\": 8065.829347923393,\n  \"qrSales\": 6470.29679300728,\n  \"creditSales\": 7716.481783900735,\n  \"shiftStatus\": 3354\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -3760,7 +4487,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"shiftID\": 7672,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 3996,\n  \"openingAmount\": 9442.155565126242,\n  \"openingTime\": \"1968-12-31T20:39:11.904Z\",\n  \"closedByUserID\": 8210,\n  \"closingAmount\": 2255.323316787594,\n  \"closingTime\": \"1948-06-27T23:43:45.831Z\",\n  \"totalSales\": 7396.091858511662,\n  \"cashSales\": 2281.2550556446,\n  \"cardSales\": 2088.710325126095,\n  \"qrSales\": 3803.0434344245377,\n  \"creditSales\": 8899.628519180376,\n  \"shiftStatus\": 7557\n}",
+                      "raw": "{\n  \"shiftID\": 9497,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 1934,\n  \"openingAmount\": 2611.079281397106,\n  \"openingTime\": \"2007-01-05T06:52:45.036Z\",\n  \"closedByUserID\": 9744,\n  \"closingAmount\": 7774.526995683289,\n  \"closingTime\": \"1960-08-04T01:36:22.421Z\",\n  \"totalSales\": 8816.213753151605,\n  \"cashSales\": 9215.466715724324,\n  \"cardSales\": 8065.829347923393,\n  \"qrSales\": 6470.29679300728,\n  \"creditSales\": 7716.481783900735,\n  \"shiftStatus\": 3354\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -3798,7 +4525,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"shiftID\": 7672,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 3996,\n  \"openingAmount\": 9442.155565126242,\n  \"openingTime\": \"1968-12-31T20:39:11.904Z\",\n  \"closedByUserID\": 8210,\n  \"closingAmount\": 2255.323316787594,\n  \"closingTime\": \"1948-06-27T23:43:45.831Z\",\n  \"totalSales\": 7396.091858511662,\n  \"cashSales\": 2281.2550556446,\n  \"cardSales\": 2088.710325126095,\n  \"qrSales\": 3803.0434344245377,\n  \"creditSales\": 8899.628519180376,\n  \"shiftStatus\": 7557\n}",
+                          "raw": "{\n  \"shiftID\": 9497,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 1934,\n  \"openingAmount\": 2611.079281397106,\n  \"openingTime\": \"2007-01-05T06:52:45.036Z\",\n  \"closedByUserID\": 9744,\n  \"closingAmount\": 7774.526995683289,\n  \"closingTime\": \"1960-08-04T01:36:22.421Z\",\n  \"totalSales\": 8816.213753151605,\n  \"cashSales\": 9215.466715724324,\n  \"cardSales\": 8065.829347923393,\n  \"qrSales\": 6470.29679300728,\n  \"creditSales\": 7716.481783900735,\n  \"shiftStatus\": 3354\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -3855,7 +4582,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "5286"
+                          "value": "9170"
                         }
                       ]
                     }
@@ -3885,7 +4612,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -3913,7 +4640,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"subCategoryId\": 8268,\n  \"categoryId\": 348,\n  \"subCategoryName\": \"string\"\n}",
+                  "raw": "{\n  \"subCategoryId\": 4586,\n  \"categoryId\": 372,\n  \"subCategoryName\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -3950,7 +4677,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"subCategoryId\": 8268,\n  \"categoryId\": 348,\n  \"subCategoryName\": \"string\"\n}",
+                      "raw": "{\n  \"subCategoryId\": 4586,\n  \"categoryId\": 372,\n  \"subCategoryName\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -4038,7 +4765,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"subCategoryId\": 8268,\n  \"categoryId\": 348,\n  \"subCategoryName\": \"string\"\n}",
+                  "raw": "{\n  \"subCategoryId\": 4586,\n  \"categoryId\": 372,\n  \"subCategoryName\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -4075,7 +4802,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"subCategoryId\": 8268,\n  \"categoryId\": 348,\n  \"subCategoryName\": \"string\"\n}",
+                      "raw": "{\n  \"subCategoryId\": 4586,\n  \"categoryId\": 372,\n  \"subCategoryName\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -4139,7 +4866,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -4176,7 +4903,7 @@
                               "variable": [
                                 {
                                   "key": "id",
-                                  "value": "5286"
+                                  "value": "9170"
                                 }
                               ]
                             }
@@ -4214,7 +4941,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -4245,7 +4972,7 @@
                               "variable": [
                                 {
                                   "key": "id",
-                                  "value": "5286"
+                                  "value": "9170"
                                 }
                               ]
                             }
@@ -4273,7 +5000,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"tableID\": 4931,\n  \"tableNumber\": \"string\",\n  \"capacity\": 1721,\n  \"floorID\": 4467,\n  \"status\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "raw": "{\n  \"tableID\": 8462,\n  \"tableNumber\": \"string\",\n  \"capacity\": 5543,\n  \"floorID\": 4699,\n  \"status\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -4294,7 +5021,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "5286"
+                          "value": "9170"
                         }
                       ]
                     }
@@ -4317,7 +5044,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"tableID\": 4931,\n  \"tableNumber\": \"string\",\n  \"capacity\": 1721,\n  \"floorID\": 4467,\n  \"status\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                          "raw": "{\n  \"tableID\": 8462,\n  \"tableNumber\": \"string\",\n  \"capacity\": 5543,\n  \"floorID\": 4699,\n  \"status\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -4338,7 +5065,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -4370,7 +5097,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "5286"
+                          "value": "9170"
                         }
                       ]
                     }
@@ -4400,7 +5127,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "5286"
+                              "value": "9170"
                             }
                           ]
                         }
@@ -4431,7 +5158,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"orderID\": 6546,\n  \"tableID\": 4912\n}",
+                      "raw": "{\n  \"orderID\": 6273,\n  \"tableID\": 2384\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -4469,7 +5196,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"orderID\": 6546,\n  \"tableID\": 4912\n}",
+                          "raw": "{\n  \"orderID\": 6273,\n  \"tableID\": 2384\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -4512,7 +5239,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"tableID\": 4931,\n  \"tableNumber\": \"string\",\n  \"capacity\": 1721,\n  \"floorID\": 4467,\n  \"status\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                  "raw": "{\n  \"tableID\": 8462,\n  \"tableNumber\": \"string\",\n  \"capacity\": 5543,\n  \"floorID\": 4699,\n  \"status\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -4549,7 +5276,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"tableID\": 4931,\n  \"tableNumber\": \"string\",\n  \"capacity\": 1721,\n  \"floorID\": 4467,\n  \"status\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "raw": "{\n  \"tableID\": 8462,\n  \"tableNumber\": \"string\",\n  \"capacity\": 5543,\n  \"floorID\": 4699,\n  \"status\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -4613,6 +5340,356 @@
                       "path": [
                         "api",
                         "Table"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "VoucherType",
+          "item": [
+            {
+              "name": "{id}",
+              "item": [
+                {
+                  "name": "/api/VoucherType/:id",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/VoucherType/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "VoucherType",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1769.476274904549"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/VoucherType/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "VoucherType",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1769.476274904549"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                },
+                {
+                  "name": "/api/VoucherType/:id",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"voucherTypeName\": \"string\",\n  \"isTax\": true,\n  \"narration\": \"string\",\n  \"isActive\": false,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/VoucherType/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "VoucherType",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1769.476274904549"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"voucherTypeName\": \"string\",\n  \"isTax\": true,\n  \"narration\": \"string\",\n  \"isActive\": false,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/VoucherType/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "VoucherType",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1769.476274904549"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                },
+                {
+                  "name": "/api/VoucherType/:id",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/VoucherType/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "VoucherType",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1769.476274904549"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/VoucherType/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "VoucherType",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1769.476274904549"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "/api/VoucherType",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"voucherTypeName\": \"string\",\n  \"isTax\": true,\n  \"narration\": \"string\",\n  \"isActive\": false,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/VoucherType",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "VoucherType"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"voucherTypeName\": \"string\",\n  \"isTax\": true,\n  \"narration\": \"string\",\n  \"isActive\": false,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/VoucherType",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "VoucherType"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                }
+              ]
+            },
+            {
+              "name": "/api/VoucherType",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/VoucherType",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "VoucherType"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/VoucherType",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "VoucherType"
                       ]
                     }
                   },

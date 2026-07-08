@@ -6,14 +6,13 @@ import 'package:iconify_flutter/icons/ion.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/core/network/session_service.dart';
-import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/portrait_overview_row.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/portrait_shift_details_card.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/portrait_shift_header.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/recent_orders_section_portrait.dart';
+import 'package:nextrestro/features/branch/presentation/pages/branch_page.dart';
 import 'package:nextrestro/features/login/presentation/login_page.dart';
 import 'package:nextrestro/features/menu/presentation/pages/menu_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/orders_page.dart';
-import 'package:nextrestro/features/shift/presentation/providers/shift_provider.dart';
 import 'package:nextrestro/features/shift/presentation/shift_page.dart';
 import 'package:nextrestro/features/tables/presentation/tables_page.dart';
 import 'package:nextrestro/features/customer/presentation/pages/customer_page.dart';
@@ -24,8 +23,10 @@ import 'package:nextrestro/features/admin_dashboard/data/models/dashboard_summar
 import 'package:nextrestro/features/admin_dashboard/presentation/pages/dashboard_charts_page.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/providers/dashboard_controller.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/providers/dashboard_state.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/widgets/sales_breakdown_grid.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/widgets/summary_bento_box.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/widgets/top_selling_section.dart';
+import 'package:nextrestro/features/reports/presentation/pages/reports_page.dart';
 import 'package:nextrestro/features/department/presentation/pages/department_page.dart';
 import 'package:nextrestro/features/shift/presentation/providers/shift_management_provider.dart';
 
@@ -39,6 +40,7 @@ class AdminDashboardPotraitPage extends ConsumerStatefulWidget {
 
 class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotraitPage> {
   int _selectedIndex = 0;
+  bool _isSalesExpanded = false;
 
   void _handleLogout() {
     showDialog(
@@ -135,10 +137,10 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
           const TablesPage(),
           const MenuPage(),
           const ShiftPage(),
-          _buildPlaceholderTab('Reports', MaterialSymbols.bar_chart),
+          const ReportsPage(),
           const CustomerPage(),
           const StaffPage(),
-          _buildPlaceholderTab('Branch Management', MaterialSymbols.store),
+          const BranchPage(),
           const DepartmentPage(),
         ],
       ),
@@ -440,12 +442,35 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
                         ),
                       );
                     },
+                    onExpandSales: () {
+                      setState(() {
+                        _isSalesExpanded = !_isSalesExpanded;
+                      });
+                    },
+                    isSalesExpanded: _isSalesExpanded,
+                    isPortrait: true,
+                  ),
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    child: _isSalesExpanded
+                        ? Column(
+                            children: [
+                              const SizedBox(height: 12),
+                              SalesBreakdownGrid(
+                                current: state.currentSummary ?? DashboardSummaryModel(),
+                                previous: state.previousSummary,
+                                isPortrait: true,
+                              ),
+                            ],
+                          )
+                        : const SizedBox.shrink(),
                   ),
                   const SizedBox(height: 12),
-                  // In portrait, we might need a modified TopSellingSection or scrollable
                   TopSellingSection(
                     products: state.currentSummary?.topSellingProducts ?? [],
                     categories: state.currentSummary?.topSellingCategories ?? [],
+                    isPortrait: true,
                   ),
                 ],
               ),
@@ -501,7 +526,7 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
                     },
                   ),
                   loading: () => const LinearProgressIndicator(),
-                  error: (_, stack) => const Text('Error'),
+                  error: (e, _) => Text('Error: $e'),
                 ),
               ),
               if (state.asData?.value.dateRange == DashboardDateRange.custom)
