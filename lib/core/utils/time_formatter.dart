@@ -29,4 +29,23 @@ class TimeFormatter {
     if (dateTime == null) return '';
     return DateFormat('dd MMM yyyy, hh:mm a').format(dateTime);
   }
+
+  static String formatTimeOnly(String? dateTimeStr) {
+    if (dateTimeStr == null) return '';
+    final dateTime = DateTime.tryParse(dateTimeStr);
+    if (dateTime == null) return '';
+    return DateFormat('hh:mm a').format(dateTime);
+  }
+
+  static String formatDuration(String? startDateTimeStr) {
+    if (startDateTimeStr == null) return '0m';
+    final start = DateTime.tryParse(startDateTimeStr);
+    if (start == null) return '0m';
+
+    final diff = DateTime.now().difference(start);
+    if (diff.inHours > 0) {
+      return '${diff.inHours}h ${diff.inMinutes % 60}m';
+    }
+    return '${diff.inMinutes}m';
+  }
 }

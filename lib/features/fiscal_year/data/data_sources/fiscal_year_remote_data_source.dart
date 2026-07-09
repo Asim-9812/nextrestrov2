@@ -13,6 +13,18 @@ class FiscalYearRemoteDataSource {
 
   Future<FiscalYearResponse> getAllFiscalYears() async {
     final response = await _apiClient.get('/api/FiscalYear');
+    
+    // Check if the response is a raw list
+    if (response.data is List) {
+      return FiscalYearResponse(
+        succeeded: true,
+        messages: 'Success',
+        data: (response.data as List)
+            .map((e) => FiscalYearModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+    }
+
     return FiscalYearResponse.fromJson(response.data);
   }
 }

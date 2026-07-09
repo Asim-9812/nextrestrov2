@@ -29,20 +29,27 @@ class AdminHeader extends ConsumerWidget {
               color: AppColors.black,
             ),
           ),
-          const SizedBox(width: 24),
-          Expanded(
-            child: _buildShiftHeaderInfo(context, ref),
-          ),
-          const Chip(
-            avatar: CircleAvatar(
-              backgroundColor: AppColors.primary,
-              child: Text(
-                'A',
-                style: TextStyle(color: AppColors.white),
+          // const SizedBox(width: 24),
+          // Expanded(
+          //   child: _buildShiftHeaderInfo(context, ref),
+          // ),
+          Spacer(),
+          Row(
+            children: [
+              CircleAvatar(
+                foregroundImage: AssetImage('assets/images/man.png'),
+                radius: 18,
               ),
-            ),
-            label: Text('Admin'),
-          ),
+              const SizedBox(width: 12,),
+              Text('Admin',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Manrope',
+                  fontWeight: FontWeight.bold
+                ),
+              )
+            ],
+          )
         ],
       ),
     );
@@ -286,4 +293,6 @@ class AdminHeader extends ConsumerWidget {
       ),
     );
   }
+
+
 }

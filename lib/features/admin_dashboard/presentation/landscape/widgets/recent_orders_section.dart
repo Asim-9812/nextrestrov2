@@ -16,6 +16,7 @@ class RecentOrdersSection extends ConsumerWidget {
     final shiftState = ref.watch(shiftManagementControllerProvider);
 
     return Container(
+      height: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: AppColors.white,

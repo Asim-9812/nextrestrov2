@@ -4,149 +4,128 @@ import 'package:nextrestro/core/constants/app_colors.dart';
 class DashboardSummaryCard extends StatelessWidget {
   final String title;
   final String value;
-  final String? subValue;
   final double? percentageChange;
+  final String? comparisonLabel;
   final IconData icon;
+  final Color? color;
   final VoidCallback? onShowChart;
   final VoidCallback? onExpand;
   final bool isExpanded;
   final bool isSmall;
-  final Color? color;
 
   const DashboardSummaryCard({
     super.key,
     required this.title,
     required this.value,
-    this.subValue,
     this.percentageChange,
+    this.comparisonLabel,
     required this.icon,
+    this.color,
     this.onShowChart,
     this.onExpand,
     this.isExpanded = false,
     this.isSmall = false,
-    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     final bool isPositive = (percentageChange ?? 0) >= 0;
-    
-    return Stack(
-      children: [
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(isSmall ? 12 : 16),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.black.withValues(alpha: 0.02),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
+    final themeColor = color ?? AppColors.primary;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withValues(alpha: 0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(isSmall ? 6 : 8),
-                    decoration: BoxDecoration(
-                      color: (color ?? AppColors.primary).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(icon, color: color ?? AppColors.primary, size: isSmall ? 16 : 20),
-                  ),
-                  if (onShowChart != null)
-                    IconButton(
-                      onPressed: onShowChart,
-                      icon: const Icon(Icons.bar_chart, size: 20, color: AppColors.grey),
-                      tooltip: 'Show Chart',
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                ],
-              ),
-              if (!isSmall) const Spacer(),
-              if (isSmall) const SizedBox(height: 8),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: isSmall ? 12 : 14,
-                  color: AppColors.grey,
-                  fontWeight: FontWeight.w500,
+              // Icon with circular background
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: themeColor.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
                 ),
+                child: Icon(icon, color: themeColor, size: 32),
               ),
-              const SizedBox(height: 4),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: isSmall ? 16 : 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.black,
-                  ),
-                ),
-              ),
-              if (percentageChange != null) ...[
-                SizedBox(height: isSmall ? 4 : 8),
-                Row(
+              const SizedBox(width: 12),
+              // Value and Title
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      isPositive ? Icons.trending_up : Icons.trending_down,
-                      size: isSmall ? 12 : 14,
-                      color: isPositive ? Colors.green : Colors.red,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${percentageChange!.abs().toStringAsFixed(1)}%',
-                      style: TextStyle(
-                        fontSize: isSmall ? 10 : 12,
-                        fontWeight: FontWeight.w600,
-                        color: isPositive ? Colors.green : Colors.red,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        value,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.black,
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 4),
                     Text(
-                      'vs prev.',
-                      style: TextStyle(
-                        fontSize: isSmall ? 8 : 10,
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 12,
                         color: AppColors.grey,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
+                    const SizedBox(height: 4),
+                    // Percentage change
+                    if (percentageChange != null)
+                      Row(
+                        children: [
+                          Icon(
+                            isPositive ? Icons.arrow_upward : Icons.arrow_downward,
+                            size: 12,
+                            color: isPositive ? Colors.green : Colors.red,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${percentageChange!.abs().toStringAsFixed(1)}%',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: isPositive ? Colors.green : Colors.red,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            comparisonLabel ?? 'vs yesterday',
+                            style: const TextStyle(
+                              fontSize: 9,
+                              color: AppColors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
-              ],
+              ),
             ],
           ),
-        ),
-        if (onExpand != null)
-          Positioned(
-            bottom: 12,
-            right: 12,
-            child: IconButton(
-              onPressed: onExpand,
-              icon: Icon(
-                isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                size: 24,
-                color: AppColors.white,
-              ),
-              tooltip: isExpanded ? 'Collapse' : 'Expand Breakdown',
-              style: IconButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.all(4),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-            ),
-          ),
-      ],
+
+        ],
+      ),
     );
   }
 }

@@ -18,6 +18,14 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
   DateTime fromDate = DateTime.now().subtract(const Duration(days: 30));
   DateTime toDate = DateTime.now();
   int? selectedFiscalYearID;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,30 +51,136 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
           ),
         ),
 
-        // Summary Cards
-        reportState.when(
-          data: (data) => data != null ? _buildSummaryCards(data.summary!) : const SizedBox.shrink(),
-          loading: () => const SizedBox.shrink(),
-          error: (_, __) => const SizedBox.shrink(),
-        ),
-
-        // Data Table
+        // Data Table Section
         Expanded(
           child: reportState.when(
             data: (data) {
               if (data == null) {
                 return const Center(child: Text('Click Search to view the report'));
               }
-              if (data.data.isEmpty) {
-                return const Center(child: Text('No records found for the selected range'));
-              }
-              return _buildDataTable(data.data);
+              
+              // Local filtering
+              final filteredData = data.data.where((item) {
+                final query = _searchQuery.toLowerCase();
+                return (item.invoiceNo?.toLowerCase().contains(query) ?? false) ||
+                       (item.customerName?.toLowerCase().contains(query) ?? false) ||
+                       (item.tableNumber?.toLowerCase().contains(query) ?? false);
+              }).toList();
+
+              return Column(
+                children: [
+                  // Search Bar above table
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (value) => setState(() => _searchQuery = value),
+                      decoration: InputDecoration(
+                        hintText: 'Search by Invoice, Customer or Table...',
+                        prefixIcon: const Icon(Icons.search, size: 20),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                        suffixIcon: _searchQuery.isNotEmpty 
+                          ? IconButton(
+                              icon: const Icon(Icons.clear, size: 20),
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() => _searchQuery = '');
+                              },
+                            )
+                          : null,
+                      ),
+                    ),
+                  ),
+                  
+                  if (filteredData.isEmpty)
+                    const Expanded(child: Center(child: Text('No matching records found')))
+                  else
+                    Expanded(child: _buildDataTable(filteredData)),
+                ],
+              );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, _) => Center(child: Text('Error: $error')),
           ),
         ),
+
+        // Fixed Footer Summary using original card design
+        reportState.when(
+          data: (data) => data != null ? _buildSummaryCards(data.summary!) : const SizedBox.shrink(),
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
+        ),
       ],
+    );
+  }
+
+  Widget _buildSummaryCards(dynamic summary) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        border: Border(top: BorderSide(color: AppColors.border.withValues(alpha: 0.5))),
+      ),
+      child: widget.isPortrait
+          ? Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: _summaryCard('Total Bills', summary.totalBills.toString())),
+                    const SizedBox(width: 8),
+                    Expanded(child: _summaryCard('Grand Total', 'Rs. ${summary.grandTotal}')),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(child: _summaryCard('Total Items', summary.totalItems.toString())),
+                    const SizedBox(width: 8),
+                    Expanded(child: _summaryCard('Tax', 'Rs. ${summary.tax}')),
+                  ],
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(child: _summaryCard('Total Bills', summary.totalBills.toString())),
+                const SizedBox(width: 12),
+                Expanded(child: _summaryCard('SubTotal', 'Rs. ${summary.subTotal}')),
+                const SizedBox(width: 12),
+                Expanded(child: _summaryCard('Discount', 'Rs. ${summary.discount}')),
+                const SizedBox(width: 12),
+                Expanded(child: _summaryCard('Tax', 'Rs. ${summary.tax}')),
+                const SizedBox(width: 12),
+                Expanded(child: _summaryCard('Grand Total', 'Rs. ${summary.grandTotal}')),
+              ],
+            ),
+    );
+  }
+
+  Widget _summaryCard(String label, String value) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: const TextStyle(fontSize: 12, color: AppColors.grey)),
+          const SizedBox(height: 4),
+          Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primary)),
+        ],
+      ),
     );
   }
 
@@ -171,98 +285,65 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
     );
   }
 
-  Widget _buildSummaryCards(dynamic summary) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: widget.isPortrait
-          ? Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(child: _summaryCard('Total Bills', summary.totalBills.toString())),
-                    const SizedBox(width: 8),
-                    Expanded(child: _summaryCard('Grand Total', 'Rs. ${summary.grandTotal}')),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(child: _summaryCard('Total Items', summary.totalItems.toString())),
-                    const SizedBox(width: 8),
-                    Expanded(child: _summaryCard('Tax', 'Rs. ${summary.tax}')),
-                  ],
-                ),
-              ],
-            )
-          : Row(
-              children: [
-                Expanded(child: _summaryCard('Total Bills', summary.totalBills.toString())),
-                const SizedBox(width: 12),
-                Expanded(child: _summaryCard('SubTotal', 'Rs. ${summary.subTotal}')),
-                const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Discount', 'Rs. ${summary.discount}')),
-                const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Tax', 'Rs. ${summary.tax}')),
-                const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Grand Total', 'Rs. ${summary.grandTotal}')),
-              ],
-            ),
-    );
-  }
-
-  Widget _summaryCard(String label, String value) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: const TextStyle(fontSize: 12, color: AppColors.grey)),
-          const SizedBox(height: 4),
-          Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primary)),
-        ],
-      ),
-    );
-  }
-
   Widget _buildDataTable(List<dynamic> data) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          dividerTheme: const DividerThemeData(thickness: 0.5),
+        ),
         child: SingleChildScrollView(
-          child: DataTable(
-            headingRowColor: WidgetStateProperty.all(AppColors.primary.withValues(alpha: 0.1)),
-            columns: const [
-              DataColumn(label: Text('Invoice No')),
-              DataColumn(label: Text('Date')),
-              DataColumn(label: Text('Customer')),
-              DataColumn(label: Text('Table')),
-              DataColumn(label: Text('SubTotal')),
-              DataColumn(label: Text('Tax')),
-              DataColumn(label: Text('Grand Total')),
-            ],
-            rows: data.map((item) => DataRow(cells: [
-              DataCell(Text(item.invoiceNo ?? '')),
-              DataCell(Text(DateFormat('MMM dd, yyyy HH:mm').format(DateTime.parse(item.billingDate)))),
-              DataCell(Text(item.customerName ?? '-')),
-              DataCell(Text(item.tableNumber ?? '-')),
-              DataCell(Text(item.subTotal.toString())),
-              DataCell(Text(item.tax.toString())),
-              DataCell(Text(item.grandTotal.toString())),
-            ])).toList(),
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - 32),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Fixed Header
+                DataTable(
+                  headingRowColor: WidgetStateProperty.all(AppColors.primary.withValues(alpha: 0.1)),
+                  columnSpacing: 24,
+                  columns: const [
+                    DataColumn(label: SizedBox(width: 200, child: Text('Invoice No', style: TextStyle(fontWeight: FontWeight.bold)))),
+                    DataColumn(label: SizedBox(width: 150, child: Text('Date', style: TextStyle(fontWeight: FontWeight.bold)))),
+                    DataColumn(label: SizedBox(width: 150, child: Text('Customer', style: TextStyle(fontWeight: FontWeight.bold)))),
+                    DataColumn(label: SizedBox(width: 40, child: Text('Table', style: TextStyle(fontWeight: FontWeight.bold)))),
+                    DataColumn(label: SizedBox(width: 50, child: Text('SubTotal', style: TextStyle(fontWeight: FontWeight.bold)))),
+                    DataColumn(label: SizedBox(width: 50, child: Text('Tax', style: TextStyle(fontWeight: FontWeight.bold)))),
+                    DataColumn(label: SizedBox(width: 100, child: Text('Grand Total', style: TextStyle(fontWeight: FontWeight.bold)))),
+                  ],
+                  rows: const [], // Empty rows for header only
+                ),
+                // Scrollable Body
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: DataTable(
+                      headingRowHeight: 0, // Hide default header
+                      columnSpacing: 24,
+                      columns: const [
+                        DataColumn(label: SizedBox(width: 200)),
+                        DataColumn(label: SizedBox(width: 150)),
+                        DataColumn(label: SizedBox(width: 150)),
+                        DataColumn(label: SizedBox(width: 40)),
+                        DataColumn(label: SizedBox(width: 50)),
+                        DataColumn(label: SizedBox(width: 50)),
+                        DataColumn(label: SizedBox(width: 100)),
+                      ],
+                      rows: data.map((item) => DataRow(cells: [
+                        DataCell(SizedBox(width: 200, child: Text(item.invoiceNo ?? '', style: const TextStyle(fontSize: 13)))),
+                        DataCell(SizedBox(width: 150, child: Text(DateFormat('MMM dd, yyyy HH:mm').format(DateTime.parse(item.billingDate)), style: const TextStyle(fontSize: 13)))),
+                        DataCell(SizedBox(width: 150, child: Text(item.customerName ?? '-', style: const TextStyle(fontSize: 13)))),
+                        DataCell(SizedBox(width: 40, child: Text(item.tableNumber ?? '-', style: const TextStyle(fontSize: 13)))),
+                        DataCell(SizedBox(width: 50, child: Text(item.subTotal.toString(), style: const TextStyle(fontSize: 13)))),
+                        DataCell(SizedBox(width: 50, child: Text(item.tax.toString(), style: const TextStyle(fontSize: 13)))),
+                        DataCell(SizedBox(width: 100, child: Text(item.grandTotal.toString(), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.primary)))),
+                      ])).toList(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

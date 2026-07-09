@@ -17,8 +17,10 @@ import 'package:nextrestro/features/admin_dashboard/data/models/dashboard_summar
 import 'package:nextrestro/features/admin_dashboard/presentation/pages/dashboard_charts_page.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/providers/dashboard_controller.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/providers/dashboard_state.dart';
-import 'package:nextrestro/features/admin_dashboard/presentation/widgets/sales_breakdown_grid.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/widgets/summary_bento_box.dart';
+import 'package:nextrestro/features/orders/presentation/providers/order_provider.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/widgets/orders_overview_grid.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/widgets/sales_summary_pie_chart.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/widgets/top_selling_section.dart';
 import 'package:nextrestro/features/department/presentation/pages/department_page.dart';
 import 'package:nextrestro/features/reports/presentation/pages/reports_page.dart';
@@ -75,7 +77,7 @@ class _AdminDashboardLandscapePageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: AppColors.white,
       body: Row(
         children: [
           AdminSidebar(
@@ -166,43 +168,53 @@ class _AdminDashboardLandscapePageState
   Widget _buildHomeTab() {
     final shiftState = ref.watch(shiftManagementControllerProvider);
     final dashboardState = ref.watch(dashboardControllerProvider);
+    final ordersState = ref.watch(orderControllerProvider);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Shift and Date Range Row
+          // Shift Overview Card
+          shiftState.when(
+            data: (state) {
+              final shift = state.shifts.isNotEmpty && state.shifts.first.shiftStatus == 1 ? state.shifts.first : null;
+              if (shift == null) {
+                return _buildNoShiftCard();
+              }
+              return ActiveShiftCard(
+                shift: shift,
+                openerName: state.selectedShiftOpenerName,
+              );
+            },
+            loading: () => const Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 40),
+                child: CircularProgressIndicator(),
+              ),
+            ),
+            error: (error, stack) => Text('Shift Error: $error'),
+          ),
+          const SizedBox(height: 16),
+
+          // Dashboard Overview Header
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                flex: 2,
-                child: shiftState.when(
-                  data: (state) {
-                    final shift = state.shifts.isNotEmpty && state.shifts.first.shiftStatus == 1 ? state.shifts.first : null;
-                    if (shift == null) {
-                      return _buildNoShiftCard();
-                    }
-                    return ActiveShiftCard(
-                      shift: shift,
-                      openerName: state.selectedShiftOpenerName,
-                    );
-                  },
-                  loading: () => const Center(child: CircularProgressIndicator()),
-                  error: (error, stack) => Text('Shift Error: $error'),
+              const Text(
+                'Overview',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.black,
                 ),
               ),
-              const SizedBox(width: 24),
-              Expanded(
-                flex: 1,
-                child: _buildDateRangeSelector(dashboardState),
-              ),
+              _buildDateRangeSelector(dashboardState),
             ],
           ),
-          const SizedBox(height: 8),
-          
-          // Dashboard Summary
+          const SizedBox(height: 16),
+
+          // Dashboard Summary Cards
           dashboardState.when(
             data: (state) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,6 +222,7 @@ class _AdminDashboardLandscapePageState
                 SummaryBentoBox(
                   current: state.currentSummary ?? DashboardSummaryModel(),
                   previous: state.previousSummary,
+                  selectedRange: state.dateRange,
                   onShowChart: (metric) {
                     Navigator.push(
                       context,
@@ -220,44 +233,67 @@ class _AdminDashboardLandscapePageState
                       ),
                     );
                   },
-                  onExpandSales: () {
-                    setState(() {
-                      _isSalesExpanded = !_isSalesExpanded;
-                    });
-                  },
-                  isSalesExpanded: _isSalesExpanded,
                 ),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: _isSalesExpanded
-                      ? Column(
-                          children: [
-                            SalesBreakdownGrid(
-                              current: state.currentSummary ?? DashboardSummaryModel(),
-                              previous: state.previousSummary,
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
+                const SizedBox(height: 24),
+                
+                // Row 1: Insights (Sales Summary & Orders Overview)
+                SizedBox(
+                  height: 320,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: SalesSummaryPieChart(
+                          summary: state.currentSummary ?? DashboardSummaryModel(),
+                        ),
+                      ),
+                      const SizedBox(width: 24),
+                      Expanded(
+                        flex: 1,
+                        child: ordersState.when(
+                          data: (orders) => OrdersOverviewGrid(orders: orders),
+                          loading: () => const Center(child: CircularProgressIndicator()),
+                          error: (error, _) => Center(child: Text('Error: $error')),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 32),
-                TopSellingSection(
-                  products: state.currentSummary?.topSellingProducts ?? [],
-                  categories: state.currentSummary?.topSellingCategories ?? [],
-                  isPortrait: false,
+                const SizedBox(height: 24),
+
+                // Row 2: Activity (Recent Orders & Top Selling Items)
+                SizedBox(
+                  height: 480,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: const RecentOrdersSection(),
+                      ),
+                      const SizedBox(width: 24),
+                      Expanded(
+                        flex: 2,
+                        child: TopSellingSection(
+                          products: state.currentSummary?.topSellingProducts ?? [],
+                          categories: state.currentSummary?.topSellingCategories ?? [],
+                          isPortrait: false,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            loading: () => const Center(child: Padding(
-              padding: EdgeInsets.all(64.0),
-              child: CircularProgressIndicator(),
-            )),
+            loading: () => const Center(
+              child: Padding(
+                padding: EdgeInsets.all(32.0),
+                child: CircularProgressIndicator(),
+              ),
+            ),
             error: (error, stack) => Center(child: Text('Dashboard Error: $error')),
           ),
-          
-          const SizedBox(height: 32),
-          const RecentOrdersSection(),
         ],
       ),
     );
@@ -301,79 +337,63 @@ class _AdminDashboardLandscapePageState
   }
 
   Widget _buildDateRangeSelector(AsyncValue<DashboardState> state) {
-    return Container(
-      height: 140,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Statistics Range',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              TextButton.icon(
-                onPressed: () {
-                  ref.read(dashboardControllerProvider.notifier).setDateRange(state.asData!.value.dateRange);
-                  ref.invalidate(shiftManagementControllerProvider);
-                },
-                icon: const Icon(Icons.refresh, size: 16),
-                label: const Text('Refresh', style: TextStyle(fontSize: 12)),
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    return state.when(
+      data: (data) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DropdownButtonHideUnderline(
+              child: DropdownButton<DashboardDateRange>(
+                value: data.dateRange,
+                isDense: true,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black,
                 ),
+                items: DashboardDateRange.values.map((range) {
+                  return DropdownMenuItem(
+                    value: range,
+                    child: Text(range.name.toUpperCase()),
+                  );
+                }).toList(),
+                onChanged: (val) {
+                  if (val == DashboardDateRange.custom) {
+                    _showCustomDateRangePicker(data.fromDate, data.toDate);
+                  } else if (val != null) {
+                    ref.read(dashboardControllerProvider.notifier).setDateRange(val);
+                  }
+                },
+              ),
+            ),
+            if (data.dateRange == DashboardDateRange.custom) ...[
+              const SizedBox(width: 8),
+              Text(
+                '${DateFormat('MMM dd').format(data.fromDate!)} - ${DateFormat('MMM dd').format(data.toDate!)}',
+                style: const TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.bold),
               ),
             ],
-          ),
-          const Spacer(),
-          state.when(
-            data: (data) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DropdownButtonFormField<DashboardDateRange>(
-                  initialValue: data.dateRange,
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                  items: DashboardDateRange.values.map((range) {
-                    return DropdownMenuItem(
-                      value: range,
-                      child: Text(range.name.toUpperCase(), style: const TextStyle(fontSize: 13)),
-                    );
-                  }).toList(),
-                  onChanged: (val) {
-                    if (val == DashboardDateRange.custom) {
-                      _showCustomDateRangePicker(data.fromDate, data.toDate);
-                    } else if (val != null) {
-                      ref.read(dashboardControllerProvider.notifier).setDateRange(val);
-                    }
-                  },
-                ),
-                if (data.dateRange == DashboardDateRange.custom) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    '${DateFormat('MMM dd').format(data.fromDate!)} - ${DateFormat('MMM dd').format(data.toDate!)}',
-                    style: const TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ],
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: () {
+                ref.read(dashboardControllerProvider.notifier).setDateRange(data.dateRange);
+                ref.invalidate(shiftManagementControllerProvider);
+              },
+              icon: const Icon(Icons.refresh, size: 16, color: AppColors.grey),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
             ),
-            loading: () => const LinearProgressIndicator(),
-            error: (_, stack) => const Text('Error loading range'),
-          ),
-        ],
+          ],
+        ),
       ),
+      loading: () => const SizedBox(width: 100, child: LinearProgressIndicator()),
+      error: (_, __) => const SizedBox.shrink(),
     );
   }
 

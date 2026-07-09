@@ -13,6 +13,17 @@ class VoucherTypeRemoteDataSource {
 
   Future<VoucherTypeResponse> getAllVoucherTypes() async {
     final response = await _apiClient.get('/api/VoucherType');
+    
+    if (response.data is List) {
+      return VoucherTypeResponse(
+        succeeded: true,
+        messages: 'Success',
+        data: (response.data as List)
+            .map((e) => VoucherTypeModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+    }
+
     return VoucherTypeResponse.fromJson(response.data);
   }
 }

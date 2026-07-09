@@ -26,42 +26,37 @@ class TopSellingSection extends StatelessWidget {
       );
     }
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 2,
-          child: _buildProductCard(),
-        ),
-        const SizedBox(width: 24),
-        Expanded(
-          flex: 1,
-          child: _buildCategoryPlaceholder(),
-        ),
-      ],
-    );
+    return _buildProductCard();
   }
 
   Widget _buildProductCard() {
     return Container(
+      height: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withValues(alpha: 0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Top Selling Products',
+            'Top Selling Items',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: AppColors.black,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
           if (products.isEmpty)
             const Center(
               child: Padding(
@@ -73,30 +68,49 @@ class TopSellingSection extends StatelessWidget {
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: products.length,
-              separatorBuilder: (context, index) => const Divider(height: 24),
+              itemCount: products.length > 5 ? 5 : products.length,
+              separatorBuilder: (context, index) => const Divider(height: 16),
               itemBuilder: (context, index) {
                 final product = products[index];
                 return Row(
                   children: [
+                    // Circular Index
                     Container(
-                      width: 40,
-                      height: 40,
+                      width: 24,
+                      height: 24,
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
+                        color: AppColors.ashGrey.withValues(alpha: 0.3),
+                        shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: Text(
                           '${index + 1}',
                           style: const TextStyle(
-                            color: AppColors.primary,
+                            fontSize: 10,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
+                    const SizedBox(width: 12),
+                    // Product Image
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        'assets/images/momo.jpg',
+                        width: 48,
+                        height: 48,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          width: 48,
+                          height: 48,
+                          color: AppColors.lightGrey,
+                          child: const Icon(Icons.image, color: Colors.white),
+                        ),
+                      ),
+                    ),
                     const SizedBox(width: 16),
+                    // Name and quantity
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,12 +118,13 @@ class TopSellingSection extends StatelessWidget {
                           Text(
                             product.productName,
                             style: const TextStyle(
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.bold,
                               fontSize: 14,
+                              color: AppColors.black,
                             ),
                           ),
                           Text(
-                            '${product.quantitySold} units sold',
+                            '${product.quantitySold} plates',
                             style: const TextStyle(
                               fontSize: 12,
                               color: AppColors.grey,
@@ -118,6 +133,7 @@ class TopSellingSection extends StatelessWidget {
                         ],
                       ),
                     ),
+                    // Price
                     Text(
                       'Rs. ${product.totalSales.toStringAsFixed(2)}',
                       style: const TextStyle(

@@ -13,6 +13,17 @@ class PrefixSuffixRemoteDataSource {
 
   Future<PrefixSuffixResponse> getAllPrefixSuffixes() async {
     final response = await _apiClient.get('/api/PrefixSuffix');
+    
+    if (response.data is List) {
+      return PrefixSuffixResponse(
+        succeeded: true,
+        messages: 'Success',
+        data: (response.data as List)
+            .map((e) => PrefixSuffixModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+    }
+
     return PrefixSuffixResponse.fromJson(response.data);
   }
 }

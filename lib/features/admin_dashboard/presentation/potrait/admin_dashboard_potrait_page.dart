@@ -432,6 +432,7 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
                   SummaryBentoBox(
                     current: state.currentSummary ?? DashboardSummaryModel(),
                     previous: state.previousSummary,
+                    selectedRange: state.dateRange,
                     onShowChart: (metric) {
                       Navigator.push(
                         context,
@@ -442,12 +443,6 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
                         ),
                       );
                     },
-                    onExpandSales: () {
-                      setState(() {
-                        _isSalesExpanded = !_isSalesExpanded;
-                      });
-                    },
-                    isSalesExpanded: _isSalesExpanded,
                     isPortrait: true,
                   ),
                   AnimatedSize(
