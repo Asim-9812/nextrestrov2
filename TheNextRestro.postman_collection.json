@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "e2b966d0-60c7-41cd-8643-8935dbee6918",
+    "_postman_id": "8e12489c-6ed3-4dac-be8b-53b6d885fa5b",
     "name": "TheNextRestro",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "37124649",
-    "_collection_link": "https://go.postman.co/collection/37124649-e2b966d0-60c7-41cd-8643-8935dbee6918?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/37124649-8e12489c-6ed3-4dac-be8b-53b6d885fa5b?source=collection_link"
   },
   "item": [
     {
@@ -28,7 +28,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"userId\": 5791,\n  \"username\": \"string\",\n  \"password\": \"string\",\n  \"role\": \"string\"\n}",
+                      "raw": "{\n  \"userId\": 3988,\n  \"username\": \"string\",\n  \"password\": \"string\",\n  \"role\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -66,7 +66,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"userId\": 5791,\n  \"username\": \"string\",\n  \"password\": \"string\",\n  \"role\": \"string\"\n}",
+                          "raw": "{\n  \"userId\": 3988,\n  \"username\": \"string\",\n  \"password\": \"string\",\n  \"role\": \"string\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -462,7 +462,7 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{baseUrl}}/api/Auth/getuserbyId?userId=9170",
+                      "raw": "{{baseUrl}}/api/Auth/getuserbyId?userId=2409",
                       "host": [
                         "{{baseUrl}}"
                       ],
@@ -474,7 +474,7 @@
                       "query": [
                         {
                           "key": "userId",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -492,7 +492,7 @@
                           }
                         ],
                         "url": {
-                          "raw": "{{baseUrl}}/api/Auth/getuserbyId?userId=9170",
+                          "raw": "{{baseUrl}}/api/Auth/getuserbyId?userId=2409",
                           "host": [
                             "{{baseUrl}}"
                           ],
@@ -504,7 +504,7 @@
                           "query": [
                             {
                               "key": "userId",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -546,7 +546,7 @@
                       "variable": [
                         {
                           "key": "companyId",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -576,7 +576,7 @@
                           "variable": [
                             {
                               "key": "companyId",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -617,7 +617,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -648,7 +648,7 @@
                               "variable": [
                                 {
                                   "key": "id",
-                                  "value": "9170"
+                                  "value": "2409"
                                 }
                               ]
                             }
@@ -681,7 +681,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"companyID\": 7771,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "raw": "{\n  \"companyID\": 9045,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -702,7 +702,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -725,7 +725,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"companyID\": 7771,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                          "raw": "{\n  \"companyID\": 9045,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -746,7 +746,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -778,7 +778,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -808,7 +808,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -836,7 +836,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"companyID\": 7771,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                  "raw": "{\n  \"companyID\": 9045,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -873,7 +873,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"companyID\": 7771,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "raw": "{\n  \"companyID\": 9045,\n  \"branchName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -918,7 +918,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"categoryId\": 4843,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
+                  "raw": "{\n  \"categoryId\": 1227,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -955,7 +955,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"categoryId\": 4843,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
+                      "raw": "{\n  \"categoryId\": 1227,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1043,7 +1043,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"categoryId\": 4843,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
+                  "raw": "{\n  \"categoryId\": 1227,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1080,7 +1080,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"categoryId\": 4843,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
+                      "raw": "{\n  \"categoryId\": 1227,\n  \"categoryName\": \"string\",\n  \"description\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1128,7 +1128,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"companyName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"vatOrPan\": false,\n  \"vatPanNumber\": \"string\",\n  \"companyLogo\": \"string\",\n  \"email\": \"string\",\n  \"website\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "raw": "{\n  \"companyName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"vatOrPan\": true,\n  \"vatPanNumber\": \"string\",\n  \"companyLogo\": \"string\",\n  \"email\": \"string\",\n  \"website\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1149,7 +1149,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -1172,7 +1172,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"companyName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"vatOrPan\": false,\n  \"vatPanNumber\": \"string\",\n  \"companyLogo\": \"string\",\n  \"email\": \"string\",\n  \"website\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                          "raw": "{\n  \"companyName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"vatOrPan\": true,\n  \"vatPanNumber\": \"string\",\n  \"companyLogo\": \"string\",\n  \"email\": \"string\",\n  \"website\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -1193,7 +1193,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -1221,7 +1221,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"companyName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"vatOrPan\": false,\n  \"vatPanNumber\": \"string\",\n  \"companyLogo\": \"string\",\n  \"email\": \"string\",\n  \"website\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                  "raw": "{\n  \"companyName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"vatOrPan\": true,\n  \"vatPanNumber\": \"string\",\n  \"companyLogo\": \"string\",\n  \"email\": \"string\",\n  \"website\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1258,7 +1258,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"companyName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"vatOrPan\": false,\n  \"vatPanNumber\": \"string\",\n  \"companyLogo\": \"string\",\n  \"email\": \"string\",\n  \"website\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "raw": "{\n  \"companyName\": \"string\",\n  \"address\": \"string\",\n  \"phoneNumber\": \"string\",\n  \"vatOrPan\": true,\n  \"vatPanNumber\": \"string\",\n  \"companyLogo\": \"string\",\n  \"email\": \"string\",\n  \"website\": \"string\",\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1360,7 +1360,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -1390,7 +1390,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -1422,7 +1422,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -1452,7 +1452,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -1480,7 +1480,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"customerID\": 1293,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 192,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2024-10-18T04:30:10.379Z\"\n}",
+                  "raw": "{\n  \"customerID\": 93,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 6097,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2016-09-11T04:35:58.254Z\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1517,7 +1517,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"customerID\": 1293,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 192,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2024-10-18T04:30:10.379Z\"\n}",
+                      "raw": "{\n  \"customerID\": 93,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 6097,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2016-09-11T04:35:58.254Z\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1605,7 +1605,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"customerID\": 1293,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 192,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2024-10-18T04:30:10.379Z\"\n}",
+                  "raw": "{\n  \"customerID\": 93,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 6097,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2016-09-11T04:35:58.254Z\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1642,7 +1642,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"customerID\": 1293,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 192,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2024-10-18T04:30:10.379Z\"\n}",
+                      "raw": "{\n  \"customerID\": 93,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\",\n  \"loyaltyPoints\": 6097,\n  \"isMember\": false,\n  \"gender\": \"string\",\n  \"dob\": \"2016-09-11T04:35:58.254Z\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1690,7 +1690,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"fromDate\": \"1985-11-10T17:51:33.741Z\",\n  \"toDate\": \"2020-07-11T06:05:27.443Z\"\n}",
+                      "raw": "{\n  \"fromDate\": \"1990-11-15T02:05:33.750Z\",\n  \"toDate\": \"2010-05-31T04:03:16.250Z\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -1728,7 +1728,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"fromDate\": \"1985-11-10T17:51:33.741Z\",\n  \"toDate\": \"2020-07-11T06:05:27.443Z\"\n}",
+                          "raw": "{\n  \"fromDate\": \"1990-11-15T02:05:33.750Z\",\n  \"toDate\": \"2010-05-31T04:03:16.250Z\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -1785,7 +1785,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -1815,7 +1815,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -1847,7 +1847,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -1877,7 +1877,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -1905,7 +1905,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"departmentID\": 9442,\n  \"departmentName\": \"string\",\n  \"status\": true\n}",
+                  "raw": "{\n  \"departmentID\": 4630,\n  \"departmentName\": \"string\",\n  \"status\": false\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1942,7 +1942,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"departmentID\": 9442,\n  \"departmentName\": \"string\",\n  \"status\": true\n}",
+                      "raw": "{\n  \"departmentID\": 4630,\n  \"departmentName\": \"string\",\n  \"status\": false\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2030,7 +2030,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"departmentID\": 9442,\n  \"departmentName\": \"string\",\n  \"status\": true\n}",
+                  "raw": "{\n  \"departmentID\": 4630,\n  \"departmentName\": \"string\",\n  \"status\": false\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -2067,7 +2067,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"departmentID\": 9442,\n  \"departmentName\": \"string\",\n  \"status\": true\n}",
+                      "raw": "{\n  \"departmentID\": 4630,\n  \"departmentName\": \"string\",\n  \"status\": false\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2121,7 +2121,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -2151,7 +2151,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -2177,7 +2177,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"fromDate\": \"1972-05-17T14:26:41.874Z\",\n  \"toDate\": \"1983-07-02T23:39:20.442Z\",\n  \"fiscalYearName\": \"string\",\n  \"shortDate\": \"string\",\n  \"userId\": 3,\n  \"bookClose\": 4466\n}",
+                      "raw": "{\n  \"fromDate\": \"2009-03-27T15:24:14.373Z\",\n  \"toDate\": \"1985-04-08T13:18:50.697Z\",\n  \"fiscalYearName\": \"string\",\n  \"shortDate\": \"string\",\n  \"userId\": 8140,\n  \"bookClose\": 1547\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2198,7 +2198,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -2221,7 +2221,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"fromDate\": \"1972-05-17T14:26:41.874Z\",\n  \"toDate\": \"1983-07-02T23:39:20.442Z\",\n  \"fiscalYearName\": \"string\",\n  \"shortDate\": \"string\",\n  \"userId\": 3,\n  \"bookClose\": 4466\n}",
+                          "raw": "{\n  \"fromDate\": \"2009-03-27T15:24:14.373Z\",\n  \"toDate\": \"1985-04-08T13:18:50.697Z\",\n  \"fiscalYearName\": \"string\",\n  \"shortDate\": \"string\",\n  \"userId\": 8140,\n  \"bookClose\": 1547\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -2242,7 +2242,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -2274,7 +2274,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -2304,7 +2304,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -2332,7 +2332,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"fromDate\": \"1972-05-17T14:26:41.874Z\",\n  \"toDate\": \"1983-07-02T23:39:20.442Z\",\n  \"fiscalYearName\": \"string\",\n  \"shortDate\": \"string\",\n  \"userId\": 3,\n  \"bookClose\": 4466\n}",
+                  "raw": "{\n  \"fromDate\": \"2009-03-27T15:24:14.373Z\",\n  \"toDate\": \"1985-04-08T13:18:50.697Z\",\n  \"fiscalYearName\": \"string\",\n  \"shortDate\": \"string\",\n  \"userId\": 8140,\n  \"bookClose\": 1547\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -2369,7 +2369,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"fromDate\": \"1972-05-17T14:26:41.874Z\",\n  \"toDate\": \"1983-07-02T23:39:20.442Z\",\n  \"fiscalYearName\": \"string\",\n  \"shortDate\": \"string\",\n  \"userId\": 3,\n  \"bookClose\": 4466\n}",
+                      "raw": "{\n  \"fromDate\": \"2009-03-27T15:24:14.373Z\",\n  \"toDate\": \"1985-04-08T13:18:50.697Z\",\n  \"fiscalYearName\": \"string\",\n  \"shortDate\": \"string\",\n  \"userId\": 8140,\n  \"bookClose\": 1547\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2475,7 +2475,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -2506,7 +2506,7 @@
                               "variable": [
                                 {
                                   "key": "id",
-                                  "value": "9170"
+                                  "value": "2409"
                                 }
                               ]
                             }
@@ -2549,7 +2549,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -2580,7 +2580,7 @@
                               "variable": [
                                 {
                                   "key": "id",
-                                  "value": "9170"
+                                  "value": "2409"
                                 }
                               ]
                             }
@@ -2733,7 +2733,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"customerId\": 5873,\n  \"tableId\": 5798,\n  \"waiterId\": 1085,\n  \"orderType\": \"string\",\n  \"items\": [\n    {\n      \"productId\": 8010,\n      \"itemName\": \"string\",\n      \"quantity\": 9696,\n      \"unitPrice\": 1794.9956630922447,\n      \"subtotal\": 1072.458636858844,\n      \"specialInstructions\": \"string\"\n    },\n    {\n      \"productId\": 1725,\n      \"itemName\": \"string\",\n      \"quantity\": 9979,\n      \"unitPrice\": 1423.486757966932,\n      \"subtotal\": 7376.5419968733695,\n      \"specialInstructions\": \"string\"\n    }\n  ]\n}",
+                      "raw": "{\n  \"customerId\": 6085,\n  \"tableId\": 4507,\n  \"waiterId\": 3840,\n  \"orderType\": \"string\",\n  \"items\": [\n    {\n      \"productId\": 5376,\n      \"itemName\": \"string\",\n      \"quantity\": 2754,\n      \"unitPrice\": 3556.7446203997256,\n      \"subtotal\": 3750.484969077228,\n      \"specialInstructions\": \"string\"\n    },\n    {\n      \"productId\": 8805,\n      \"itemName\": \"string\",\n      \"quantity\": 1167,\n      \"unitPrice\": 7647.401416196653,\n      \"subtotal\": 2026.5315547205541,\n      \"specialInstructions\": \"string\"\n    }\n  ]\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2771,7 +2771,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"customerId\": 5873,\n  \"tableId\": 5798,\n  \"waiterId\": 1085,\n  \"orderType\": \"string\",\n  \"items\": [\n    {\n      \"productId\": 8010,\n      \"itemName\": \"string\",\n      \"quantity\": 9696,\n      \"unitPrice\": 1794.9956630922447,\n      \"subtotal\": 1072.458636858844,\n      \"specialInstructions\": \"string\"\n    },\n    {\n      \"productId\": 1725,\n      \"itemName\": \"string\",\n      \"quantity\": 9979,\n      \"unitPrice\": 1423.486757966932,\n      \"subtotal\": 7376.5419968733695,\n      \"specialInstructions\": \"string\"\n    }\n  ]\n}",
+                          "raw": "{\n  \"customerId\": 6085,\n  \"tableId\": 4507,\n  \"waiterId\": 3840,\n  \"orderType\": \"string\",\n  \"items\": [\n    {\n      \"productId\": 5376,\n      \"itemName\": \"string\",\n      \"quantity\": 2754,\n      \"unitPrice\": 3556.7446203997256,\n      \"subtotal\": 3750.484969077228,\n      \"specialInstructions\": \"string\"\n    },\n    {\n      \"productId\": 8805,\n      \"itemName\": \"string\",\n      \"quantity\": 1167,\n      \"unitPrice\": 7647.401416196653,\n      \"subtotal\": 2026.5315547205541,\n      \"specialInstructions\": \"string\"\n    }\n  ]\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -2817,7 +2817,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"orderId\": 3497,\n  \"status\": \"string\"\n}",
+                      "raw": "{\n  \"orderId\": 9355,\n  \"status\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2855,7 +2855,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"orderId\": 3497,\n  \"status\": \"string\"\n}",
+                          "raw": "{\n  \"orderId\": 9355,\n  \"status\": \"string\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -2901,7 +2901,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"orderItemId\": 9793,\n  \"orderId\": 9058,\n  \"status\": \"string\"\n}",
+                      "raw": "{\n  \"orderItemId\": 5563,\n  \"orderId\": 7390,\n  \"status\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2939,7 +2939,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"orderItemId\": 9793,\n  \"orderId\": 9058,\n  \"status\": \"string\"\n}",
+                          "raw": "{\n  \"orderItemId\": 5563,\n  \"orderId\": 7390,\n  \"status\": \"string\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -3052,7 +3052,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"orderId\": 7059,\n  \"paymentMethod\": 653,\n  \"discount\": 7100.41010437034,\n  \"splitPayments\": [\n    {\n      \"paymentMethod\": 8699,\n      \"amount\": 2388.6864713250366\n    },\n    {\n      \"paymentMethod\": 3087,\n      \"amount\": 9152.54160537915\n    }\n  ]\n}",
+                      "raw": "{\n  \"orderId\": 9221,\n  \"paymentMethod\": 7787,\n  \"discount\": 7225.4503136463645,\n  \"splitPayments\": [\n    {\n      \"paymentMethod\": 3063,\n      \"amount\": 3592.9211341850055\n    },\n    {\n      \"paymentMethod\": 3841,\n      \"amount\": 6041.369012732447\n    }\n  ]\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -3090,7 +3090,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"orderId\": 7059,\n  \"paymentMethod\": 653,\n  \"discount\": 7100.41010437034,\n  \"splitPayments\": [\n    {\n      \"paymentMethod\": 8699,\n      \"amount\": 2388.6864713250366\n    },\n    {\n      \"paymentMethod\": 3087,\n      \"amount\": 9152.54160537915\n    }\n  ]\n}",
+                          "raw": "{\n  \"orderId\": 9221,\n  \"paymentMethod\": 7787,\n  \"discount\": 7225.4503136463645,\n  \"splitPayments\": [\n    {\n      \"paymentMethod\": 3063,\n      \"amount\": 3592.9211341850055\n    },\n    {\n      \"paymentMethod\": 3841,\n      \"amount\": 6041.369012732447\n    }\n  ]\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -3152,7 +3152,7 @@
                           "variable": [
                             {
                               "key": "orderId",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -3189,7 +3189,7 @@
                               "variable": [
                                 {
                                   "key": "orderId",
-                                  "value": "9170"
+                                  "value": "2409"
                                 }
                               ]
                             }
@@ -3232,7 +3232,7 @@
                           "variable": [
                             {
                               "key": "orderId",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -3263,7 +3263,7 @@
                               "variable": [
                                 {
                                   "key": "orderId",
-                                  "value": "9170"
+                                  "value": "2409"
                                 }
                               ]
                             }
@@ -3369,7 +3369,7 @@
                     "method": "POST",
                     "header": [],
                     "url": {
-                      "raw": "{{baseUrl}}/api/PaymentSession/create-session?orderId=9170&tableId=9170&amount=1769.476274904549",
+                      "raw": "{{baseUrl}}/api/PaymentSession/create-session?orderId=2409&tableId=2409&amount=5924.2816862797",
                       "host": [
                         "{{baseUrl}}"
                       ],
@@ -3381,15 +3381,15 @@
                       "query": [
                         {
                           "key": "orderId",
-                          "value": "9170"
+                          "value": "2409"
                         },
                         {
                           "key": "tableId",
-                          "value": "9170"
+                          "value": "2409"
                         },
                         {
                           "key": "amount",
-                          "value": "1769.476274904549"
+                          "value": "5924.2816862797"
                         }
                       ]
                     }
@@ -3407,7 +3407,7 @@
                           }
                         ],
                         "url": {
-                          "raw": "{{baseUrl}}/api/PaymentSession/create-session?orderId=9170&tableId=9170&amount=1769.476274904549",
+                          "raw": "{{baseUrl}}/api/PaymentSession/create-session?orderId=2409&tableId=2409&amount=5924.2816862797",
                           "host": [
                             "{{baseUrl}}"
                           ],
@@ -3419,15 +3419,15 @@
                           "query": [
                             {
                               "key": "orderId",
-                              "value": "9170"
+                              "value": "2409"
                             },
                             {
                               "key": "tableId",
-                              "value": "9170"
+                              "value": "2409"
                             },
                             {
                               "key": "amount",
-                              "value": "1769.476274904549"
+                              "value": "5924.2816862797"
                             }
                           ]
                         }
@@ -3463,7 +3463,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"voucherTypeID\": 6584,\n  \"financialYearID\": 9073,\n  \"startIndex\": 6463.414476044669,\n  \"prefix\": \"string\",\n  \"suffix\": \"string\",\n  \"narration\": \"string\",\n  \"status\": true,\n  \"createdBy\": 7588\n}",
+                      "raw": "{\n  \"voucherTypeID\": 492,\n  \"financialYearID\": 8289,\n  \"startIndex\": 4314.656610800789,\n  \"prefix\": \"string\",\n  \"suffix\": \"string\",\n  \"narration\": \"string\",\n  \"status\": true,\n  \"createdBy\": 4240\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -3484,7 +3484,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -3507,7 +3507,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"voucherTypeID\": 6584,\n  \"financialYearID\": 9073,\n  \"startIndex\": 6463.414476044669,\n  \"prefix\": \"string\",\n  \"suffix\": \"string\",\n  \"narration\": \"string\",\n  \"status\": true,\n  \"createdBy\": 7588\n}",
+                          "raw": "{\n  \"voucherTypeID\": 492,\n  \"financialYearID\": 8289,\n  \"startIndex\": 4314.656610800789,\n  \"prefix\": \"string\",\n  \"suffix\": \"string\",\n  \"narration\": \"string\",\n  \"status\": true,\n  \"createdBy\": 4240\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -3528,7 +3528,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -3560,7 +3560,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -3590,7 +3590,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -3618,7 +3618,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"voucherTypeID\": 6584,\n  \"financialYearID\": 9073,\n  \"startIndex\": 6463.414476044669,\n  \"prefix\": \"string\",\n  \"suffix\": \"string\",\n  \"narration\": \"string\",\n  \"status\": true,\n  \"createdBy\": 7588\n}",
+                  "raw": "{\n  \"voucherTypeID\": 492,\n  \"financialYearID\": 8289,\n  \"startIndex\": 4314.656610800789,\n  \"prefix\": \"string\",\n  \"suffix\": \"string\",\n  \"narration\": \"string\",\n  \"status\": true,\n  \"createdBy\": 4240\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -3655,7 +3655,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"voucherTypeID\": 6584,\n  \"financialYearID\": 9073,\n  \"startIndex\": 6463.414476044669,\n  \"prefix\": \"string\",\n  \"suffix\": \"string\",\n  \"narration\": \"string\",\n  \"status\": true,\n  \"createdBy\": 7588\n}",
+                      "raw": "{\n  \"voucherTypeID\": 492,\n  \"financialYearID\": 8289,\n  \"startIndex\": 4314.656610800789,\n  \"prefix\": \"string\",\n  \"suffix\": \"string\",\n  \"narration\": \"string\",\n  \"status\": true,\n  \"createdBy\": 4240\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -3748,7 +3748,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"productId\": 5285,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 8273.011127966358,\n  \"categoryId\": 897,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 5575\n}",
+                  "raw": "{\n  \"productId\": 4921,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 7162.59533980802,\n  \"categoryId\": 9622,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 2047\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -3785,7 +3785,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"productId\": 5285,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 8273.011127966358,\n  \"categoryId\": 897,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 5575\n}",
+                      "raw": "{\n  \"productId\": 4921,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 7162.59533980802,\n  \"categoryId\": 9622,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 2047\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -3873,7 +3873,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"productId\": 5285,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 8273.011127966358,\n  \"categoryId\": 897,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 5575\n}",
+                  "raw": "{\n  \"productId\": 4921,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 7162.59533980802,\n  \"categoryId\": 9622,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 2047\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -3910,7 +3910,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"productId\": 5285,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 8273.011127966358,\n  \"categoryId\": 897,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 5575\n}",
+                      "raw": "{\n  \"productId\": 4921,\n  \"productName\": \"string\",\n  \"description\": \"string\",\n  \"price\": 7162.59533980802,\n  \"categoryId\": 9622,\n  \"isTaxable\": false,\n  \"imageUrl\": \"string\",\n  \"isActive\": 2047\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -3941,6 +3941,179 @@
           ]
         },
         {
+          "name": "reports",
+          "item": [
+            {
+              "name": "productsales",
+              "item": [
+                {
+                  "name": "/api/reports/productsales",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"fromDate\": \"1989-08-16T13:47:20.804Z\",\n  \"toDate\": \"1956-11-28T23:38:55.618Z\",\n  \"branchID\": \"string\",\n  \"fiscalYearID\": 1990,\n  \"categoryID\": 7672,\n  \"productID\": 7374,\n  \"customerID\": 8323\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/reports/productsales",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "reports",
+                        "productsales"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"fromDate\": \"1989-08-16T13:47:20.804Z\",\n  \"toDate\": \"1956-11-28T23:38:55.618Z\",\n  \"branchID\": \"string\",\n  \"fiscalYearID\": 1990,\n  \"categoryID\": 7672,\n  \"productID\": 7374,\n  \"customerID\": 8323\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/reports/productsales",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "reports",
+                            "productsales"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "sales",
+              "item": [
+                {
+                  "name": "/api/reports/sales",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"fromDate\": \"1949-04-17T21:11:52.062Z\",\n  \"toDate\": \"1959-09-13T12:44:35.203Z\",\n  \"customerID\": 6450,\n  \"tableID\": 6472,\n  \"paymentMethod\": 9846,\n  \"invoiceNo\": \"string\",\n  \"branchID\": 5273,\n  \"fiscalYearID\": 5620\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/reports/sales",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "reports",
+                        "sales"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"fromDate\": \"1949-04-17T21:11:52.062Z\",\n  \"toDate\": \"1959-09-13T12:44:35.203Z\",\n  \"customerID\": 6450,\n  \"tableID\": 6472,\n  \"paymentMethod\": 9846,\n  \"invoiceNo\": \"string\",\n  \"branchID\": 5273,\n  \"fiscalYearID\": 5620\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/reports/sales",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "reports",
+                            "sales"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "Reservation",
           "item": [
             {
@@ -3958,7 +4131,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"customerID\": 2989,\n  \"reservationDate\": \"2014-08-08T14:51:08.116Z\",\n  \"specialRequest\": \"string\",\n  \"advanceAmount\": 3838.5428784858177,\n  \"createdBy\": 8559,\n  \"reservationDetails\": [\n    {\n      \"tableID\": 9301,\n      \"noOfPersons\": 1028,\n      \"reservationStatus\": 2410,\n      \"remarks\": \"string\"\n    },\n    {\n      \"tableID\": 3988,\n      \"noOfPersons\": 9932,\n      \"reservationStatus\": 842,\n      \"remarks\": \"string\"\n    }\n  ]\n}",
+                      "raw": "{\n  \"customerID\": 2858,\n  \"reservationDate\": \"1976-03-14T22:56:39.051Z\",\n  \"specialRequest\": \"string\",\n  \"advanceAmount\": 4082.127606981938,\n  \"createdBy\": 7966,\n  \"reservationDetails\": [\n    {\n      \"tableID\": 2977,\n      \"noOfPersons\": 7964,\n      \"reservationStatus\": 2168,\n      \"remarks\": \"string\"\n    },\n    {\n      \"tableID\": 3267,\n      \"noOfPersons\": 1815,\n      \"reservationStatus\": 3374,\n      \"remarks\": \"string\"\n    }\n  ]\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -3996,7 +4169,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"customerID\": 2989,\n  \"reservationDate\": \"2014-08-08T14:51:08.116Z\",\n  \"specialRequest\": \"string\",\n  \"advanceAmount\": 3838.5428784858177,\n  \"createdBy\": 8559,\n  \"reservationDetails\": [\n    {\n      \"tableID\": 9301,\n      \"noOfPersons\": 1028,\n      \"reservationStatus\": 2410,\n      \"remarks\": \"string\"\n    },\n    {\n      \"tableID\": 3988,\n      \"noOfPersons\": 9932,\n      \"reservationStatus\": 842,\n      \"remarks\": \"string\"\n    }\n  ]\n}",
+                          "raw": "{\n  \"customerID\": 2858,\n  \"reservationDate\": \"1976-03-14T22:56:39.051Z\",\n  \"specialRequest\": \"string\",\n  \"advanceAmount\": 4082.127606981938,\n  \"createdBy\": 7966,\n  \"reservationDetails\": [\n    {\n      \"tableID\": 2977,\n      \"noOfPersons\": 7964,\n      \"reservationStatus\": 2168,\n      \"remarks\": \"string\"\n    },\n    {\n      \"tableID\": 3267,\n      \"noOfPersons\": 1815,\n      \"reservationStatus\": 3374,\n      \"remarks\": \"string\"\n    }\n  ]\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -4107,7 +4280,7 @@
                           "variable": [
                             {
                               "key": "reservationId",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -4138,7 +4311,7 @@
                               "variable": [
                                 {
                                   "key": "reservationId",
-                                  "value": "9170"
+                                  "value": "2409"
                                 }
                               ]
                             }
@@ -4165,7 +4338,7 @@
                     "method": "PUT",
                     "header": [],
                     "url": {
-                      "raw": "{{baseUrl}}/api/Reservation/cancel-detail?reservationDetailsId=9170&cancelledBy=9170&reason=string",
+                      "raw": "{{baseUrl}}/api/Reservation/cancel-detail?reservationDetailsId=2409&cancelledBy=2409&reason=string",
                       "host": [
                         "{{baseUrl}}"
                       ],
@@ -4177,11 +4350,11 @@
                       "query": [
                         {
                           "key": "reservationDetailsId",
-                          "value": "9170"
+                          "value": "2409"
                         },
                         {
                           "key": "cancelledBy",
-                          "value": "9170"
+                          "value": "2409"
                         },
                         {
                           "key": "reason",
@@ -4203,7 +4376,7 @@
                           }
                         ],
                         "url": {
-                          "raw": "{{baseUrl}}/api/Reservation/cancel-detail?reservationDetailsId=9170&cancelledBy=9170&reason=string",
+                          "raw": "{{baseUrl}}/api/Reservation/cancel-detail?reservationDetailsId=2409&cancelledBy=2409&reason=string",
                           "host": [
                             "{{baseUrl}}"
                           ],
@@ -4215,105 +4388,16 @@
                           "query": [
                             {
                               "key": "reservationDetailsId",
-                              "value": "9170"
+                              "value": "2409"
                             },
                             {
                               "key": "cancelledBy",
-                              "value": "9170"
+                              "value": "2409"
                             },
                             {
                               "key": "reason",
                               "value": "string"
                             }
-                          ]
-                        }
-                      },
-                      "status": "OK",
-                      "code": 200,
-                      "_postman_previewlanguage": "text",
-                      "header": [],
-                      "cookie": [],
-                      "body": ""
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "reports",
-          "item": [
-            {
-              "name": "sales",
-              "item": [
-                {
-                  "name": "/api/reports/sales",
-                  "request": {
-                    "method": "POST",
-                    "header": [
-                      {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                      }
-                    ],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\n  \"fromDate\": \"2021-03-27T00:54:00.643Z\",\n  \"toDate\": \"2022-05-10T13:38:26.761Z\",\n  \"customerID\": 9283,\n  \"tableID\": 406,\n  \"paymentMethod\": 1482,\n  \"invoiceNo\": \"string\",\n  \"branchID\": 2684,\n  \"fiscalYearID\": 2239\n}",
-                      "options": {
-                        "raw": {
-                          "headerFamily": "json",
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{baseUrl}}/api/reports/sales",
-                      "host": [
-                        "{{baseUrl}}"
-                      ],
-                      "path": [
-                        "api",
-                        "reports",
-                        "sales"
-                      ]
-                    }
-                  },
-                  "response": [
-                    {
-                      "name": "OK",
-                      "originalRequest": {
-                        "method": "POST",
-                        "header": [
-                          {
-                            "key": "Content-Type",
-                            "value": "application/json"
-                          },
-                          {
-                            "description": "Added as a part of security scheme: bearer",
-                            "key": "Authorization",
-                            "value": "Bearer <token>"
-                          }
-                        ],
-                        "body": {
-                          "mode": "raw",
-                          "raw": "{\n  \"fromDate\": \"2021-03-27T00:54:00.643Z\",\n  \"toDate\": \"2022-05-10T13:38:26.761Z\",\n  \"customerID\": 9283,\n  \"tableID\": 406,\n  \"paymentMethod\": 1482,\n  \"invoiceNo\": \"string\",\n  \"branchID\": 2684,\n  \"fiscalYearID\": 2239\n}",
-                          "options": {
-                            "raw": {
-                              "headerFamily": "json",
-                              "language": "json"
-                            }
-                          }
-                        },
-                        "url": {
-                          "raw": "{{baseUrl}}/api/reports/sales",
-                          "host": [
-                            "{{baseUrl}}"
-                          ],
-                          "path": [
-                            "api",
-                            "reports",
-                            "sales"
                           ]
                         }
                       },
@@ -4348,7 +4432,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"shiftID\": 9497,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 1934,\n  \"openingAmount\": 2611.079281397106,\n  \"openingTime\": \"2007-01-05T06:52:45.036Z\",\n  \"closedByUserID\": 9744,\n  \"closingAmount\": 7774.526995683289,\n  \"closingTime\": \"1960-08-04T01:36:22.421Z\",\n  \"totalSales\": 8816.213753151605,\n  \"cashSales\": 9215.466715724324,\n  \"cardSales\": 8065.829347923393,\n  \"qrSales\": 6470.29679300728,\n  \"creditSales\": 7716.481783900735,\n  \"shiftStatus\": 3354\n}",
+                      "raw": "{\n  \"shiftID\": 7646,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 5341,\n  \"openingAmount\": 3242.555576156596,\n  \"openingTime\": \"1950-06-25T18:44:54.264Z\",\n  \"closedByUserID\": 9274,\n  \"closingAmount\": 5518.699879384941,\n  \"closingTime\": \"2017-01-06T09:40:30.651Z\",\n  \"totalSales\": 4516.748250733438,\n  \"cashSales\": 2201.890595043554,\n  \"cardSales\": 1929.3873222231705,\n  \"qrSales\": 822.3551873345114,\n  \"creditSales\": 6389.889301912721,\n  \"shiftStatus\": 8474\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -4386,7 +4470,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"shiftID\": 9497,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 1934,\n  \"openingAmount\": 2611.079281397106,\n  \"openingTime\": \"2007-01-05T06:52:45.036Z\",\n  \"closedByUserID\": 9744,\n  \"closingAmount\": 7774.526995683289,\n  \"closingTime\": \"1960-08-04T01:36:22.421Z\",\n  \"totalSales\": 8816.213753151605,\n  \"cashSales\": 9215.466715724324,\n  \"cardSales\": 8065.829347923393,\n  \"qrSales\": 6470.29679300728,\n  \"creditSales\": 7716.481783900735,\n  \"shiftStatus\": 3354\n}",
+                          "raw": "{\n  \"shiftID\": 7646,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 5341,\n  \"openingAmount\": 3242.555576156596,\n  \"openingTime\": \"1950-06-25T18:44:54.264Z\",\n  \"closedByUserID\": 9274,\n  \"closingAmount\": 5518.699879384941,\n  \"closingTime\": \"2017-01-06T09:40:30.651Z\",\n  \"totalSales\": 4516.748250733438,\n  \"cashSales\": 2201.890595043554,\n  \"cardSales\": 1929.3873222231705,\n  \"qrSales\": 822.3551873345114,\n  \"creditSales\": 6389.889301912721,\n  \"shiftStatus\": 8474\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -4487,7 +4571,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"shiftID\": 9497,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 1934,\n  \"openingAmount\": 2611.079281397106,\n  \"openingTime\": \"2007-01-05T06:52:45.036Z\",\n  \"closedByUserID\": 9744,\n  \"closingAmount\": 7774.526995683289,\n  \"closingTime\": \"1960-08-04T01:36:22.421Z\",\n  \"totalSales\": 8816.213753151605,\n  \"cashSales\": 9215.466715724324,\n  \"cardSales\": 8065.829347923393,\n  \"qrSales\": 6470.29679300728,\n  \"creditSales\": 7716.481783900735,\n  \"shiftStatus\": 3354\n}",
+                      "raw": "{\n  \"shiftID\": 7646,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 5341,\n  \"openingAmount\": 3242.555576156596,\n  \"openingTime\": \"1950-06-25T18:44:54.264Z\",\n  \"closedByUserID\": 9274,\n  \"closingAmount\": 5518.699879384941,\n  \"closingTime\": \"2017-01-06T09:40:30.651Z\",\n  \"totalSales\": 4516.748250733438,\n  \"cashSales\": 2201.890595043554,\n  \"cardSales\": 1929.3873222231705,\n  \"qrSales\": 822.3551873345114,\n  \"creditSales\": 6389.889301912721,\n  \"shiftStatus\": 8474\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -4525,7 +4609,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"shiftID\": 9497,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 1934,\n  \"openingAmount\": 2611.079281397106,\n  \"openingTime\": \"2007-01-05T06:52:45.036Z\",\n  \"closedByUserID\": 9744,\n  \"closingAmount\": 7774.526995683289,\n  \"closingTime\": \"1960-08-04T01:36:22.421Z\",\n  \"totalSales\": 8816.213753151605,\n  \"cashSales\": 9215.466715724324,\n  \"cardSales\": 8065.829347923393,\n  \"qrSales\": 6470.29679300728,\n  \"creditSales\": 7716.481783900735,\n  \"shiftStatus\": 3354\n}",
+                          "raw": "{\n  \"shiftID\": 7646,\n  \"shiftName\": \"string\",\n  \"openedByUserID\": 5341,\n  \"openingAmount\": 3242.555576156596,\n  \"openingTime\": \"1950-06-25T18:44:54.264Z\",\n  \"closedByUserID\": 9274,\n  \"closingAmount\": 5518.699879384941,\n  \"closingTime\": \"2017-01-06T09:40:30.651Z\",\n  \"totalSales\": 4516.748250733438,\n  \"cashSales\": 2201.890595043554,\n  \"cardSales\": 1929.3873222231705,\n  \"qrSales\": 822.3551873345114,\n  \"creditSales\": 6389.889301912721,\n  \"shiftStatus\": 8474\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -4582,7 +4666,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -4612,7 +4696,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -4640,7 +4724,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"subCategoryId\": 4586,\n  \"categoryId\": 372,\n  \"subCategoryName\": \"string\"\n}",
+                  "raw": "{\n  \"subCategoryId\": 3065,\n  \"categoryId\": 4184,\n  \"subCategoryName\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -4677,7 +4761,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"subCategoryId\": 4586,\n  \"categoryId\": 372,\n  \"subCategoryName\": \"string\"\n}",
+                      "raw": "{\n  \"subCategoryId\": 3065,\n  \"categoryId\": 4184,\n  \"subCategoryName\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -4765,7 +4849,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"subCategoryId\": 4586,\n  \"categoryId\": 372,\n  \"subCategoryName\": \"string\"\n}",
+                  "raw": "{\n  \"subCategoryId\": 3065,\n  \"categoryId\": 4184,\n  \"subCategoryName\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -4802,7 +4886,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"subCategoryId\": 4586,\n  \"categoryId\": 372,\n  \"subCategoryName\": \"string\"\n}",
+                      "raw": "{\n  \"subCategoryId\": 3065,\n  \"categoryId\": 4184,\n  \"subCategoryName\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -4866,7 +4950,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -4903,7 +4987,7 @@
                               "variable": [
                                 {
                                   "key": "id",
-                                  "value": "9170"
+                                  "value": "2409"
                                 }
                               ]
                             }
@@ -4941,7 +5025,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -4972,7 +5056,7 @@
                               "variable": [
                                 {
                                   "key": "id",
-                                  "value": "9170"
+                                  "value": "2409"
                                 }
                               ]
                             }
@@ -5000,7 +5084,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"tableID\": 8462,\n  \"tableNumber\": \"string\",\n  \"capacity\": 5543,\n  \"floorID\": 4699,\n  \"status\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "raw": "{\n  \"tableID\": 2304,\n  \"tableNumber\": \"string\",\n  \"capacity\": 889,\n  \"floorID\": 4673,\n  \"status\": \"string\",\n  \"isActive\": false,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -5021,7 +5105,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -5044,7 +5128,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"tableID\": 8462,\n  \"tableNumber\": \"string\",\n  \"capacity\": 5543,\n  \"floorID\": 4699,\n  \"status\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                          "raw": "{\n  \"tableID\": 2304,\n  \"tableNumber\": \"string\",\n  \"capacity\": 889,\n  \"floorID\": 4673,\n  \"status\": \"string\",\n  \"isActive\": false,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -5065,7 +5149,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -5097,7 +5181,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "9170"
+                          "value": "2409"
                         }
                       ]
                     }
@@ -5127,7 +5211,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "9170"
+                              "value": "2409"
                             }
                           ]
                         }
@@ -5158,7 +5242,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"orderID\": 6273,\n  \"tableID\": 2384\n}",
+                      "raw": "{\n  \"orderID\": 6121,\n  \"tableID\": 1736\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -5196,7 +5280,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"orderID\": 6273,\n  \"tableID\": 2384\n}",
+                          "raw": "{\n  \"orderID\": 6121,\n  \"tableID\": 1736\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -5239,7 +5323,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"tableID\": 8462,\n  \"tableNumber\": \"string\",\n  \"capacity\": 5543,\n  \"floorID\": 4699,\n  \"status\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                  "raw": "{\n  \"tableID\": 2304,\n  \"tableNumber\": \"string\",\n  \"capacity\": 889,\n  \"floorID\": 4673,\n  \"status\": \"string\",\n  \"isActive\": false,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -5276,7 +5360,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"tableID\": 8462,\n  \"tableNumber\": \"string\",\n  \"capacity\": 5543,\n  \"floorID\": 4699,\n  \"status\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "raw": "{\n  \"tableID\": 2304,\n  \"tableNumber\": \"string\",\n  \"capacity\": 889,\n  \"floorID\": 4673,\n  \"status\": \"string\",\n  \"isActive\": false,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -5378,7 +5462,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1769.476274904549"
+                          "value": "5924.2816862797"
                         }
                       ]
                     }
@@ -5408,7 +5492,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "1769.476274904549"
+                              "value": "5924.2816862797"
                             }
                           ]
                         }
@@ -5434,7 +5518,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"voucherTypeName\": \"string\",\n  \"isTax\": true,\n  \"narration\": \"string\",\n  \"isActive\": false,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "raw": "{\n  \"voucherTypeName\": \"string\",\n  \"isTax\": true,\n  \"narration\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -5455,7 +5539,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1769.476274904549"
+                          "value": "5924.2816862797"
                         }
                       ]
                     }
@@ -5478,7 +5562,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n  \"voucherTypeName\": \"string\",\n  \"isTax\": true,\n  \"narration\": \"string\",\n  \"isActive\": false,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                          "raw": "{\n  \"voucherTypeName\": \"string\",\n  \"isTax\": true,\n  \"narration\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                           "options": {
                             "raw": {
                               "headerFamily": "json",
@@ -5499,7 +5583,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "1769.476274904549"
+                              "value": "5924.2816862797"
                             }
                           ]
                         }
@@ -5531,7 +5615,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1769.476274904549"
+                          "value": "5924.2816862797"
                         }
                       ]
                     }
@@ -5561,7 +5645,7 @@
                           "variable": [
                             {
                               "key": "id",
-                              "value": "1769.476274904549"
+                              "value": "5924.2816862797"
                             }
                           ]
                         }
@@ -5589,7 +5673,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"voucherTypeName\": \"string\",\n  \"isTax\": true,\n  \"narration\": \"string\",\n  \"isActive\": false,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                  "raw": "{\n  \"voucherTypeName\": \"string\",\n  \"isTax\": true,\n  \"narration\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -5626,7 +5710,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"voucherTypeName\": \"string\",\n  \"isTax\": true,\n  \"narration\": \"string\",\n  \"isActive\": false,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
+                      "raw": "{\n  \"voucherTypeName\": \"string\",\n  \"isTax\": true,\n  \"narration\": \"string\",\n  \"isActive\": true,\n  \"extra1\": \"string\",\n  \"extra2\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
