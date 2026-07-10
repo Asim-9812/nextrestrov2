@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/models/sales_report_model.dart';
+import '../../data/models/product_sales_report_model.dart';
 import '../../data/repositories/reports_repository_impl.dart';
 
 part 'reports_controller.g.dart';
@@ -25,6 +26,36 @@ class SalesReportController extends _$SalesReportController {
     );
 
     final result = await ref.read(reportsRepositoryProvider).getSalesReport(request);
+    
+    state = result.fold(
+      (failure) => AsyncValue.error(failure.message, StackTrace.current),
+      (response) => AsyncValue.data(response.data),
+    );
+  }
+}
+
+@riverpod
+class ProductSalesReportController extends _$ProductSalesReportController {
+  @override
+  AsyncValue<ProductSalesReportData?> build() {
+    return const AsyncValue.data(null);
+  }
+
+  Future<void> fetchProductSalesReport({
+    required DateTime fromDate,
+    required DateTime toDate,
+    required int fiscalYearID,
+  }) async {
+    state = const AsyncValue.loading();
+    
+    final request = ProductSalesReportRequest(
+      fromDate: fromDate.toIso8601String(),
+      toDate: toDate.toIso8601String(),
+      fiscalYearID: fiscalYearID,
+      branchID: '3', // Constant for now as requested
+    );
+
+    final result = await ref.read(reportsRepositoryProvider).getProductSalesReport(request);
     
     state = result.fold(
       (failure) => AsyncValue.error(failure.message, StackTrace.current),

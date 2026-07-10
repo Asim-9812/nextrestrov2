@@ -4,6 +4,7 @@ import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import '../providers/reports_controller.dart';
 import '../widgets/sales_report_content.dart';
+import '../widgets/product_sales_report_content.dart';
 import '../../../menu/presentation/landscape/widgets/menu_sidebar_item.dart';
 
 class ReportsLandscapePage extends ConsumerWidget {
@@ -36,6 +37,12 @@ class ReportsLandscapePage extends ConsumerWidget {
                       isSelected: selectedIndex == 0,
                       onTap: () => ref.read(selectedReportTabProvider.notifier).set(0),
                     ),
+                    MenuSidebarItem(
+                      icon: MaterialSymbols.inventory,
+                      label: 'Product Sales Report',
+                      isSelected: selectedIndex == 1,
+                      onTap: () => ref.read(selectedReportTabProvider.notifier).set(1),
+                    ),
                   ],
                 ),
               ),
@@ -60,6 +67,8 @@ class ReportsLandscapePage extends ConsumerWidget {
     switch (selectedIndex) {
       case 0:
         return const SalesReportContent();
+      case 1:
+        return const ProductSalesReportContent();
       default:
         return const Center(child: Text('Select a report from the menu'));
     }

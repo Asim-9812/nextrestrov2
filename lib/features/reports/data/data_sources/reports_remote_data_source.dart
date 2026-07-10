@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextrestro/core/network/api_client.dart';
+import 'package:nextrestro/core/network/api_constants.dart';
 import '../models/sales_report_model.dart';
+import '../models/product_sales_report_model.dart';
 
 final reportsRemoteDataSourceProvider = Provider<ReportsRemoteDataSource>((ref) {
   return ReportsRemoteDataSource(ref.read(apiClientProvider));
@@ -13,9 +15,17 @@ class ReportsRemoteDataSource {
 
   Future<SalesReportResponse> getSalesReport(SalesReportRequest request) async {
     final response = await _apiClient.post(
-      '/api/reports/sales',
+      ApiConstants.getSalesReportEndpoint,
       data: request.toJson(),
     );
     return SalesReportResponse.fromJson(response.data);
+  }
+
+  Future<ProductSalesReportResponse> getProductSalesReport(ProductSalesReportRequest request) async {
+    final response = await _apiClient.post(
+      ApiConstants.getProductSalesReportEndpoint,
+      data: request.toJson(),
+    );
+    return ProductSalesReportResponse.fromJson(response.data);
   }
 }

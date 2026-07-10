@@ -24,10 +24,13 @@ import 'package:nextrestro/features/admin_dashboard/presentation/widgets/sales_s
 import 'package:nextrestro/features/admin_dashboard/presentation/widgets/top_selling_section.dart';
 import 'package:nextrestro/features/department/presentation/pages/department_page.dart';
 import 'package:nextrestro/features/reports/presentation/pages/reports_page.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/providers/admin_navigation_provider.dart';
 import 'widgets/admin_sidebar.dart';
 import 'widgets/admin_header.dart';
 import 'widgets/active_shift_card.dart';
 import 'widgets/recent_orders_section.dart';
+
+import 'widgets/quick_actions_row.dart';
 
 class AdminDashboardLandscapePage extends ConsumerStatefulWidget {
   const AdminDashboardLandscapePage({super.key});
@@ -39,7 +42,6 @@ class AdminDashboardLandscapePage extends ConsumerStatefulWidget {
 
 class _AdminDashboardLandscapePageState
     extends ConsumerState<AdminDashboardLandscapePage> {
-  int _selectedIndex = 0;
   bool _isSalesExpanded = false;
 
   void _handleLogout() {
@@ -76,26 +78,26 @@ class _AdminDashboardLandscapePageState
 
   @override
   Widget build(BuildContext context) {
+    final selectedIndex = ref.watch(adminDashboardTabControllerProvider);
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Row(
         children: [
           AdminSidebar(
-            selectedIndex: _selectedIndex,
+            selectedIndex: selectedIndex,
             onItemSelected: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
+              ref.read(adminDashboardTabControllerProvider.notifier).set(index);
             },
             onLogout: _handleLogout,
           ),
           Expanded(
             child: Column(
               children: [
-                AdminHeader(title: _getPageTitle()),
+                AdminHeader(title: _getPageTitle(selectedIndex)),
                 Expanded(
                   child: IndexedStack(
-                    index: _selectedIndex,
+                    index: selectedIndex,
                     children: [
                       _buildHomeTab(),
                       _buildOrdersTab(),
@@ -118,8 +120,8 @@ class _AdminDashboardLandscapePageState
     );
   }
 
-  String _getPageTitle() {
-    switch (_selectedIndex) {
+  String _getPageTitle(int index) {
+    switch (index) {
       case 0:
         return 'Dashboard';
       case 1:
@@ -179,13 +181,13 @@ class _AdminDashboardLandscapePageState
           shiftState.when(
             data: (state) {
               final shift = state.shifts.isNotEmpty && state.shifts.first.shiftStatus == 1 ? state.shifts.first : null;
-              if (shift == null) {
-                return _buildNoShiftCard();
-              }
-              return ActiveShiftCard(
-                shift: shift,
-                openerName: state.selectedShiftOpenerName,
-              );
+              
+              return shift == null 
+                  ? _buildNoShiftCard() 
+                  : ActiveShiftCard(
+                      shift: shift,
+                      openerName: state.selectedShiftOpenerName,
+                    );
             },
             loading: () => const Center(
               child: Padding(
@@ -195,6 +197,11 @@ class _AdminDashboardLandscapePageState
             ),
             error: (error, stack) => Text('Shift Error: $error'),
           ),
+          const SizedBox(height: 16),
+
+          // Quick Actions Horizontally Scrollable Row
+          const QuickActionsRow(),
+          // const SizedBox(height: 24),
           const SizedBox(height: 16),
 
           // Dashboard Overview Header

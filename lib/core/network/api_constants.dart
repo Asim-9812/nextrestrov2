@@ -1,6 +1,6 @@
 class ApiConstants {
   // Base URL
-  static const String baseUrl = 'https://zxvco-103-1-93-10.free.pinggy.net';
+  static const String baseUrl = 'https://qxxay-103-1-93-10.run.pinggy-free.link';
 
   // Timeouts (in milliseconds)
   static const Duration connectionTimeout = Duration(seconds: 30);
@@ -54,6 +54,13 @@ class ApiConstants {
   static const String updateDepartmentEndpoint = '/api/Department';
   static const String deleteDepartmentEndpoint = '/api/Department/:id';
 
+  // Endpoints - Fiscal Year
+  static const String getFiscalYearByIdEndpoint = '/api/FiscalYear/:id';
+  static const String createFiscalYearEndpoint = '/api/FiscalYear';
+  static const String getFiscalYearsEndpoint = '/api/FiscalYear';
+  static const String updateFiscalYearEndpoint = '/api/FiscalYear/:id';
+  static const String deleteFiscalYearEndpoint = '/api/FiscalYear/:id';
+
   // Endpoints - Menu
   static const String getMenuCategoryEndpoint = '/api/Menu/category/:id';
   static const String getMenuSubcategoryEndpoint = '/api/Menu/subcategory/:id';
@@ -73,11 +80,21 @@ class ApiConstants {
   // Endpoints - Payment Session
   static const String createPaymentSessionEndpoint = '/api/PaymentSession/create-session';
 
+  // Endpoints - Prefix Suffix
+  static const String createPrefixSuffixEndpoint = '/api/PrefixSuffix';
+  static const String getPrefixSuffixesEndpoint = '/api/PrefixSuffix';
+  static const String updatePrefixSuffixEndpoint = '/api/PrefixSuffix/:id';
+  static const String deletePrefixSuffixEndpoint = '/api/PrefixSuffix/:id';
+
   // Endpoints - Product
   static const String createProductEndpoint = '/api/Product';
   static const String getProductsEndpoint = '/api/Product';
   static const String updateProductEndpoint = '/api/Product';
   static const String deleteProductEndpoint = '/api/Product/:id';
+
+  // Endpoints - Reports
+  static const String getProductSalesReportEndpoint = '/api/reports/productsales';
+  static const String getSalesReportEndpoint = '/api/reports/sales';
 
   // Endpoints - Reservation
   static const String createReservationEndpoint = '/api/Reservation/createreservation';
@@ -102,5 +119,14 @@ class ApiConstants {
   static const String getTablesEndpoint = '/api/Table';
   static const String updateTableEndpoint = '/api/Table/:id';
   static const String deleteTableEndpoint = '/api/Table/:id';
+  static const String updateTableStatusEndpoint = '/api/Table/:id/status';
+  static const String getTableQrEndpoint = '/api/Table/:id/qr';
   static const String changeTableEndpoint = '/api/Table/change-table';
+
+  // Endpoints - Voucher Type
+  static const String getVoucherTypeByIdEndpoint = '/api/VoucherType/:id';
+  static const String createVoucherTypeEndpoint = '/api/VoucherType';
+  static const String getVoucherTypesEndpoint = '/api/VoucherType';
+  static const String updateVoucherTypeEndpoint = '/api/VoucherType/:id';
+  static const String deleteVoucherTypeEndpoint = '/api/VoucherType/:id';
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/providers/admin_navigation_provider.dart';
 import 'package:nextrestro/features/orders/presentation/pages/landscape/widgets/dashboard/orders_dashboard_landscape_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/landscape/widgets/place_order/orders_place_order_landscape_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/landscape/widgets/pending/pending_orders_landscape_page.dart';
@@ -16,11 +17,11 @@ class OrdersLandscapePage extends ConsumerStatefulWidget {
 }
 
 class _OrdersLandscapePageState extends ConsumerState<OrdersLandscapePage> {
-  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final shiftState = ref.watch(shiftControllerProvider);
+    final selectedIndex = ref.watch(ordersTabControllerProvider);
 
     return Scaffold(
       backgroundColor: AppColors.bg,
@@ -34,11 +35,9 @@ class _OrdersLandscapePageState extends ConsumerState<OrdersLandscapePage> {
           return Row(
             children: [
               OrdersSidebar(
-                selectedIndex: _selectedIndex,
+                selectedIndex: selectedIndex,
                 onItemSelected: (index) {
-                  setState(() {
-                    _selectedIndex = index;
-                  });
+                  ref.read(ordersTabControllerProvider.notifier).set(index);
                 },
               ),
               Expanded(
@@ -46,7 +45,7 @@ class _OrdersLandscapePageState extends ConsumerState<OrdersLandscapePage> {
                   children: [
                     Expanded(
                       child: IndexedStack(
-                        index: _selectedIndex.clamp(0, 3),
+                        index: selectedIndex.clamp(0, 3),
                         children: const [
                           OrdersDashboardLandscapePage(),
                           OrdersPlaceOrderLandscapePage(),

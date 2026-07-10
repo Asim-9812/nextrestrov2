@@ -5,6 +5,8 @@ import 'package:nextrestro/core/utils/time_formatter.dart';
 import 'package:nextrestro/features/shift/data/models/shift_model.dart';
 import 'package:nextrestro/features/shift/presentation/providers/shift_management_provider.dart';
 
+import 'package:nextrestro/features/shift/data/models/shift_model.dart';
+
 class ActiveShiftCard extends ConsumerWidget {
   final ShiftModel shift;
   final String? openerName;
