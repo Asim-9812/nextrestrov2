@@ -1,35 +1,30 @@
-# Admin Dashboard Portrait UI Improvements Walkthrough
+# Comprehensive Report Filters Walkthrough
 
-I have improved the portrait version of the Admin Dashboard to match the visual style and functional richness of the landscape version, while ensuring it is optimized for vertical screens.
+I have implemented advanced filtering capabilities across all report types (Sales, Product Sales, Customer Sales, and User Sales). This allows for much more granular data analysis directly from the UI.
 
-## Changes Made
+## Key Enhancements
 
-### 1. Visual Consistency & Layout
-- **Background Color**: Changed the background to `AppColors.white` to match the clean look of the landscape dashboard.
-- **Spacing & Padding**: Standardized padding (16px and 12px) and increased vertical spacing between sections to improve readability.
-- **Improved Header**: The app bar remains consistent, but the inner content now feels more spacious and modern.
+### 1. Unified Filter Logic
+- **Controller Updates**: Updated all `ReportsController` methods to accept and pass new filtering parameters (Branch, User, Customer, Category, Product, Table, Invoice No) to the backend API.
+- **Provider Integration**: Leveraged existing providers for `Branches`, `Staff`, `Customers`, `Tables`, `Categories`, and `Products` to populate filter dropdowns dynamically.
 
-### 2. New Content & Insights
-- **Quick Actions Row**: Added the horizontally scrollable Quick Actions row (Place Order, Set Reservation, Add Customer, Shift Details) to the portrait view.
-- **"Overview" Section**: Added a dedicated Overview header with a new compact date range selector.
-- **Detailed Insights**: Added the **Sales Summary Pie Chart** and **Orders Overview Grid** to the home tab. These widgets are now stacked vertically for a better fit on mobile screens.
+### 2. Intelligent Defaults
+- **Branch Selection**: Automatically selects the first available branch by default.
+- **"All" Options**: Added "All" options (with ID 0) for Users, Customers, Categories, Products, and Tables to allow for high-level summary views.
 
-### 3. Improved Shift Management UI
-- **PortraitActiveShiftCard**: Created a new, more detailed shift card for portrait mode. It includes:
-    - Shift name and status indicator.
-    - Running duration.
-    - Key metrics (Cash Drawer, Sales Today) in a clean grid layout.
-    - Easily accessible "End Shift" button.
-- **Improved "No Shift" State**: Refined the UI when no shift is active, making it more inviting to "Open" a shift.
+### 3. Responsive & Dynamic Layouts
+- **Portrait Mode**: Designed a vertical-stack filter layout for mobile devices, ensuring that even with multiple dropdowns and date pickers, the UI remains clean and usable.
+- **Landscape Mode**: Implemented a multi-row grid layout for filters in tablet/desktop views to maximize screen space while keeping filters easily accessible.
 
-### 4. Code Refactoring & Responsiveness
-- **Shared Widgets**: Moved `QuickActionsRow` to a shared directory (`lib/features/admin_dashboard/presentation/widgets/`) so it's maintained in one place for both orientations.
-- **Responsive Pie Chart**: Updated `SalesSummaryPieChart` to support both horizontal (landscape) and vertical (portrait) layouts via an `isPortrait` parameter.
-- **Clean Code**: Removed unused imports, unused methods, and fixed syntax errors in the portrait page implementation.
+### 4. Report-Specific Filters
+- **Sales Report**: Added filters for Branch, Customer, Table, and Invoice No.
+- **Product Sales Report**: Added filters for Branch, Category, Product, and Customer.
+- **Customer Sales Report**: Added filters for Branch and Customer.
+- **User Sales Report**: Added filters for Branch and User.
 
 ## Verification Results
 
-- **Landscape Consistency**: Verified that the landscape dashboard still works correctly and looks as intended after the refactoring.
-- **Portrait Optimization**: The new layout successfully fits all essential information without feeling cramped.
-- **Functional Check**: Verified that all buttons (refresh, logout, drawer navigation, quick actions) are correctly wired up.
-- **Code Quality**: Performed static analysis to ensure no syntax errors or critical warnings remain.
+- **Data Integrity**: Verified that all new filter parameters are correctly mapped to their respective API request models.
+- **UI Stability**: Confirmed that the layouts adapt correctly between Portrait and Landscape orientations without overflows.
+- **State Management**: Ensured that changing a filter updates the local state and correctly triggers a new API fetch when the "Search" button is clicked.
+- **Clean Code**: Fixed deprecation warnings related to `DropdownButtonFormField` usage.

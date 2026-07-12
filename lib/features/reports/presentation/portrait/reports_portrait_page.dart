@@ -5,6 +5,7 @@ import '../providers/reports_controller.dart';
 import '../widgets/sales_report_content.dart';
 import '../widgets/product_sales_report_content.dart';
 import '../widgets/customer_sales_report_content.dart';
+import '../widgets/user_sales_report_content.dart';
 
 class ReportsPortraitPage extends ConsumerWidget {
   const ReportsPortraitPage({super.key});
@@ -38,6 +39,10 @@ class ReportsPortraitPage extends ConsumerWidget {
             icon: Icon(Icons.group),
             label: 'Customer',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'User',
+          ),
         ],
       ),
     );
@@ -51,6 +56,8 @@ class ReportsPortraitPage extends ConsumerWidget {
         return const ProductSalesReportContent(isPortrait: true);
       case 2:
         return const CustomerSalesReportContent(isPortrait: true);
+      case 3:
+        return const UserSalesReportContent(isPortrait: true);
       default:
         return const Center(child: Text('Select a report'));
     }

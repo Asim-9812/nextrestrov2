@@ -206,6 +206,74 @@ abstract class _$CustomerSalesReportController
   }
 }
 
+@ProviderFor(UserSalesReportController)
+final userSalesReportControllerProvider = UserSalesReportControllerProvider._();
+
+final class UserSalesReportControllerProvider
+    extends
+        $NotifierProvider<
+          UserSalesReportController,
+          AsyncValue<UserSalesReportData?>
+        > {
+  UserSalesReportControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userSalesReportControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userSalesReportControllerHash();
+
+  @$internal
+  @override
+  UserSalesReportController create() => UserSalesReportController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AsyncValue<UserSalesReportData?> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AsyncValue<UserSalesReportData?>>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$userSalesReportControllerHash() =>
+    r'976ea4e2397e3a3ca3a60e7a7a288db6e04f6e5f';
+
+abstract class _$UserSalesReportController
+    extends $Notifier<AsyncValue<UserSalesReportData?>> {
+  AsyncValue<UserSalesReportData?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<UserSalesReportData?>,
+              AsyncValue<UserSalesReportData?>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<UserSalesReportData?>,
+                AsyncValue<UserSalesReportData?>
+              >,
+              AsyncValue<UserSalesReportData?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
 @ProviderFor(SelectedReportTab)
 final selectedReportTabProvider = SelectedReportTabProvider._();
 

@@ -4,45 +4,41 @@ import 'package:intl/intl.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/fiscal_year/presentation/providers/fiscal_year_provider.dart';
 import 'package:nextrestro/features/branch/presentation/providers/branch_provider.dart';
-import 'package:nextrestro/features/customer/presentation/providers/customer_provider.dart';
-import 'package:nextrestro/features/tables/presentation/providers/table_provider.dart';
+import 'package:nextrestro/features/users/presentation/providers/staff_provider.dart';
 import '../providers/reports_controller.dart';
 import '../../../fiscal_year/data/models/fiscal_year_model.dart';
+import '../../data/models/user_sales_report_model.dart';
 
-class SalesReportContent extends ConsumerStatefulWidget {
+class UserSalesReportContent extends ConsumerStatefulWidget {
   final bool isPortrait;
-  const SalesReportContent({super.key, this.isPortrait = false});
+  const UserSalesReportContent({super.key, this.isPortrait = false});
 
   @override
-  ConsumerState<SalesReportContent> createState() => _SalesReportContentState();
+  ConsumerState<UserSalesReportContent> createState() => _UserSalesReportContentState();
 }
 
-class _SalesReportContentState extends ConsumerState<SalesReportContent> {
+class _UserSalesReportContentState extends ConsumerState<UserSalesReportContent> {
   DateTime fromDate = DateTime.now().subtract(const Duration(days: 30));
   DateTime toDate = DateTime.now();
   int? selectedFiscalYearID;
   int? selectedBranchID;
-  int selectedCustomerID = 0;
-  int selectedTableID = 0;
-  final TextEditingController _invoiceController = TextEditingController();
+  int selectedUserID = 0; // Default to 0 (All)
   
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
   @override
   void dispose() {
-    _invoiceController.dispose();
     _searchController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final reportState = ref.watch(salesReportControllerProvider);
+    final reportState = ref.watch(userSalesReportControllerProvider);
     final fiscalYearsAsync = ref.watch(fiscalYearsProvider);
     final branchesAsync = ref.watch(branchesProvider);
-    final customersAsync = ref.watch(customersProvider);
-    final tablesAsync = ref.watch(tablesStreamProvider);
+    final staffAsync = ref.watch(allStaffProvider);
 
     return Column(
       children: [
@@ -54,11 +50,11 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Sales Report Filters',
+                'User Sales Report Filters',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              _buildFilters(fiscalYearsAsync, branchesAsync, customersAsync, tablesAsync),
+              _buildFilters(fiscalYearsAsync, branchesAsync, staffAsync),
             ],
           ),
         ),
@@ -73,8 +69,7 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
               
               final filteredData = data.data.where((item) {
                 final query = _searchQuery.toLowerCase();
-                return (item.invoiceNo?.toLowerCase().contains(query) ?? false) ||
-                       (item.customerName?.toLowerCase().contains(query) ?? false);
+                return (item.userName?.toLowerCase().contains(query) ?? false);
               }).toList();
 
               return Column(
@@ -85,7 +80,7 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
                       controller: _searchController,
                       onChanged: (value) => setState(() => _searchQuery = value),
                       decoration: InputDecoration(
-                        hintText: 'Search by Invoice or Customer...',
+                        hintText: 'Search by User Name...',
                         prefixIcon: const Icon(Icons.search, size: 20),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -127,8 +122,7 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
   Widget _buildFilters(
     AsyncValue<List<FiscalYearModel>> fiscalYears,
     AsyncValue<dynamic> branches,
-    AsyncValue<dynamic> customers,
-    AsyncValue<dynamic> tables,
+    AsyncValue<dynamic> staff,
   ) {
     if (widget.isPortrait) {
       return Column(
@@ -145,18 +139,7 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
           const SizedBox(height: 12),
           _buildBranchDropdown(branches),
           const SizedBox(height: 12),
-          _buildCustomerDropdown(customers),
-          const SizedBox(height: 12),
-          _buildTableDropdown(tables),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _invoiceController,
-            decoration: const InputDecoration(
-              labelText: 'Invoice No',
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            ),
-          ),
+          _buildUserDropdown(staff),
           const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
@@ -190,31 +173,14 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
           children: [
             Expanded(child: _buildBranchDropdown(branches)),
             const SizedBox(width: 12),
-            Expanded(child: _buildCustomerDropdown(customers)),
-            const SizedBox(width: 12),
-            Expanded(child: _buildTableDropdown(tables)),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _invoiceController,
-                decoration: const InputDecoration(
-                  labelText: 'Invoice No',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                ),
-              ),
-            ),
+            Expanded(child: _buildUserDropdown(staff)),
             const SizedBox(width: 12),
             ElevatedButton(
               onPressed: _onSearch,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 18),
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
               ),
               child: const Text('Search'),
             ),
@@ -224,7 +190,7 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
     );
   }
 
-  Widget _buildSummaryCards(dynamic summary) {
+  Widget _buildSummaryCards(UserSalesReportSummary summary) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -238,15 +204,15 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
                   children: [
                     Expanded(child: _summaryCard('Total Bills', summary.totalBills.toString())),
                     const SizedBox(width: 8),
-                    Expanded(child: _summaryCard('Grand Total', 'Rs. ${summary.grandTotal.toStringAsFixed(2)}')),
+                    Expanded(child: _summaryCard('Net Amount', 'Rs. ${summary.netAmount.toStringAsFixed(2)}')),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Expanded(child: _summaryCard('Total Items', summary.totalItems.toString())),
+                    Expanded(child: _summaryCard('Total Qty', summary.totalQuantity.toString())),
                     const SizedBox(width: 8),
-                    Expanded(child: _summaryCard('Tax', 'Rs. ${summary.tax.toStringAsFixed(2)}')),
+                    Expanded(child: _summaryCard('Tax', 'Rs. ${summary.taxAmount.toStringAsFixed(2)}')),
                   ],
                 ),
               ],
@@ -255,13 +221,13 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
               children: [
                 Expanded(child: _summaryCard('Total Bills', summary.totalBills.toString())),
                 const SizedBox(width: 12),
-                Expanded(child: _summaryCard('SubTotal', 'Rs. ${summary.subTotal.toStringAsFixed(2)}')),
+                Expanded(child: _summaryCard('Total Qty', summary.totalQuantity.toString())),
                 const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Discount', 'Rs. ${summary.discount.toStringAsFixed(2)}')),
+                Expanded(child: _summaryCard('Gross Amount', 'Rs. ${summary.grossAmount.toStringAsFixed(2)}')),
                 const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Tax', 'Rs. ${summary.tax.toStringAsFixed(2)}')),
+                Expanded(child: _summaryCard('Tax', 'Rs. ${summary.taxAmount.toStringAsFixed(2)}')),
                 const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Grand Total', 'Rs. ${summary.grandTotal.toStringAsFixed(2)}')),
+                Expanded(child: _summaryCard('Net Amount', 'Rs. ${summary.netAmount.toStringAsFixed(2)}')),
               ],
             ),
     );
@@ -366,53 +332,30 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
     );
   }
 
-  Widget _buildCustomerDropdown(AsyncValue<dynamic> customersAsync) {
-    return customersAsync.when(
-      data: (customers) {
-        final customerList = customers as List;
+  Widget _buildUserDropdown(AsyncValue<dynamic> staffAsync) {
+    return staffAsync.when(
+      data: (staff) {
+        final staffList = staff as List;
         return DropdownButtonFormField<int>(
-          initialValue: selectedCustomerID,
+          initialValue: selectedUserID,
           decoration: const InputDecoration(
-            labelText: 'Customer',
+            labelText: 'User',
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           ),
           items: [
-            const DropdownMenuItem(value: 0, child: Text('All Customers')),
-            ...customerList.map((c) => DropdownMenuItem(value: c.customerID as int, child: Text('${c.firstName} ${c.lastName}'))),
+            const DropdownMenuItem(value: 0, child: Text('All Users')),
+            ...staffList.map((s) => DropdownMenuItem(value: s.userID as int, child: Text(s.fullName ?? s.username))),
           ],
-          onChanged: (val) => setState(() => selectedCustomerID = val ?? 0),
+          onChanged: (val) => setState(() => selectedUserID = val ?? 0),
         );
       },
       loading: () => const LinearProgressIndicator(),
-      error: (_, __) => const Text('Error loading customers'),
+      error: (_, __) => const Text('Error loading users'),
     );
   }
 
-  Widget _buildTableDropdown(AsyncValue<dynamic> tablesAsync) {
-    return tablesAsync.when(
-      data: (tables) {
-        final tableList = tables as List;
-        return DropdownButtonFormField<int>(
-          initialValue: selectedTableID,
-          decoration: const InputDecoration(
-            labelText: 'Table',
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          ),
-          items: [
-            const DropdownMenuItem(value: 0, child: Text('All Tables')),
-            ...tableList.map((t) => DropdownMenuItem(value: t.tableID as int, child: Text('Table ${t.tableNumber}'))),
-          ],
-          onChanged: (val) => setState(() => selectedTableID = val ?? 0),
-        );
-      },
-      loading: () => const LinearProgressIndicator(),
-      error: (_, __) => const Text('Error loading tables'),
-    );
-  }
-
-  Widget _buildDataTable(List<dynamic> data) {
+  Widget _buildDataTable(List<UserSalesData> data) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -433,22 +376,22 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
                   columnSpacing: 12,
                   horizontalMargin: 12,
                   columns: const [
-                    DataColumn(label: Text('Invoice No', style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text('Date', style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text('Customer', style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text('Table', style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text('SubTotal', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('SN', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('User Name', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Bills', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Qty', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Gross', style: TextStyle(fontWeight: FontWeight.bold))),
                     DataColumn(label: Text('Tax', style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text('Grand Total', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Net', style: TextStyle(fontWeight: FontWeight.bold))),
                   ],
-                  rows: const [],
+                  rows: const [], // No rows in header table
                 ),
                 // Scrollable Body
                 Expanded(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: DataTable(
-                      headingRowHeight: 0,
+                      headingRowHeight: 0, // Hide header in body table
                       columnSpacing: 12,
                       horizontalMargin: 12,
                       columns: const [
@@ -461,13 +404,13 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
                         DataColumn(label: SizedBox.shrink()),
                       ],
                       rows: data.map((item) => DataRow(cells: [
-                        DataCell(Text(item.invoiceNo ?? '', style: const TextStyle(fontSize: 13))),
-                        DataCell(Text(DateFormat('MMM dd, yyyy HH:mm').format(DateTime.parse(item.billingDate)), style: const TextStyle(fontSize: 13))),
-                        DataCell(Text(item.customerName ?? '-', style: const TextStyle(fontSize: 13))),
-                        DataCell(Text(item.tableNumber ?? '-', style: const TextStyle(fontSize: 13))),
-                        DataCell(Text(item.subTotal.toStringAsFixed(2), style: const TextStyle(fontSize: 13))),
-                        DataCell(Text(item.tax.toStringAsFixed(2), style: const TextStyle(fontSize: 13))),
-                        DataCell(Text(item.grandTotal.toStringAsFixed(2), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.primary))),
+                        DataCell(Text(item.sn?.toString() ?? '', style: const TextStyle(fontSize: 13))),
+                        DataCell(Text(item.userName ?? '', style: const TextStyle(fontSize: 13))),
+                        DataCell(Text(item.totalBills.toString(), style: const TextStyle(fontSize: 13))),
+                        DataCell(Text(item.quantity.toString(), style: const TextStyle(fontSize: 13))),
+                        DataCell(Text(item.grossAmount.toStringAsFixed(2), style: const TextStyle(fontSize: 13))),
+                        DataCell(Text(item.taxAmount.toStringAsFixed(2), style: const TextStyle(fontSize: 13))),
+                        DataCell(Text(item.netAmount.toStringAsFixed(2), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.primary))),
                       ])).toList(),
                     ),
                   ),
@@ -485,14 +428,12 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a fiscal year')));
       return;
     }
-    ref.read(salesReportControllerProvider.notifier).fetchSalesReport(
+    ref.read(userSalesReportControllerProvider.notifier).fetchUserSalesReport(
       fromDate: fromDate,
       toDate: toDate,
       fiscalYearID: selectedFiscalYearID!,
-      branchID: selectedBranchID ?? 0,
-      customerID: selectedCustomerID,
-      tableID: selectedTableID,
-      invoiceNo: _invoiceController.text,
+      branchID: selectedBranchID?.toString() ?? '0',
+      userID: selectedUserID,
     );
   }
 }

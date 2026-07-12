@@ -4,6 +4,7 @@ import 'package:nextrestro/core/network/api_constants.dart';
 import '../models/sales_report_model.dart';
 import '../models/product_sales_report_model.dart';
 import '../models/customer_sales_report_model.dart';
+import '../models/user_sales_report_model.dart';
 
 final reportsRemoteDataSourceProvider = Provider<ReportsRemoteDataSource>((ref) {
   return ReportsRemoteDataSource(ref.read(apiClientProvider));
@@ -36,5 +37,13 @@ class ReportsRemoteDataSource {
       data: request.toJson(),
     );
     return CustomerSalesReportResponse.fromJson(response.data);
+  }
+
+  Future<UserSalesReportResponse> getUserSalesReport(UserSalesReportRequest request) async {
+    final response = await _apiClient.post(
+      ApiConstants.getUserSalesReportEndpoint,
+      data: request.toJson(),
+    );
+    return UserSalesReportResponse.fromJson(response.data);
   }
 }

@@ -1,53 +1,63 @@
-# Improve Portrait Admin Dashboard UI
+# Implementation Plan - User Sales Report
 
-The goal is to update the portrait version of the admin dashboard to match the visual style and content richness of the landscape version, while ensuring it remains optimized for vertical screens.
+Add a new User Sales Report feature to track sales performance per user, including API integration, data modeling, and UI implementation.
 
 ## Proposed Changes
 
-### [Admin Dashboard Common Widgets]
+### [Core Network]
 
-Move shared widgets to a central location and update them for responsiveness.
-
-#### [NEW] [quick_actions_row.dart](file:///D:/StudioProjects/nextrestro/lib/features/admin_dashboard/presentation/widgets/quick_actions_row.dart)
-- Move from `landscape/widgets/quick_actions_row.dart` to `widgets/quick_actions_row.dart`.
-
-#### [DELETE] [quick_actions_row.dart](file:///D:/StudioProjects/nextrestro/lib/features/admin_dashboard/presentation/landscape/widgets/quick_actions_row.dart)
-
-#### [sales_summary_pie_chart.dart](file:///D:/StudioProjects/nextrestro/lib/features/admin_dashboard/presentation/widgets/sales_summary_pie_chart.dart)
-- Add `isPortrait` parameter.
-- If `isPortrait` is true, stack the chart and legend vertically instead of horizontally.
-
-#### [NEW] [portrait_active_shift_card.dart](file:///D:/StudioProjects/nextrestro/lib/features/admin_dashboard/presentation/potrait/widgets/portrait_active_shift_card.dart)
-- Create a more visually appealing shift card for portrait, matching the `ActiveShiftCard` "vibe" but with a vertical layout for info sections.
+#### [api_constants.dart](file:///D:/StudioProjects/nextrestro/lib/core/network/api_constants.dart)
+- Add `getUserSalesReportEndpoint = '/api/reports/usersales'`
 
 ---
 
-### [Admin Dashboard Portrait Page]
+### [Reports Feature - Data Layer]
 
-#### [admin_dashboard_potrait_page.dart](file:///D:/StudioProjects/nextrestro/lib/features/admin_dashboard/presentation/potrait/admin_dashboard_potrait_page.dart)
-- Update `Scaffold` background to `AppColors.white`.
-- Refactor `_buildDateRangeSelector` to be compact.
-- Update `_buildHomeTab`:
-    - Increase padding and use consistent spacing.
-    - Add `QuickActionsRow`.
-    - Add "Overview" Row with title and compact date range selector.
-    - Use `SummaryBentoBox` (horizontal scrollable).
-    - Add `SalesSummaryPieChart` and `OrdersOverviewGrid` in a vertical stack.
-    - Use the new `PortraitActiveShiftCard` when a shift is active.
+#### [NEW] [user_sales_report_model.dart](file:///D:/StudioProjects/nextrestro/lib/features/reports/data/models/user_sales_report_model.dart)
+- Define `UserSalesReportRequest`, `UserSalesReportResponse`, `UserSalesReportData`, `UserSalesReportSummary`, and `UserSalesData` using `freezed`.
+
+#### [reports_remote_data_source.dart](file:///D:/StudioProjects/nextrestro/lib/features/reports/data/data_sources/reports_remote_data_source.dart)
+- Add `getUserSalesReport` method to fetch data from the new endpoint.
+
+#### [reports_repository_impl.dart](file:///D:/StudioProjects/nextrestro/lib/features/reports/data/repositories/reports_repository_impl.dart)
+- Implement `getUserSalesReport` in the repository.
 
 ---
 
-### [Admin Dashboard Landscape Page]
+### [Reports Feature - Domain Layer]
 
-#### [admin_dashboard_landscape_page.dart](file:///D:/StudioProjects/nextrestro/lib/features/admin_dashboard/presentation/landscape/admin_dashboard_landscape_page.dart)
-- Update import path for `QuickActionsRow`.
+#### [reports_repository.dart](file:///D:/StudioProjects/nextrestro/lib/features/reports/domain/repositories/reports_repository.dart)
+- Add `getUserSalesReport` abstract method.
+
+---
+
+### [Reports Feature - Presentation Layer]
+
+#### [reports_controller.dart](file:///D:/StudioProjects/nextrestro/lib/features/reports/presentation/providers/reports_controller.dart)
+- Add `UserSalesReportController` to manage the report state and fetching logic.
+
+#### [NEW] [user_sales_report_content.dart](file:///D:/StudioProjects/nextrestro/lib/features/reports/presentation/widgets/user_sales_report_content.dart)
+- Implement the UI for User Sales Report, including filters (Date Range, Fiscal Year), a searchable data table, and a summary footer.
+
+#### [reports_landscape_page.dart](file:///D:/StudioProjects/nextrestro/lib/features/reports/presentation/landscape/reports_landscape_page.dart)
+- Add "User Sales Report" to the sidebar.
+- Update `_buildMainContent` to include `UserSalesReportContent`.
+
+#### [reports_portrait_page.dart](file:///D:/StudioProjects/nextrestro/lib/features/reports/presentation/portrait/reports_portrait_page.dart)
+- Add "User" tab to the `BottomNavigationBar`.
+- Update `_buildMainContent` to include `UserSalesReportContent(isPortrait: true)`.
+
+---
 
 ## Verification Plan
 
+### Automated Tests
+- Run `flutter pub run build_runner build --delete-conflicting-outputs` to generate freezed/json_serializable code.
+
 ### Manual Verification
-- Run the app on a mobile emulator (portrait).
-- Verify the new background color and spacing.
-- Check the Quick Actions row functionality.
-- Verify that `SalesSummaryPieChart` and `OrdersOverviewGrid` are displayed correctly and stacked.
-- Check the new active shift card design.
-- Switch to landscape and ensure it still looks good and works as expected.
+- Navigate to the Reports page in both Portrait and Landscape orientations.
+- Select the "User Sales Report" tab.
+- Apply date and fiscal year filters and click "Search".
+- Verify that the data table displays the user sales data correctly.
+- Test the search functionality within the report.
+- Verify the summary footer displays the correct totals.

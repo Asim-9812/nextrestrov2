@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/models/sales_report_model.dart';
 import '../../data/models/product_sales_report_model.dart';
 import '../../data/models/customer_sales_report_model.dart';
+import '../../data/models/user_sales_report_model.dart';
 import '../../data/repositories/reports_repository_impl.dart';
 
 part 'reports_controller.g.dart';
@@ -17,6 +18,11 @@ class SalesReportController extends _$SalesReportController {
     required DateTime fromDate,
     required DateTime toDate,
     required int fiscalYearID,
+    int customerID = 0,
+    int tableID = 0,
+    int paymentMethod = 0,
+    String invoiceNo = '',
+    int branchID = 0,
   }) async {
     state = const AsyncValue.loading();
     
@@ -24,6 +30,11 @@ class SalesReportController extends _$SalesReportController {
       fromDate: fromDate.toIso8601String(),
       toDate: toDate.toIso8601String(),
       fiscalYearID: fiscalYearID,
+      customerID: customerID,
+      tableID: tableID,
+      paymentMethod: paymentMethod,
+      invoiceNo: invoiceNo,
+      branchID: branchID,
     );
 
     final result = await ref.read(reportsRepositoryProvider).getSalesReport(request);
@@ -46,6 +57,10 @@ class ProductSalesReportController extends _$ProductSalesReportController {
     required DateTime fromDate,
     required DateTime toDate,
     required int fiscalYearID,
+    String branchID = '0',
+    int categoryID = 0,
+    int productID = 0,
+    int customerID = 0,
   }) async {
     state = const AsyncValue.loading();
     
@@ -53,7 +68,10 @@ class ProductSalesReportController extends _$ProductSalesReportController {
       fromDate: fromDate.toIso8601String(),
       toDate: toDate.toIso8601String(),
       fiscalYearID: fiscalYearID,
-      branchID: '3', // Constant for now as requested
+      branchID: branchID,
+      categoryID: categoryID,
+      productID: productID,
+      customerID: customerID,
     );
 
     final result = await ref.read(reportsRepositoryProvider).getProductSalesReport(request);
@@ -76,6 +94,8 @@ class CustomerSalesReportController extends _$CustomerSalesReportController {
     required DateTime fromDate,
     required DateTime toDate,
     required int fiscalYearID,
+    String branchID = '0',
+    int customerID = 0,
   }) async {
     state = const AsyncValue.loading();
     
@@ -83,10 +103,44 @@ class CustomerSalesReportController extends _$CustomerSalesReportController {
       fromDate: fromDate.toIso8601String(),
       toDate: toDate.toIso8601String(),
       fiscalYearID: fiscalYearID,
-      branchID: '3', 
+      branchID: branchID,
+      customerID: customerID,
     );
 
     final result = await ref.read(reportsRepositoryProvider).getCustomerSalesReport(request);
+    
+    state = result.fold(
+      (failure) => AsyncValue.error(failure.message, StackTrace.current),
+      (response) => AsyncValue.data(response.data),
+    );
+  }
+}
+
+@riverpod
+class UserSalesReportController extends _$UserSalesReportController {
+  @override
+  AsyncValue<UserSalesReportData?> build() {
+    return const AsyncValue.data(null);
+  }
+
+  Future<void> fetchUserSalesReport({
+    required DateTime fromDate,
+    required DateTime toDate,
+    required int fiscalYearID,
+    String branchID = '0',
+    int userID = 0,
+  }) async {
+    state = const AsyncValue.loading();
+    
+    final request = UserSalesReportRequest(
+      fromDate: fromDate.toIso8601String(),
+      toDate: toDate.toIso8601String(),
+      fiscalYearID: fiscalYearID,
+      branchID: branchID,
+      userID: userID,
+    );
+
+    final result = await ref.read(reportsRepositoryProvider).getUserSalesReport(request);
     
     state = result.fold(
       (failure) => AsyncValue.error(failure.message, StackTrace.current),

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/fiscal_year/presentation/providers/fiscal_year_provider.dart';
+import 'package:nextrestro/features/branch/presentation/providers/branch_provider.dart';
+import 'package:nextrestro/features/customer/presentation/providers/customer_provider.dart';
 import '../providers/reports_controller.dart';
 import '../../../fiscal_year/data/models/fiscal_year_model.dart';
 import '../../data/models/customer_sales_report_model.dart';
@@ -19,6 +21,9 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
   DateTime fromDate = DateTime.now().subtract(const Duration(days: 30));
   DateTime toDate = DateTime.now();
   int? selectedFiscalYearID;
+  int? selectedBranchID;
+  int selectedCustomerID = 0;
+  
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
@@ -32,6 +37,8 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
   Widget build(BuildContext context) {
     final reportState = ref.watch(customerSalesReportControllerProvider);
     final fiscalYearsAsync = ref.watch(fiscalYearsProvider);
+    final branchesAsync = ref.watch(branchesProvider);
+    final customersAsync = ref.watch(customersProvider);
 
     return Column(
       children: [
@@ -47,7 +54,7 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              widget.isPortrait ? _buildPortraitFilters(fiscalYearsAsync) : _buildLandscapeFilters(fiscalYearsAsync),
+              _buildFilters(fiscalYearsAsync, branchesAsync, customersAsync),
             ],
           ),
         ),
@@ -60,23 +67,20 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
                 return const Center(child: Text('Click Search to view the report'));
               }
               
-              // Local filtering
               final filteredData = data.data.where((item) {
                 final query = _searchQuery.toLowerCase();
-                return (item.customerName?.toLowerCase().contains(query) ?? false) ||
-                       (item.sn?.toString().contains(query) ?? false);
+                return (item.customerName?.toLowerCase().contains(query) ?? false);
               }).toList();
 
               return Column(
                 children: [
-                  // Search Bar above table
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: TextField(
                       controller: _searchController,
                       onChanged: (value) => setState(() => _searchQuery = value),
                       decoration: InputDecoration(
-                        hintText: 'Search across all fields...',
+                        hintText: 'Search by Customer Name...',
                         prefixIcon: const Icon(Icons.search, size: 20),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -115,6 +119,77 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
     );
   }
 
+  Widget _buildFilters(
+    AsyncValue<List<FiscalYearModel>> fiscalYears,
+    AsyncValue<dynamic> branches,
+    AsyncValue<dynamic> customers,
+  ) {
+    if (widget.isPortrait) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              Expanded(child: _buildDatePicker('From', fromDate, (date) => setState(() => fromDate = date))),
+              const SizedBox(width: 8),
+              Expanded(child: _buildDatePicker('To', toDate, (date) => setState(() => toDate = date))),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _buildFiscalYearDropdown(fiscalYears),
+          const SizedBox(height: 12),
+          _buildBranchDropdown(branches),
+          const SizedBox(height: 12),
+          _buildCustomerDropdown(customers),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _onSearch,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              child: const Text('Search'),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(child: _buildDatePicker('From', fromDate, (date) => setState(() => fromDate = date))),
+            const SizedBox(width: 12),
+            Expanded(child: _buildDatePicker('To', toDate, (date) => setState(() => toDate = date))),
+            const SizedBox(width: 12),
+            Expanded(child: _buildFiscalYearDropdown(fiscalYears)),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(child: _buildBranchDropdown(branches)),
+            const SizedBox(width: 12),
+            Expanded(child: _buildCustomerDropdown(customers)),
+            const SizedBox(width: 12),
+            ElevatedButton(
+              onPressed: _onSearch,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+              ),
+              child: const Text('Search'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildSummaryCards(CustomerSalesReportSummary summary) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -129,15 +204,15 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
                   children: [
                     Expanded(child: _summaryCard('Total Bills', summary.totalBills.toString())),
                     const SizedBox(width: 8),
-                    Expanded(child: _summaryCard('Total Qty', summary.totalQuantity.toString())),
+                    Expanded(child: _summaryCard('Net Amount', 'Rs. ${summary.netAmount.toStringAsFixed(2)}')),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Expanded(child: _summaryCard('Gross Amount', 'Rs. ${summary.grossAmount}')),
+                    Expanded(child: _summaryCard('Total Qty', summary.totalQuantity.toString())),
                     const SizedBox(width: 8),
-                    Expanded(child: _summaryCard('Net Amount', 'Rs. ${summary.netAmount}')),
+                    Expanded(child: _summaryCard('Tax', 'Rs. ${summary.taxAmount.toStringAsFixed(2)}')),
                   ],
                 ),
               ],
@@ -148,13 +223,13 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
                 const SizedBox(width: 12),
                 Expanded(child: _summaryCard('Total Qty', summary.totalQuantity.toString())),
                 const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Gross Amt', 'Rs. ${summary.grossAmount}')),
+                Expanded(child: _summaryCard('Gross Amt', 'Rs. ${summary.grossAmount.toStringAsFixed(2)}')),
                 const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Discount', 'Rs. ${summary.discountAmount}')),
+                Expanded(child: _summaryCard('Discount', 'Rs. ${summary.discountAmount.toStringAsFixed(2)}')),
                 const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Tax', 'Rs. ${summary.taxAmount}')),
+                Expanded(child: _summaryCard('Tax', 'Rs. ${summary.taxAmount.toStringAsFixed(2)}')),
                 const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Net Amt', 'Rs. ${summary.netAmount}')),
+                Expanded(child: _summaryCard('Net Amt', 'Rs. ${summary.netAmount.toStringAsFixed(2)}')),
               ],
             ),
     );
@@ -180,59 +255,9 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
         children: [
           Text(label, style: const TextStyle(fontSize: 12, color: AppColors.grey)),
           const SizedBox(height: 4),
-          Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primary)),
+          Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primary)),
         ],
       ),
-    );
-  }
-
-  Widget _buildLandscapeFilters(AsyncValue<List<FiscalYearModel>> fiscalYearsAsync) {
-    return Row(
-      children: [
-        _buildDatePicker('From', fromDate, (date) => setState(() => fromDate = date)),
-        const SizedBox(width: 16),
-        _buildDatePicker('To', toDate, (date) => setState(() => toDate = date)),
-        const SizedBox(width: 16),
-        Expanded(child: _buildFiscalYearDropdown(fiscalYearsAsync)),
-        const SizedBox(width: 16),
-        ElevatedButton(
-          onPressed: _onSearch,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          ),
-          child: const Text('Search'),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPortraitFilters(AsyncValue<List<FiscalYearModel>> fiscalYearsAsync) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(child: _buildDatePicker('From', fromDate, (date) => setState(() => fromDate = date))),
-            const SizedBox(width: 8),
-            Expanded(child: _buildDatePicker('To', toDate, (date) => setState(() => toDate = date))),
-          ],
-        ),
-        const SizedBox(height: 12),
-        _buildFiscalYearDropdown(fiscalYearsAsync),
-        const SizedBox(height: 12),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _onSearch,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.white,
-            ),
-            child: const Text('Search'),
-          ),
-        ),
-      ],
     );
   }
 
@@ -248,17 +273,16 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
         if (picked != null) onPicked(picked);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: AppColors.ashGrey),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('$label: ${DateFormat('yyyy-MM-dd').format(date)}'),
-            const SizedBox(width: 8),
-            const Icon(Icons.calendar_today, size: 16),
+            Text('$label: ${DateFormat('yyyy-MM-dd').format(date)}', style: const TextStyle(fontSize: 13)),
+            const Icon(Icons.calendar_today, size: 16, color: AppColors.primary),
           ],
         ),
       ),
@@ -272,7 +296,7 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
           selectedFiscalYearID = years.first.fiscalYearId;
         }
         return DropdownButtonFormField<int>(
-          value: selectedFiscalYearID,
+          initialValue: selectedFiscalYearID,
           decoration: const InputDecoration(
             labelText: 'Fiscal Year',
             border: OutlineInputBorder(),
@@ -282,8 +306,54 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
           onChanged: (val) => setState(() => selectedFiscalYearID = val),
         );
       },
-      loading: () => const CircularProgressIndicator(),
+      loading: () => const LinearProgressIndicator(),
       error: (_, __) => const Text('Error loading fiscal years'),
+    );
+  }
+
+  Widget _buildBranchDropdown(AsyncValue<dynamic> branchesAsync) {
+    return branchesAsync.when(
+      data: (branches) {
+        final branchList = branches as List;
+        if (selectedBranchID == null && branchList.isNotEmpty) {
+          selectedBranchID = branchList.first.branchID;
+        }
+        return DropdownButtonFormField<int>(
+          initialValue: selectedBranchID,
+          decoration: const InputDecoration(
+            labelText: 'Branch',
+            border: OutlineInputBorder(),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          ),
+          items: branchList.map((b) => DropdownMenuItem(value: b.branchID as int, child: Text(b.branchName as String))).toList(),
+          onChanged: (val) => setState(() => selectedBranchID = val),
+        );
+      },
+      loading: () => const LinearProgressIndicator(),
+      error: (_, __) => const Text('Error loading branches'),
+    );
+  }
+
+  Widget _buildCustomerDropdown(AsyncValue<dynamic> customersAsync) {
+    return customersAsync.when(
+      data: (customers) {
+        final customerList = customers as List;
+        return DropdownButtonFormField<int>(
+          initialValue: selectedCustomerID,
+          decoration: const InputDecoration(
+            labelText: 'Customer',
+            border: OutlineInputBorder(),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          ),
+          items: [
+            const DropdownMenuItem(value: 0, child: Text('All Customers')),
+            ...customerList.map((c) => DropdownMenuItem(value: c.customerID as int, child: Text('${c.firstName} ${c.lastName}'))),
+          ],
+          onChanged: (val) => setState(() => selectedCustomerID = val ?? 0),
+        );
+      },
+      loading: () => const LinearProgressIndicator(),
+      error: (_, __) => const Text('Error loading customers'),
     );
   }
 
@@ -302,44 +372,47 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Fixed Header
+                // Sticky Header
                 DataTable(
                   headingRowColor: WidgetStateProperty.all(AppColors.primary.withValues(alpha: 0.1)),
-                  columnSpacing: 24,
+                  columnSpacing: 12,
+                  horizontalMargin: 12,
                   columns: const [
-                    DataColumn(label: SizedBox(width: 50, child: Text('S.N.', style: TextStyle(fontWeight: FontWeight.bold)))),
-                    DataColumn(label: SizedBox(width: 250, child: Text('Customer Name', style: TextStyle(fontWeight: FontWeight.bold)))),
-                    DataColumn(label: SizedBox(width: 100, child: Text('Total Bills', style: TextStyle(fontWeight: FontWeight.bold)))),
-                    DataColumn(label: SizedBox(width: 100, child: Text('Quantity', style: TextStyle(fontWeight: FontWeight.bold)))),
-                    DataColumn(label: SizedBox(width: 120, child: Text('Gross Amount', style: TextStyle(fontWeight: FontWeight.bold)))),
-                    DataColumn(label: SizedBox(width: 120, child: Text('Tax Amount', style: TextStyle(fontWeight: FontWeight.bold)))),
-                    DataColumn(label: SizedBox(width: 120, child: Text('Net Amount', style: TextStyle(fontWeight: FontWeight.bold)))),
+                    DataColumn(label: Text('SN', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Customer Name', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Bills', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Qty', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Gross', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Tax', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Net', style: TextStyle(fontWeight: FontWeight.bold))),
                   ],
-                  rows: const [], // Empty rows for header only
+                  rows: const [],
                 ),
                 // Scrollable Body
                 Expanded(
                   child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
                     child: DataTable(
-                      headingRowHeight: 0, // Hide default header
-                      columnSpacing: 24,
+                      headingRowHeight: 0,
+                      columnSpacing: 12,
+                      horizontalMargin: 12,
                       columns: const [
-                        DataColumn(label: SizedBox(width: 50)),
-                        DataColumn(label: SizedBox(width: 250)),
-                        DataColumn(label: SizedBox(width: 100)),
-                        DataColumn(label: SizedBox(width: 100)),
-                        DataColumn(label: SizedBox(width: 120)),
-                        DataColumn(label: SizedBox(width: 120)),
-                        DataColumn(label: SizedBox(width: 120)),
+                        DataColumn(label: SizedBox.shrink()),
+                        DataColumn(label: SizedBox.shrink()),
+                        DataColumn(label: SizedBox.shrink()),
+                        DataColumn(label: SizedBox.shrink()),
+                        DataColumn(label: SizedBox.shrink()),
+                        DataColumn(label: SizedBox.shrink()),
+                        DataColumn(label: SizedBox.shrink()),
                       ],
                       rows: data.map((item) => DataRow(cells: [
-                        DataCell(SizedBox(width: 50, child: Text(item.sn?.toString() ?? '', style: const TextStyle(fontSize: 13)))),
-                        DataCell(SizedBox(width: 250, child: Text(item.customerName ?? '', style: const TextStyle(fontSize: 13)))),
-                        DataCell(SizedBox(width: 100, child: Text(item.totalBills.toString(), style: const TextStyle(fontSize: 13)))),
-                        DataCell(SizedBox(width: 100, child: Text(item.quantity.toString(), style: const TextStyle(fontSize: 13)))),
-                        DataCell(SizedBox(width: 120, child: Text('Rs. ${item.grossAmount}', style: const TextStyle(fontSize: 13)))),
-                        DataCell(SizedBox(width: 120, child: Text('Rs. ${item.taxAmount}', style: const TextStyle(fontSize: 13)))),
-                        DataCell(SizedBox(width: 120, child: Text('Rs. ${item.netAmount}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.primary)))),
+                        DataCell(Text(item.sn?.toString() ?? '', style: const TextStyle(fontSize: 13))),
+                        DataCell(Text(item.customerName ?? '', style: const TextStyle(fontSize: 13))),
+                        DataCell(Text(item.totalBills?.toString() ?? '0', style: const TextStyle(fontSize: 13))),
+                        DataCell(Text(item.quantity?.toString() ?? '0', style: const TextStyle(fontSize: 13))),
+                        DataCell(Text(item.grossAmount.toStringAsFixed(2), style: const TextStyle(fontSize: 13))),
+                        DataCell(Text(item.taxAmount.toStringAsFixed(2), style: const TextStyle(fontSize: 13))),
+                        DataCell(Text(item.netAmount.toStringAsFixed(2), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.primary))),
                       ])).toList(),
                     ),
                   ),
@@ -361,6 +434,8 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
       fromDate: fromDate,
       toDate: toDate,
       fiscalYearID: selectedFiscalYearID!,
+      branchID: selectedBranchID?.toString() ?? '0',
+      customerID: selectedCustomerID,
     );
   }
 }

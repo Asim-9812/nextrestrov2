@@ -6,6 +6,7 @@ import '../providers/reports_controller.dart';
 import '../widgets/sales_report_content.dart';
 import '../widgets/product_sales_report_content.dart';
 import '../widgets/customer_sales_report_content.dart';
+import '../widgets/user_sales_report_content.dart';
 import '../../../menu/presentation/landscape/widgets/menu_sidebar_item.dart';
 
 class ReportsLandscapePage extends ConsumerWidget {
@@ -50,6 +51,12 @@ class ReportsLandscapePage extends ConsumerWidget {
                       isSelected: selectedIndex == 2,
                       onTap: () => ref.read(selectedReportTabProvider.notifier).set(2),
                     ),
+                    MenuSidebarItem(
+                      icon: MaterialSymbols.person,
+                      label: 'User Sales Report',
+                      isSelected: selectedIndex == 3,
+                      onTap: () => ref.read(selectedReportTabProvider.notifier).set(3),
+                    ),
                   ],
                 ),
               ),
@@ -78,6 +85,8 @@ class ReportsLandscapePage extends ConsumerWidget {
         return const ProductSalesReportContent();
       case 2:
         return const CustomerSalesReportContent();
+      case 3:
+        return const UserSalesReportContent();
       default:
         return const Center(child: Text('Select a report from the menu'));
     }
