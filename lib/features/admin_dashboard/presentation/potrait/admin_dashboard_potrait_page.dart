@@ -6,8 +6,11 @@ import 'package:iconify_flutter/icons/ion.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/core/network/session_service.dart';
-import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/portrait_shift_details_card.dart';
-import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/portrait_shift_header.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/portrait_active_shift_card.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/portrait_orders_overview.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/portrait_sales_summary_chart.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/portrait_summary_bento_box.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/portrait_top_selling_section.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/potrait/widgets/recent_orders_section_portrait.dart';
 import 'package:nextrestro/features/branch/presentation/pages/branch_page.dart';
 import 'package:nextrestro/features/login/presentation/login_page.dart';
@@ -17,18 +20,16 @@ import 'package:nextrestro/features/shift/presentation/shift_page.dart';
 import 'package:nextrestro/features/tables/presentation/tables_page.dart';
 import 'package:nextrestro/features/customer/presentation/pages/customer_page.dart';
 import 'package:nextrestro/features/users/presentation/pages/staff_page.dart';
-import 'package:intl/intl.dart';
 import 'package:nextrestro/features/shift/data/models/shift_model.dart';
 import 'package:nextrestro/features/admin_dashboard/data/models/dashboard_summary_model.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/pages/dashboard_charts_page.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/providers/dashboard_controller.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/providers/dashboard_state.dart';
-import 'package:nextrestro/features/admin_dashboard/presentation/widgets/sales_breakdown_grid.dart';
-import 'package:nextrestro/features/admin_dashboard/presentation/widgets/summary_bento_box.dart';
-import 'package:nextrestro/features/admin_dashboard/presentation/widgets/top_selling_section.dart';
 import 'package:nextrestro/features/reports/presentation/pages/reports_page.dart';
 import 'package:nextrestro/features/department/presentation/pages/department_page.dart';
 import 'package:nextrestro/features/shift/presentation/providers/shift_management_provider.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/widgets/quick_actions_row.dart';
+import 'package:nextrestro/features/orders/presentation/providers/order_provider.dart';
 
 class AdminDashboardPotraitPage extends ConsumerStatefulWidget {
   const AdminDashboardPotraitPage({super.key});
@@ -40,7 +41,6 @@ class AdminDashboardPotraitPage extends ConsumerStatefulWidget {
 
 class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotraitPage> {
   int _selectedIndex = 0;
-  bool _isSalesExpanded = false;
 
   void _handleLogout() {
     showDialog(
@@ -104,7 +104,7 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         iconTheme: const IconThemeData(color: AppColors.white),
         title: Text(
@@ -124,66 +124,29 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
             onPressed: () {
               ref.invalidate(dashboardControllerProvider);
               ref.invalidate(shiftManagementControllerProvider);
+              ref.invalidate(orderControllerProvider);
             },
           ),
         ],
       ),
       drawer: _buildDrawer(),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: [
-          _buildHomeTab(),
-          const OrdersPage(),
-          const TablesPage(),
-          const MenuPage(),
-          const ShiftPage(),
-          const ReportsPage(),
-          const CustomerPage(),
-          const StaffPage(),
-          const BranchPage(),
-          const DepartmentPage(),
-        ],
-      ),
-    );
-  }
-
-  void _showEndShiftDialog(BuildContext context, WidgetRef ref, ShiftModel shift) {
-    final TextEditingController amountController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('End Shift'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Enter closing amount to end the shift.'),
-            const SizedBox(height: 16),
-            TextField(
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Closing Amount',
-                prefixText: 'Rs. ',
-                border: OutlineInputBorder(),
-              ),
+      body: _selectedIndex == 0 
+          ? _buildHomeTab() 
+          : IndexedStack(
+              index: _selectedIndex,
+              children: [
+                const SizedBox.shrink(), // Home handled separately
+                const OrdersPage(),
+                const TablesPage(),
+                const MenuPage(),
+                const ShiftPage(),
+                const ReportsPage(),
+                const CustomerPage(),
+                const StaffPage(),
+                const BranchPage(),
+                const DepartmentPage(),
+              ],
             ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final amount = double.tryParse(amountController.text) ?? 0.0;
-              ref.read(shiftManagementControllerProvider.notifier).endShift(shift, amount);
-              Navigator.pop(context);
-            },
-            child: const Text('End Shift'),
-          ),
-        ],
-      ),
     );
   }
 
@@ -283,26 +246,6 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
     );
   }
 
-  Widget _buildPlaceholderTab(String title, String icon) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Iconify(icon, size: 64, color: AppColors.primary),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: AppColors.black,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildDrawer() {
     return Drawer(
       width: 200,
@@ -384,52 +327,60 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
   Widget _buildHomeTab() {
     final shiftState = ref.watch(shiftManagementControllerProvider);
     final dashboardState = ref.watch(dashboardControllerProvider);
+    final ordersState = ref.watch(orderControllerProvider);
 
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 12),
-          // Range Selector in Portrait
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: _buildDateRangeSelector(dashboardState),
-          ),
-          const SizedBox(height: 12),
-          
+          const SizedBox(height: 16),
           shiftState.when(
             data: (data) {
               final shift = data.shifts.isNotEmpty && data.shifts.first.shiftStatus == 1 ? data.shifts.first : null;
               if (shift == null) {
                 return _buildNoShiftCard(data.shifts);
               }
-              return Column(
-                children: [
-                  PortraitShiftHeader(
-                    shift: shift,
-                    onEndShift: () {
-                      _showEndShiftDialog(context, ref, shift);
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  PortraitShiftDetailsCard(
-                    shift: shift,
-                    openerName: data.selectedShiftOpenerName,
-                  ),
-                ],
+              return PortraitActiveShiftCard(
+                shift: shift,
+                openerName: data.selectedShiftOpenerName,
               );
             },
-            loading: () => const CircularProgressIndicator(),
+            loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => Text('Shift Error: $e'),
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            child: QuickActionsRow(),
+          ),
+
+          const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Overview',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.black,
+                  ),
+                ),
+                _buildCompactDateRangeSelector(dashboardState),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
           
           dashboardState.when(
             data: (state) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: Column(
                 children: [
-                  SummaryBentoBox(
+                  PortraitSummaryBentoBox(
                     current: state.currentSummary ?? DashboardSummaryModel(),
                     previous: state.previousSummary,
                     selectedRange: state.dateRange,
@@ -443,29 +394,17 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
                         ),
                       );
                     },
-                    isPortrait: true,
                   ),
-                  AnimatedSize(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    child: _isSalesExpanded
-                        ? Column(
-                            children: [
-                              const SizedBox(height: 12),
-                              SalesBreakdownGrid(
-                                current: state.currentSummary ?? DashboardSummaryModel(),
-                                previous: state.previousSummary,
-                                isPortrait: true,
-                              ),
-                            ],
-                          )
-                        : const SizedBox.shrink(),
+                  const SizedBox(height: 24),
+                  PortraitOrdersOverview(orders: ordersState.asData?.value ?? []),
+                  const SizedBox(height: 24),
+                  PortraitSalesSummaryChart(
+                    summary: state.currentSummary ?? DashboardSummaryModel(),
                   ),
-                  const SizedBox(height: 12),
-                  TopSellingSection(
+                  const SizedBox(height: 24),
+                  PortraitTopSellingSection(
                     products: state.currentSummary?.topSellingProducts ?? [],
                     categories: state.currentSummary?.topSellingCategories ?? [],
-                    isPortrait: true,
                   ),
                 ],
               ),
@@ -474,7 +413,7 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
             error: (e, _) => Text('Dashboard Error: $e'),
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 24),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.0),
             child: RecentOrdersSectionPortrait(),
@@ -485,71 +424,62 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
     );
   }
 
-  Widget _buildDateRangeSelector(AsyncValue<DashboardState> state) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
-      ),
-      child: Column(
-        children: [
-          Row(
+  Widget _buildCompactDateRangeSelector(AsyncValue<DashboardState> state) {
+    return state.when(
+      data: (data) => InkWell(
+        onTap: () async {
+          final RenderBox button = context.findRenderObject() as RenderBox;
+          final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+          final RelativeRect position = RelativeRect.fromRect(
+            Rect.fromPoints(
+              button.localToGlobal(Offset.zero, ancestor: overlay),
+              button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
+            ),
+            Offset.zero & overlay.size,
+          );
+
+          final result = await showMenu<DashboardDateRange>(
+            context: context,
+            position: position,
+            items: DashboardDateRange.values.map((range) {
+              return PopupMenuItem(
+                value: range,
+                child: Text(range.name.toUpperCase()),
+              );
+            }).toList(),
+          );
+
+          if (result == DashboardDateRange.custom) {
+            _showCustomDateRangePicker(data.fromDate, data.toDate);
+          } else if (result != null) {
+            ref.read(dashboardControllerProvider.notifier).setDateRange(result);
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: AppColors.bg,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.calendar_today, size: 16, color: AppColors.primary),
-              const SizedBox(width: 12),
-              Expanded(
-                child: state.when(
-                  data: (data) => DropdownButton<DashboardDateRange>(
-                    value: data.dateRange,
-                    isExpanded: true,
-                    underline: const SizedBox(),
-                    style: const TextStyle(fontSize: 14, color: AppColors.black, fontWeight: FontWeight.bold),
-                    items: DashboardDateRange.values.map((range) {
-                      return DropdownMenuItem(
-                        value: range,
-                        child: Text(range.name.toUpperCase()),
-                      );
-                    }).toList(),
-                    onChanged: (val) {
-                      if (val == DashboardDateRange.custom) {
-                        _showCustomDateRangePicker(data.fromDate, data.toDate);
-                      } else if (val != null) {
-                        ref.read(dashboardControllerProvider.notifier).setDateRange(val);
-                      }
-                    },
-                  ),
-                  loading: () => const LinearProgressIndicator(),
-                  error: (e, _) => Text('Error: $e'),
+              Text(
+                data.dateRange.name.toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
                 ),
               ),
-              if (state.asData?.value.dateRange == DashboardDateRange.custom)
-                Text(
-                  '${DateFormat('MM/dd').format(state.asData!.value.fromDate!)} - ${DateFormat('MM/dd').format(state.asData!.value.toDate!)}',
-                  style: const TextStyle(fontSize: 12, color: AppColors.primary),
-                ),
+              const Icon(Icons.arrow_drop_down, size: 18, color: AppColors.primary),
             ],
           ),
-          const Divider(height: 1),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: () {
-                ref.read(dashboardControllerProvider.notifier).setDateRange(state.asData!.value.dateRange);
-                ref.invalidate(shiftManagementControllerProvider);
-              },
-              icon: const Icon(Icons.refresh, size: 14),
-              label: const Text('Refresh Dashboard', style: TextStyle(fontSize: 11)),
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
+      loading: () => const SizedBox(width: 40, height: 20, child: LinearProgressIndicator()),
+      error: (_, __) => const SizedBox.shrink(),
     );
   }
 
@@ -575,20 +505,46 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
   Widget _buildNoShiftCard(List<ShiftModel> allShifts) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
       ),
       child: Row(
         children: [
-          const Icon(Icons.schedule, color: AppColors.lightGrey),
-          const SizedBox(width: 12),
-          const Expanded(child: Text('No active shift', style: TextStyle(fontWeight: FontWeight.bold))),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.lightGrey.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.schedule, color: AppColors.lightGrey, size: 24),
+          ),
+          const SizedBox(width: 16),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'No active shift',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(
+                  'Open to start sales',
+                  style: TextStyle(color: AppColors.grey, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
           ElevatedButton(
             onPressed: () => _showOpenShiftDialog(context, ref, allShifts),
-            style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
             child: const Text('Open'),
           ),
         ],

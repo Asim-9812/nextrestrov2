@@ -20,9 +20,7 @@ class SalesSummaryPieChart extends StatelessWidget {
       _ChartData('Credit', summary.creditSales, Colors.orange),
     ];
 
-    // Filter out zero values for the chart if needed, but for legend we usually keep them
     final visibleData = chartData.where((data) => data.y > 0).toList();
-    // If all are zero, show a placeholder segment to avoid empty chart
     if (visibleData.isEmpty) {
       visibleData.add(_ChartData('No Sales', 1, AppColors.ashGrey));
     }
@@ -61,59 +59,7 @@ class SalesSummaryPieChart extends StatelessWidget {
               // Doughnut Chart
               Expanded(
                 flex: 4,
-                child: SizedBox(
-                  height: 200,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SfCircularChart(
-                        margin: EdgeInsets.zero,
-                        series: <CircularSeries>[
-                          DoughnutSeries<_ChartData, String>(
-                            dataSource: visibleData,
-                            xValueMapper: (_ChartData data, _) => data.x,
-                            yValueMapper: (_ChartData data, _) => data.y,
-                            pointColorMapper: (_ChartData data, _) => data.color,
-                            innerRadius: '70%',
-                            radius: '100%',
-                            animationDuration: 1000,
-                          ),
-                        ],
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'Rs.',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppColors.grey,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              total.toStringAsFixed(2),
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.black,
-                              ),
-                            ),
-                          ),
-                          const Text(
-                            'Total',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: AppColors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                child: _buildChart(visibleData, total),
               ),
               const SizedBox(width: 24),
               // Legend
@@ -121,6 +67,62 @@ class SalesSummaryPieChart extends StatelessWidget {
                 flex: 5,
                 child: Column(
                   children: chartData.map((data) => _buildLegendItem(data, total)).toList(),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChart(List<_ChartData> visibleData, double total) {
+    return SizedBox(
+      height: 200,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SfCircularChart(
+            margin: EdgeInsets.zero,
+            series: <CircularSeries>[
+              DoughnutSeries<_ChartData, String>(
+                dataSource: visibleData,
+                xValueMapper: (_ChartData data, _) => data.x,
+                yValueMapper: (_ChartData data, _) => data.y,
+                pointColorMapper: (_ChartData data, _) => data.color,
+                innerRadius: '70%',
+                radius: '100%',
+                animationDuration: 1000,
+              ),
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Rs.',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  total.toStringAsFixed(2),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+              const Text(
+                'Total',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: AppColors.grey,
                 ),
               ),
             ],

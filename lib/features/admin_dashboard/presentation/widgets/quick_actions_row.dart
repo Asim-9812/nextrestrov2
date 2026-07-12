@@ -28,6 +28,8 @@ class QuickActionsRow extends ConsumerWidget {
           height: 80,
           child: ListView(
             scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
             children: [
               _actionItem(
                 icon: Icons.add_shopping_cart_rounded,
@@ -80,49 +82,52 @@ class QuickActionsRow extends ConsumerWidget {
     required Color color,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        width: 150, // Slightly reduced width
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          width: 150, // Slightly reduced width
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.02),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
               ),
-              child: Icon(icon, color: color, size: 24),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 12, // Reduced font size
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.black,
-                  height: 1.2, // Tighter line height for 2 lines
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                maxLines: 2, // Allow up to 2 lines
-                overflow: TextOverflow.ellipsis,
+                child: Icon(icon, color: color, size: 24),
               ),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 12, // Reduced font size
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.black,
+                    height: 1.2, // Tighter line height for 2 lines
+                  ),
+                  maxLines: 2, // Allow up to 2 lines
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

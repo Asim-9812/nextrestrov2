@@ -4,6 +4,7 @@ import 'package:nextrestro/core/constants/app_colors.dart';
 import '../providers/reports_controller.dart';
 import '../widgets/sales_report_content.dart';
 import '../widgets/product_sales_report_content.dart';
+import '../widgets/customer_sales_report_content.dart';
 
 class ReportsPortraitPage extends ConsumerWidget {
   const ReportsPortraitPage({super.key});
@@ -31,7 +32,11 @@ class ReportsPortraitPage extends ConsumerWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.inventory),
-            label: 'Product Sales',
+            label: 'Product',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.group),
+            label: 'Customer',
           ),
         ],
       ),
@@ -44,6 +49,8 @@ class ReportsPortraitPage extends ConsumerWidget {
         return const SalesReportContent(isPortrait: true);
       case 1:
         return const ProductSalesReportContent(isPortrait: true);
+      case 2:
+        return const CustomerSalesReportContent(isPortrait: true);
       default:
         return const Center(child: Text('Select a report'));
     }

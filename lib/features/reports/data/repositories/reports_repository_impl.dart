@@ -6,6 +6,7 @@ import '../../domain/repositories/reports_repository.dart';
 import '../data_sources/reports_remote_data_source.dart';
 import '../models/sales_report_model.dart';
 import '../models/product_sales_report_model.dart';
+import '../models/customer_sales_report_model.dart';
 
 final reportsRepositoryProvider = Provider<ReportsRepository>((ref) {
   return ReportsRepositoryImpl(ref.read(reportsRemoteDataSourceProvider));
@@ -32,6 +33,18 @@ class ReportsRepositoryImpl implements ReportsRepository {
   Future<Either<Failure, ProductSalesReportResponse>> getProductSalesReport(ProductSalesReportRequest request) async {
     try {
       final response = await _remoteDataSource.getProductSalesReport(request);
+      return Right(response);
+    } on DioException catch (e) {
+      return Left(ServerFailure(e.message ?? 'Server Error'));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CustomerSalesReportResponse>> getCustomerSalesReport(CustomerSalesReportRequest request) async {
+    try {
+      final response = await _remoteDataSource.getCustomerSalesReport(request);
       return Right(response);
     } on DioException catch (e) {
       return Left(ServerFailure(e.message ?? 'Server Error'));

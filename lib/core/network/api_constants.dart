@@ -1,6 +1,6 @@
 class ApiConstants {
   // Base URL
-  static const String baseUrl = 'https://qxxay-103-1-93-10.run.pinggy-free.link';
+  static const String baseUrl = 'https://xqwxa-103-1-93-10.run.pinggy-free.link';
 
   // Timeouts (in milliseconds)
   static const Duration connectionTimeout = Duration(seconds: 30);
@@ -93,6 +93,7 @@ class ApiConstants {
   static const String deleteProductEndpoint = '/api/Product/:id';
 
   // Endpoints - Reports
+  static const String getCustomerSalesReportEndpoint = '/api/reports/customersales';
   static const String getProductSalesReportEndpoint = '/api/reports/productsales';
   static const String getSalesReportEndpoint = '/api/reports/sales';
 

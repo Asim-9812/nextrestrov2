@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/orders/data/models/order_detail_model.dart';
 
-class OrdersOverviewGrid extends StatelessWidget {
+class PortraitOrdersOverview extends StatelessWidget {
   final List<GroupedOrder> orders;
 
-  const OrdersOverviewGrid({
+  const PortraitOrdersOverview({
     super.key,
     required this.orders,
   });
@@ -17,8 +17,7 @@ class OrdersOverviewGrid extends StatelessWidget {
     final cancelledCount = orders.where((o) => o.status.toLowerCase() == 'cancelled').length;
 
     return Container(
-      height: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
@@ -33,64 +32,57 @@ class OrdersOverviewGrid extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
             'Orders Overview',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: AppColors.black,
             ),
           ),
-          const SizedBox(height: 24),
-          // Use Row/Column instead of GridView for better stability in scrollable Column
+          const SizedBox(height: 20),
+          // Using Rows instead of GridView to avoid scroll conflicts and "stacking" issues
           Row(
             children: [
               Expanded(
-                child: _buildOrderStatCard(
+                child: _buildStatCard(
                   icon: Icons.check_circle_outline,
-                  iconColor: Colors.green,
+                  color: Colors.green,
                   label: 'Completed',
                   value: completedCount.toString(),
-                  percentage: '+ 14.3%',
-                  isPositive: true,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               Expanded(
-                child: _buildOrderStatCard(
+                child: _buildStatCard(
                   icon: Icons.access_time,
-                  iconColor: Colors.orange,
+                  color: Colors.orange,
                   label: 'Pending',
                   value: pendingCount.toString(),
-                  percentage: '33.3%',
-                  isPositive: false,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
-                child: _buildOrderStatCard(
+                child: _buildStatCard(
                   icon: Icons.cancel_outlined,
-                  iconColor: Colors.red,
+                  color: Colors.red,
                   label: 'Cancelled',
                   value: cancelledCount.toString(),
-                  percentage: '+ 100%',
-                  isPositive: true,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               Expanded(
-                child: _buildOrderStatCard(
+                child: _buildStatCard(
                   icon: Icons.timer_outlined,
-                  iconColor: Colors.blue,
-                  label: 'Avg. Prep Time',
+                  color: Colors.blue,
+                  label: 'Avg. Prep',
                   value: '18 min',
-                  percentage: '5 min',
-                  isPositive: false,
                 ),
               ),
             ],
@@ -100,13 +92,11 @@ class OrdersOverviewGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderStatCard({
+  Widget _buildStatCard({
     required IconData icon,
-    required Color iconColor,
+    required Color color,
     required String label,
     required String value,
-    required String percentage,
-    required bool isPositive,
   }) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -116,60 +106,29 @@ class OrdersOverviewGrid extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             children: [
-              Icon(icon, color: iconColor, size: 18),
-              const SizedBox(width: 8),
-              Flexible(
+              Icon(icon, color: color, size: 16),
+              const SizedBox(width: 6),
+              Expanded(
                 child: Text(
                   label,
+                  style: const TextStyle(fontSize: 10, color: AppColors.grey),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.black,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 2),
-                child: Row(
-                  children: [
-                    Icon(
-                      isPositive ? Icons.arrow_upward : Icons.arrow_downward,
-                      size: 10,
-                      color: isPositive ? Colors.green : Colors.red,
-                    ),
-                    Text(
-                      percentage,
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color: isPositive ? Colors.green : Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: AppColors.black,
+            ),
           ),
         ],
       ),

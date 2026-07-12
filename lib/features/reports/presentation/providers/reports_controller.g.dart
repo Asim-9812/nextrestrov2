@@ -138,6 +138,74 @@ abstract class _$ProductSalesReportController
   }
 }
 
+@ProviderFor(CustomerSalesReportController)
+final customerSalesReportControllerProvider =
+    CustomerSalesReportControllerProvider._();
+
+final class CustomerSalesReportControllerProvider
+    extends
+        $NotifierProvider<
+          CustomerSalesReportController,
+          AsyncValue<CustomerSalesReportData?>
+        > {
+  CustomerSalesReportControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'customerSalesReportControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$customerSalesReportControllerHash();
+
+  @$internal
+  @override
+  CustomerSalesReportController create() => CustomerSalesReportController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AsyncValue<CustomerSalesReportData?> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride:
+          $SyncValueProvider<AsyncValue<CustomerSalesReportData?>>(value),
+    );
+  }
+}
+
+String _$customerSalesReportControllerHash() =>
+    r'1a62da415577c7756bf5f02da3024319497b7c9f';
+
+abstract class _$CustomerSalesReportController
+    extends $Notifier<AsyncValue<CustomerSalesReportData?>> {
+  AsyncValue<CustomerSalesReportData?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<CustomerSalesReportData?>,
+              AsyncValue<CustomerSalesReportData?>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<CustomerSalesReportData?>,
+                AsyncValue<CustomerSalesReportData?>
+              >,
+              AsyncValue<CustomerSalesReportData?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
 @ProviderFor(SelectedReportTab)
 final selectedReportTabProvider = SelectedReportTabProvider._();
 

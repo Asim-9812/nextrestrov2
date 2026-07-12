@@ -35,13 +35,17 @@ class MenuSidebarItem extends StatelessWidget {
               color: isSelected ? AppColors.primary : AppColors.blackGrey,
             ),
             const SizedBox(width: 12),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected ? AppColors.primary : AppColors.blackGrey,
-                fontSize: 14,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'Manrope',
+            Expanded(
+              child: Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                  color: isSelected ? AppColors.primary : AppColors.blackGrey,
+                  fontSize: 14,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontFamily: 'Manrope',
+                ),
               ),
             ),
           ],

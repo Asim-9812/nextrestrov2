@@ -5,6 +5,7 @@ import 'package:nextrestro/core/constants/app_colors.dart';
 import '../providers/reports_controller.dart';
 import '../widgets/sales_report_content.dart';
 import '../widgets/product_sales_report_content.dart';
+import '../widgets/customer_sales_report_content.dart';
 import '../../../menu/presentation/landscape/widgets/menu_sidebar_item.dart';
 
 class ReportsLandscapePage extends ConsumerWidget {
@@ -43,6 +44,12 @@ class ReportsLandscapePage extends ConsumerWidget {
                       isSelected: selectedIndex == 1,
                       onTap: () => ref.read(selectedReportTabProvider.notifier).set(1),
                     ),
+                    MenuSidebarItem(
+                      icon: MaterialSymbols.group,
+                      label: 'Customer Sales Report',
+                      isSelected: selectedIndex == 2,
+                      onTap: () => ref.read(selectedReportTabProvider.notifier).set(2),
+                    ),
                   ],
                 ),
               ),
@@ -69,6 +76,8 @@ class ReportsLandscapePage extends ConsumerWidget {
         return const SalesReportContent();
       case 1:
         return const ProductSalesReportContent();
+      case 2:
+        return const CustomerSalesReportContent();
       default:
         return const Center(child: Text('Select a report from the menu'));
     }

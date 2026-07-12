@@ -30,7 +30,7 @@ import 'widgets/admin_header.dart';
 import 'widgets/active_shift_card.dart';
 import 'widgets/recent_orders_section.dart';
 
-import 'widgets/quick_actions_row.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/widgets/quick_actions_row.dart';
 
 class AdminDashboardLandscapePage extends ConsumerStatefulWidget {
   const AdminDashboardLandscapePage({super.key});
