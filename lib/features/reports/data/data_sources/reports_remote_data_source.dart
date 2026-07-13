@@ -5,6 +5,7 @@ import '../models/sales_report_model.dart';
 import '../models/product_sales_report_model.dart';
 import '../models/customer_sales_report_model.dart';
 import '../models/user_sales_report_model.dart';
+import '../models/branch_sales_report_model.dart';
 
 final reportsRemoteDataSourceProvider = Provider<ReportsRemoteDataSource>((ref) {
   return ReportsRemoteDataSource(ref.read(apiClientProvider));
@@ -45,5 +46,13 @@ class ReportsRemoteDataSource {
       data: request.toJson(),
     );
     return UserSalesReportResponse.fromJson(response.data);
+  }
+
+  Future<BranchSalesReportResponse> getBranchSalesReport(BranchSalesReportRequest request) async {
+    final response = await _apiClient.post(
+      ApiConstants.getBranchSalesReportEndpoint,
+      data: request.toJson(),
+    );
+    return BranchSalesReportResponse.fromJson(response.data);
   }
 }

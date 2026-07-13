@@ -1,6 +1,6 @@
 class ApiConstants {
   // Base URL
-  static const String baseUrl = 'https://ppiqg-103-1-93-10.free.pinggy.net';
+  static const String baseUrl = 'https://nxxcc-103-1-93-10.free.pinggy.net';
 
   // Timeouts (in milliseconds)
   static const Duration connectionTimeout = Duration(seconds: 30);
@@ -94,6 +94,7 @@ class ApiConstants {
 
   // Endpoints - Reports
   static const String getCustomerSalesReportEndpoint = '/api/reports/customersales';
+  static const String getBranchSalesReportEndpoint = '/api/reports/branchsales';
   static const String getProductSalesReportEndpoint = '/api/reports/productsales';
   static const String getSalesReportEndpoint = '/api/reports/sales';
   static const String getUserSalesReportEndpoint = '/api/reports/usersales';

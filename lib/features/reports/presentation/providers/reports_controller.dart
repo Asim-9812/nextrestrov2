@@ -3,6 +3,7 @@ import '../../data/models/sales_report_model.dart';
 import '../../data/models/product_sales_report_model.dart';
 import '../../data/models/customer_sales_report_model.dart';
 import '../../data/models/user_sales_report_model.dart';
+import '../../data/models/branch_sales_report_model.dart';
 import '../../data/repositories/reports_repository_impl.dart';
 
 part 'reports_controller.g.dart';
@@ -141,6 +142,37 @@ class UserSalesReportController extends _$UserSalesReportController {
     );
 
     final result = await ref.read(reportsRepositoryProvider).getUserSalesReport(request);
+    
+    state = result.fold(
+      (failure) => AsyncValue.error(failure.message, StackTrace.current),
+      (response) => AsyncValue.data(response.data),
+    );
+  }
+}
+
+@riverpod
+class BranchSalesReportController extends _$BranchSalesReportController {
+  @override
+  AsyncValue<BranchSalesReportData?> build() {
+    return const AsyncValue.data(null);
+  }
+
+  Future<void> fetchBranchSalesReport({
+    required DateTime fromDate,
+    required DateTime toDate,
+    required int fiscalYearID,
+    String branchID = '0',
+  }) async {
+    state = const AsyncValue.loading();
+    
+    final request = BranchSalesReportRequest(
+      fromDate: fromDate.toIso8601String(),
+      toDate: toDate.toIso8601String(),
+      fiscalYearID: fiscalYearID,
+      branchID: branchID,
+    );
+
+    final result = await ref.read(reportsRepositoryProvider).getBranchSalesReport(request);
     
     state = result.fold(
       (failure) => AsyncValue.error(failure.message, StackTrace.current),

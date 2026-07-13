@@ -4,25 +4,23 @@ import 'package:intl/intl.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/fiscal_year/presentation/providers/fiscal_year_provider.dart';
 import 'package:nextrestro/features/branch/presentation/providers/branch_provider.dart';
-import 'package:nextrestro/features/customer/presentation/providers/customer_provider.dart';
 import '../providers/reports_controller.dart';
 import '../../../fiscal_year/data/models/fiscal_year_model.dart';
-import '../../data/models/customer_sales_report_model.dart';
+import '../../data/models/branch_sales_report_model.dart';
 
-class CustomerSalesReportContent extends ConsumerStatefulWidget {
+class BranchSalesReportContent extends ConsumerStatefulWidget {
   final bool isPortrait;
-  const CustomerSalesReportContent({super.key, this.isPortrait = false});
+  const BranchSalesReportContent({super.key, this.isPortrait = false});
 
   @override
-  ConsumerState<CustomerSalesReportContent> createState() => _CustomerSalesReportContentState();
+  ConsumerState<BranchSalesReportContent> createState() => _BranchSalesReportContentState();
 }
 
-class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReportContent> {
+class _BranchSalesReportContentState extends ConsumerState<BranchSalesReportContent> {
   DateTime fromDate = DateTime.now().subtract(const Duration(days: 30));
   DateTime toDate = DateTime.now();
   int? selectedFiscalYearID;
   int? selectedBranchID;
-  int selectedCustomerID = 0;
   
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
@@ -37,10 +35,9 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
 
   @override
   Widget build(BuildContext context) {
-    final reportState = ref.watch(customerSalesReportControllerProvider);
+    final reportState = ref.watch(branchSalesReportControllerProvider);
     final fiscalYearsAsync = ref.watch(fiscalYearsProvider);
     final branchesAsync = ref.watch(branchesProvider);
-    final customersAsync = ref.watch(customersProvider);
 
     return Column(
       children: [
@@ -53,16 +50,16 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
                   padding: const EdgeInsets.all(16),
                   color: AppColors.white,
                   child: widget.isPortrait 
-                    ? _buildPortraitFilters(fiscalYearsAsync, branchesAsync, customersAsync)
+                    ? _buildPortraitFilters(fiscalYearsAsync, branchesAsync)
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Customer Sales Report Filters',
+                            'Branch Sales Report Filters',
                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 16),
-                          _buildFilters(fiscalYearsAsync, branchesAsync, customersAsync),
+                          _buildFilters(fiscalYearsAsync, branchesAsync),
                         ],
                       ),
                 ),
@@ -75,7 +72,7 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
                       controller: _searchController,
                       onChanged: (value) => setState(() => _searchQuery = value),
                       decoration: InputDecoration(
-                        hintText: 'Search by Customer Name...',
+                        hintText: 'Search by Branch Name...',
                         prefixIcon: const Icon(Icons.search, size: 20),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -106,7 +103,7 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
                     
                     final filteredData = data.data.where((item) {
                       final query = _searchQuery.toLowerCase();
-                      return (item.customerName?.toLowerCase().contains(query) ?? false);
+                      return (item.branchName?.toLowerCase().contains(query) ?? false);
                     }).toList();
 
                     if (filteredData.isEmpty) {
@@ -151,13 +148,12 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
   Widget _buildPortraitFilters(
     AsyncValue<List<FiscalYearModel>> fiscalYears,
     AsyncValue<dynamic> branches,
-    AsyncValue<dynamic> customers,
   ) {
     return ExpansionTile(
       controller: _filterController,
       initiallyExpanded: true,
       title: const Text(
-        'Customer Sales Report Filters',
+        'Branch Sales Report Filters',
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       tilePadding: EdgeInsets.zero,
@@ -177,8 +173,6 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
               _buildFiscalYearDropdown(fiscalYears),
               const SizedBox(height: 12),
               _buildBranchDropdown(branches),
-              const SizedBox(height: 12),
-              _buildCustomerDropdown(customers),
               const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
@@ -202,7 +196,6 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
   Widget _buildFilters(
     AsyncValue<List<FiscalYearModel>> fiscalYears,
     AsyncValue<dynamic> branches,
-    AsyncValue<dynamic> customers,
   ) {
     if (widget.isPortrait) {
       return Column(
@@ -218,8 +211,6 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
           _buildFiscalYearDropdown(fiscalYears),
           const SizedBox(height: 12),
           _buildBranchDropdown(branches),
-          const SizedBox(height: 12),
-          _buildCustomerDropdown(customers),
           const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
@@ -253,8 +244,6 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
           children: [
             Expanded(child: _buildBranchDropdown(branches)),
             const SizedBox(width: 12),
-            Expanded(child: _buildCustomerDropdown(customers)),
-            const SizedBox(width: 12),
             ElevatedButton(
               onPressed: _onSearch,
               style: ElevatedButton.styleFrom(
@@ -270,7 +259,7 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
     );
   }
 
-  Widget _buildSummaryCards(CustomerSalesReportSummary summary) {
+  Widget _buildSummaryCards(BranchSalesReportSummary summary) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -298,13 +287,11 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
                 const SizedBox(width: 12),
                 Expanded(child: _summaryCard('Total Qty', summary.totalQuantity.toString())),
                 const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Gross Amt', 'Rs. ${summary.grossAmount.toStringAsFixed(2)}')),
-                const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Discount', 'Rs. ${summary.discountAmount.toStringAsFixed(2)}')),
+                Expanded(child: _summaryCard('Gross Amount', 'Rs. ${summary.grossAmount.toStringAsFixed(2)}')),
                 const SizedBox(width: 12),
                 Expanded(child: _summaryCard('Tax', 'Rs. ${summary.taxAmount.toStringAsFixed(2)}')),
                 const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Net Amt', 'Rs. ${summary.netAmount.toStringAsFixed(2)}')),
+                Expanded(child: _summaryCard('Net Amount', 'Rs. ${summary.netAmount.toStringAsFixed(2)}')),
               ],
             ),
     );
@@ -400,7 +387,7 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
         final isValidValue = sortedYears.any((y) => y.fiscalYearId == selectedFiscalYearID);
 
         return DropdownButtonFormField<int>(
-          value: isValidValue ? selectedFiscalYearID : (sortedYears.isNotEmpty ? sortedYears.first.fiscalYearId : null),
+          initialValue: isValidValue ? selectedFiscalYearID : (sortedYears.isNotEmpty ? sortedYears.first.fiscalYearId : null),
           decoration: const InputDecoration(
             labelText: 'Fiscal Year',
             border: OutlineInputBorder(),
@@ -423,16 +410,19 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
           selectedBranchID = branchList.first.branchID;
         }
 
-        final isValidValue = branchList.any((b) => b.branchID == selectedBranchID);
+        final isValidValue = selectedBranchID == 0 || branchList.any((b) => b.branchID == selectedBranchID);
 
         return DropdownButtonFormField<int>(
-          value: isValidValue ? selectedBranchID : (branchList.isNotEmpty ? branchList.first.branchID : null),
+          initialValue: isValidValue ? selectedBranchID : 0,
           decoration: const InputDecoration(
             labelText: 'Branch',
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           ),
-          items: branchList.map((b) => DropdownMenuItem(value: b.branchID as int, child: Text(b.branchName as String))).toList(),
+          items: [
+            const DropdownMenuItem(value: 0, child: Text('All Branches')),
+            ...branchList.map((b) => DropdownMenuItem(value: b.branchID as int, child: Text(b.branchName as String))),
+          ],
           onChanged: (val) => setState(() => selectedBranchID = val),
         );
       },
@@ -441,36 +431,10 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
     );
   }
 
-  Widget _buildCustomerDropdown(AsyncValue<dynamic> customersAsync) {
-    return customersAsync.when(
-      data: (customers) {
-        final customerList = customers as List;
-        
-        final isValidValue = selectedCustomerID == 0 || customerList.any((c) => c.customerID == selectedCustomerID);
-
-        return DropdownButtonFormField<int>(
-          value: isValidValue ? selectedCustomerID : 0,
-          decoration: const InputDecoration(
-            labelText: 'Customer',
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          ),
-          items: [
-            const DropdownMenuItem(value: 0, child: Text('All Customers')),
-            ...customerList.map((c) => DropdownMenuItem(value: c.customerID as int, child: Text('${c.firstName} ${c.lastName}'))),
-          ],
-          onChanged: (val) => setState(() => selectedCustomerID = val ?? 0),
-        );
-      },
-      loading: () => const LinearProgressIndicator(),
-      error: (_, __) => const Text('Error loading customers'),
-    );
-  }
-
-  Widget _buildDataTable(List<CustomerSalesData> data) {
+  Widget _buildDataTable(List<BranchSalesData> data) {
     const columnWidths = {
       0: FixedColumnWidth(60),  // SN
-      1: FixedColumnWidth(220), // Customer Name
+      1: FixedColumnWidth(220), // Branch Name
       2: FixedColumnWidth(100), // Bills
       3: FixedColumnWidth(100), // Qty
       4: FixedColumnWidth(130), // Gross
@@ -503,7 +467,7 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
                     TableRow(
                       children: [
                         _headerCell('SN'),
-                        _headerCell('Customer Name'),
+                        _headerCell('Branch Name'),
                         _headerCell('Bills'),
                         _headerCell('Qty'),
                         _headerCell('Gross'),
@@ -527,9 +491,9 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
                     children: data.map((item) => TableRow(
                       children: [
                         _dataCell(item.sn?.toString() ?? ''),
-                        _dataCell(item.customerName ?? ''),
-                        _dataCell(item.totalBills?.toString() ?? '0'),
-                        _dataCell(item.quantity?.toString() ?? '0'),
+                        _dataCell(item.branchName ?? ''),
+                        _dataCell(item.totalBills.toString()),
+                        _dataCell(item.quantity.toString()),
                         _dataCell(item.grossAmount.toStringAsFixed(2)),
                         _dataCell(item.taxAmount.toStringAsFixed(2)),
                         _dataCell(
@@ -583,12 +547,11 @@ class _CustomerSalesReportContentState extends ConsumerState<CustomerSalesReport
       _filterController.collapse();
     }
 
-    ref.read(customerSalesReportControllerProvider.notifier).fetchCustomerSalesReport(
+    ref.read(branchSalesReportControllerProvider.notifier).fetchBranchSalesReport(
       fromDate: fromDate,
       toDate: toDate,
       fiscalYearID: selectedFiscalYearID!,
       branchID: selectedBranchID?.toString() ?? '0',
-      customerID: selectedCustomerID,
     );
   }
 }

@@ -43,7 +43,7 @@ final class SalesReportControllerProvider
 }
 
 String _$salesReportControllerHash() =>
-    r'4e35b7c2170aed6fcc837f38a5a752361c313c6c';
+    r'758bcf421c515ad19e6bd5fa351dec2060dd3e1b';
 
 abstract class _$SalesReportController
     extends $Notifier<AsyncValue<SalesReportData?>> {
@@ -109,7 +109,7 @@ final class ProductSalesReportControllerProvider
 }
 
 String _$productSalesReportControllerHash() =>
-    r'9658bdb0e2c0c18aa06a5fac895b416f87ff8486';
+    r'46a83f4b38229864a9f89d53531860194d50603c';
 
 abstract class _$ProductSalesReportController
     extends $Notifier<AsyncValue<ProductSalesReportData?>> {
@@ -177,7 +177,7 @@ final class CustomerSalesReportControllerProvider
 }
 
 String _$customerSalesReportControllerHash() =>
-    r'1a62da415577c7756bf5f02da3024319497b7c9f';
+    r'9e58b2b59cb9fe173ed04f388ce88f8eb97187b7';
 
 abstract class _$CustomerSalesReportController
     extends $Notifier<AsyncValue<CustomerSalesReportData?>> {
@@ -245,7 +245,7 @@ final class UserSalesReportControllerProvider
 }
 
 String _$userSalesReportControllerHash() =>
-    r'976ea4e2397e3a3ca3a60e7a7a288db6e04f6e5f';
+    r'c19a39602a641c17aba3a3804fc9cb1570eb6ebc';
 
 abstract class _$UserSalesReportController
     extends $Notifier<AsyncValue<UserSalesReportData?>> {
@@ -267,6 +267,75 @@ abstract class _$UserSalesReportController
                 AsyncValue<UserSalesReportData?>
               >,
               AsyncValue<UserSalesReportData?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(BranchSalesReportController)
+final branchSalesReportControllerProvider =
+    BranchSalesReportControllerProvider._();
+
+final class BranchSalesReportControllerProvider
+    extends
+        $NotifierProvider<
+          BranchSalesReportController,
+          AsyncValue<BranchSalesReportData?>
+        > {
+  BranchSalesReportControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'branchSalesReportControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$branchSalesReportControllerHash();
+
+  @$internal
+  @override
+  BranchSalesReportController create() => BranchSalesReportController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AsyncValue<BranchSalesReportData?> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AsyncValue<BranchSalesReportData?>>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$branchSalesReportControllerHash() =>
+    r'bc9ec72bbe4d7fb748030ccc437849d76f611f4f';
+
+abstract class _$BranchSalesReportController
+    extends $Notifier<AsyncValue<BranchSalesReportData?>> {
+  AsyncValue<BranchSalesReportData?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<BranchSalesReportData?>,
+              AsyncValue<BranchSalesReportData?>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<BranchSalesReportData?>,
+                AsyncValue<BranchSalesReportData?>
+              >,
+              AsyncValue<BranchSalesReportData?>,
               Object?,
               Object?
             >;

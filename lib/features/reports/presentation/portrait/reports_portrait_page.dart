@@ -6,6 +6,7 @@ import '../widgets/sales_report_content.dart';
 import '../widgets/product_sales_report_content.dart';
 import '../widgets/customer_sales_report_content.dart';
 import '../widgets/user_sales_report_content.dart';
+import '../widgets/branch_sales_report_content.dart';
 
 class ReportsPortraitPage extends ConsumerWidget {
   const ReportsPortraitPage({super.key});
@@ -15,16 +16,12 @@ class ReportsPortraitPage extends ConsumerWidget {
     final selectedIndex = ref.watch(selectedReportTabProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Reports'),
-        backgroundColor: AppColors.white,
-        foregroundColor: AppColors.primary,
-        elevation: 0,
-      ),
       body: _buildMainContent(selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
         selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.grey,
+        type: BottomNavigationBarType.fixed,
         onTap: (index) => ref.read(selectedReportTabProvider.notifier).set(index),
         items: const [
           BottomNavigationBarItem(
@@ -43,6 +40,10 @@ class ReportsPortraitPage extends ConsumerWidget {
             icon: Icon(Icons.person),
             label: 'User',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.store),
+            label: 'Branch',
+          ),
         ],
       ),
     );
@@ -58,6 +59,8 @@ class ReportsPortraitPage extends ConsumerWidget {
         return const CustomerSalesReportContent(isPortrait: true);
       case 3:
         return const UserSalesReportContent(isPortrait: true);
+      case 4:
+        return const BranchSalesReportContent(isPortrait: true);
       default:
         return const Center(child: Text('Select a report'));
     }
