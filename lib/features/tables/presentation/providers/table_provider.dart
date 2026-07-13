@@ -68,13 +68,19 @@ Future<List<GroupedOrder>> confirmedOrders(Ref ref) async {
 @riverpod
 Map<String, int> tableStatusCounts(Ref ref) {
   final tablesAsync = ref.watch(tablesStreamProvider);
+  final floorId = ref.watch(manageTableFloorFilterProvider);
+  
   return tablesAsync.maybeWhen(
     data: (tables) {
+      final filteredByFloor = floorId == null 
+          ? tables 
+          : tables.where((t) => t.floorID == floorId).toList();
+          
       final counts = {
-        'All': tables.length,
-        'Available': tables.where((t) => t.status.toLowerCase() == 'available').length,
-        'Occupied': tables.where((t) => t.status.toLowerCase() == 'occupied').length,
-        'Reserved': tables.where((t) => t.status.toLowerCase() == 'reserved').length,
+        'All': filteredByFloor.length,
+        'Available': filteredByFloor.where((t) => t.status.toLowerCase() == 'available').length,
+        'Occupied': filteredByFloor.where((t) => t.status.toLowerCase() == 'occupied').length,
+        'Reserved': filteredByFloor.where((t) => t.status.toLowerCase() == 'reserved').length,
       };
       return counts;
     },
@@ -186,6 +192,16 @@ class ManageTableFloorFilter extends _$ManageTableFloorFilter {
   int? build() => null; // null means All
 
   void set(int? floorId) => state = floorId;
+}
+
+@riverpod
+class TableViewMode extends _$TableViewMode {
+  @override
+  bool build() => true; // true for grid, false for list
+
+  void toggle() => state = !state;
+  void setGrid() => state = true;
+  void setList() => state = false;
 }
 
 @riverpod

@@ -342,7 +342,7 @@ final class TableStatusCountsProvider
   }
 }
 
-String _$tableStatusCountsHash() => r'03cb7641b20bfede9d48d620335472fc81f8e7c0';
+String _$tableStatusCountsHash() => r'f4adb689b4c5c85552ccc6e4e87d641ec0c98448';
 
 @ProviderFor(filteredGroupedTables)
 final filteredGroupedTablesProvider = FilteredGroupedTablesProvider._();
@@ -645,6 +645,58 @@ abstract class _$ManageTableFloorFilter extends $Notifier<int?> {
             as $ClassProviderElement<
               AnyNotifier<int?, int?>,
               int?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(TableViewMode)
+final tableViewModeProvider = TableViewModeProvider._();
+
+final class TableViewModeProvider
+    extends $NotifierProvider<TableViewMode, bool> {
+  TableViewModeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'tableViewModeProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$tableViewModeHash();
+
+  @$internal
+  @override
+  TableViewMode create() => TableViewMode();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$tableViewModeHash() => r'7be327beb47ef6d05b11ca592a7d8a40883613a5';
+
+abstract class _$TableViewMode extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
               Object?,
               Object?
             >;

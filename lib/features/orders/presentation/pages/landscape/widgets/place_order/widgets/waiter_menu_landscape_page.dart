@@ -21,34 +21,39 @@ class WaiterMenuLandscapePage extends ConsumerWidget {
     final filteredItems = ref.watch(filteredMenuItemsProvider);
 
     return Container(
-      color: AppColors.bg,
+      color: AppColors.white,
       child: Column(
         children: [
           // Header Row: Title and Search
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             child: Row(
               children: [
-                const Expanded(
-                  flex: 2,
-                  child: Text(
-                    'Menu Items',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Manrope'),
-                  ),
+                const Text(
+                  'Menu',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Manrope'),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 24),
                 Expanded(
-                  flex: 1,
                   child: TextField(
                     onChanged: (val) => ref.read(menuSearchQueryProvider.notifier).set(val),
-                    style: const TextStyle(fontSize: 12),
+                    style: const TextStyle(fontSize: 13),
                     decoration: InputDecoration(
-                      hintText: 'Search Table...',
-                      hintStyle: const TextStyle(fontSize: 12),
-                      prefixIcon: const Icon(Icons.search, size: 16),
+                      hintText: 'Search menu items...',
+                      hintStyle: const TextStyle(fontSize: 13, color: AppColors.grey),
+                      prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.grey),
+                      suffixIcon: const Padding(
+                        padding: EdgeInsets.only(top: 12, right: 12),
+                        child: Text('/', style: TextStyle(color: AppColors.grey)),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.bg,
                       isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
@@ -114,7 +119,7 @@ class WaiterMenuLandscapePage extends ConsumerWidget {
                                 style: TextStyle(
                                   color: isSelected ? Colors.white : AppColors.blackGrey,
                                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                  fontSize: 14,
+                                  fontSize: 12, // Smaller font for categories
                                   fontFamily: 'Manrope',
                                 ),
                               ),
@@ -136,7 +141,7 @@ class WaiterMenuLandscapePage extends ConsumerWidget {
           // SubCategories Horizontal List
           if (subCategories.length > 1)
             Container(
-              height: 36,
+              height: 32, // Smaller height
               margin: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 color: AppColors.ashGrey.withValues(alpha: 0.2),
@@ -159,7 +164,7 @@ class WaiterMenuLandscapePage extends ConsumerWidget {
                       onTap: () => ref.read(selectedSubCategoryNameProvider.notifier).set(sub),
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: isSelected ? Colors.white : Colors.transparent,
@@ -177,7 +182,7 @@ class WaiterMenuLandscapePage extends ConsumerWidget {
                           children: [
                             Iconify(
                               icon,
-                              size: 16,
+                              size: 14,
                               color: isSelected ? AppColors.primary : AppColors.grey,
                             ),
                             const SizedBox(width: 6),
@@ -186,7 +191,7 @@ class WaiterMenuLandscapePage extends ConsumerWidget {
                               style: TextStyle(
                                 color: isSelected ? AppColors.primary : AppColors.grey,
                                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                fontSize: 14,
+                                fontSize: 12, // Smaller font
                                 fontFamily: 'Manrope',
                               ),
                             ),
@@ -207,12 +212,12 @@ class WaiterMenuLandscapePage extends ConsumerWidget {
               data: (_) {
                 if (filteredItems.isEmpty) return const Center(child: Text('No items found'));
                 return GridView.builder(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(16),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 5,
-                    childAspectRatio: 1,
-                    crossAxisSpacing: 8,
-                    mainAxisSpacing: 8,
+                    crossAxisCount: 3, // Changed to 3
+                    childAspectRatio: 0.85,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
                   ),
                   itemCount: filteredItems.length,
                   itemBuilder: (context, index) => _WaiterMenuSelectionItemCard(item: filteredItems[index]),
@@ -243,104 +248,65 @@ class _WaiterMenuSelectionItemCard extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2))],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.ashGrey.withValues(alpha: 0.5)),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 4, offset: const Offset(0, 2))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-              child: Image.asset(imagePath, width: double.infinity, fit: BoxFit.cover),
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  child: Image.asset(imagePath, width: double.infinity, fit: BoxFit.cover),
+                ),
+                // Removed popular badge as isPopular is not in the model yet
+              ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(4.0),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.itemName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10), maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(item.itemName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, fontFamily: 'Manrope'), maxLines: 1, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 4),
-                Text('Rs. ${item.price.toStringAsFixed(0)}', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 14)),
-                const SizedBox(height: 4),
-                Container(
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: Colors.grey.withValues(alpha: 0.2),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () => ref
-                            .read(placeOrderProvider.notifier)
-                            .updateQuantity(item.itemID, -1),
-                        icon: const Icon(Icons.remove_rounded),
-                        iconSize: 18,
-                        splashRadius: 20,
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(
-                          minWidth: 36,
-                          minHeight: 36,
-                        ),
-                      ),
-
-                      Container(
-                        constraints: const BoxConstraints(minWidth: 32),
-                        alignment: Alignment.center,
+                Text('Rs. ${item.price.toStringAsFixed(0)}', style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12)),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    _qtyButton(Icons.remove, () => ref.read(placeOrderProvider.notifier).updateQuantity(item.itemID, -1)),
+                    Expanded(
+                      child: Center(
                         child: Text(
                           '$quantity',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                          ),
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                         ),
                       ),
-
-                      Container(
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.horizontal(
-                            left: Radius.circular(8),
-                            right: Radius.circular(8),
-                          ),
-                        ),
-                        child: IconButton(
-                          onPressed: () =>
-                              ref.read(placeOrderProvider.notifier).addItem(item),
-                          icon: const Icon(
-                            Icons.add_rounded,
-                            color: Colors.white,
-                          ),
-                          iconSize: 18,
-                          splashRadius: 20,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(
-                            minWidth: 36,
-                            minHeight: 36,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
+                    ),
+                    _qtyButton(Icons.add, () => ref.read(placeOrderProvider.notifier).addItem(item), isAdd: true),
+                  ],
+                ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _qtyButton(IconData icon, VoidCallback onTap, {bool isAdd = false}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: isAdd ? Colors.orange : AppColors.bg,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Icon(icon, size: 16, color: isAdd ? Colors.white : AppColors.blackGrey),
       ),
     );
   }

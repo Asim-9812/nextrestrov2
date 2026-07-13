@@ -7,14 +7,12 @@ import 'package:nextrestro/features/menu/presentation/pages/menu_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/orders_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/landscape/widgets/place_order/widgets/waiter_menu_landscape_page.dart';
 import 'package:nextrestro/features/orders/presentation/pages/landscape/widgets/place_order/widgets/waiter_table_selection_landscape_page.dart';
-import 'package:nextrestro/features/orders/presentation/pages/landscape/widgets/place_order/widgets/order_summary_landscape_page.dart';
-import 'package:nextrestro/features/orders/presentation/providers/place_order_provider.dart';
 import 'package:nextrestro/features/profile/presentation/profile_page.dart';
 import 'package:nextrestro/features/shift/presentation/providers/shift_management_provider.dart';
 import 'package:nextrestro/features/tables/presentation/tables_page.dart';
 import '../widgets/waiter_sidebar.dart';
 import '../widgets/waiter_header.dart';
-import '../widgets/waiter_shift_details_card.dart';
+import '../widgets/current_order_section.dart';
 
 class WaiterDashboardLandscapePage extends ConsumerStatefulWidget {
   const WaiterDashboardLandscapePage({super.key});
@@ -71,8 +69,6 @@ class _WaiterDashboardLandscapePageState extends ConsumerState<WaiterDashboardLa
 
   @override
   Widget build(BuildContext context) {
-    final isExpanded = ref.watch(placeOrderProvider.select((s) => s.isExpanded));
-
     return Scaffold(
       backgroundColor: AppColors.bg,
       body: Row(
@@ -91,64 +87,14 @@ class _WaiterDashboardLandscapePageState extends ConsumerState<WaiterDashboardLa
               children: [
                 WaiterHeader(title: _getPageTitle()),
                 Expanded(
-                  child: Stack(
+                  child: IndexedStack(
+                    index: _selectedIndex,
                     children: [
-                      // Main Content
-                      IndexedStack(
-                        index: _selectedIndex,
-                        children: [
-                          _buildDashboardTab(),
-                          const OrdersPage(),
-                          const TablesPage(),
-                          const MenuPage(),
-                          const ProfilePage(),
-                        ],
-                      ),
-                      
-                      // Dim overlay when expanded
-                      if (_selectedIndex == 0 && isExpanded)
-                        Positioned.fill(
-                          child: GestureDetector(
-                            onTap: () => ref.read(placeOrderProvider.notifier).toggleExpanded(),
-                            child: Container(
-                              color: Colors.black.withValues(alpha: 0.3),
-                            ),
-                          ),
-                        ),
-
-                      // Animated Footer/Overlay
-                      if (_selectedIndex == 0)
-                        TweenAnimationBuilder<double>(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          tween: Tween<double>(
-                            begin: 70,
-                            end: isExpanded ? MediaQuery.of(context).size.height * 0.7 : 70,
-                          ),
-                          builder: (context, height, child) {
-                            return Positioned(
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              height: height,
-                              child: GestureDetector(
-                                onTap: isExpanded ? null : () => ref.read(placeOrderProvider.notifier).toggleExpanded(),
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-                                  child: Container(
-                                    color: Colors.white,
-                                    child: OverflowBox(
-                                      alignment: Alignment.topCenter,
-                                      minHeight: 0,
-                                      maxHeight: MediaQuery.of(context).size.height * 0.7,
-                                      child: const OrderSummaryLandscapePage(),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                      _buildDashboardTab(),
+                      const OrdersPage(),
+                      const TablesPage(),
+                      const MenuPage(),
+                      const ProfilePage(),
                     ],
                   ),
                 ),
@@ -161,47 +107,40 @@ class _WaiterDashboardLandscapePageState extends ConsumerState<WaiterDashboardLa
   }
 
   Widget _buildDashboardTab() {
-    final shiftState = ref.watch(shiftManagementControllerProvider);
-
-    return shiftState.when(
-      data: (state) {
-        final shift = state.shifts.isNotEmpty && state.shifts.first.shiftStatus == 1 ? state.shifts.first : null;
-        final openerName = state.selectedShiftOpenerName;
-
-        return Column(
-          children: [
-            const SizedBox(height: 12),
-            if (shift != null)
-              WaiterShiftDetailsCard(
-                shift: shift,
-                openerName: openerName,
-              ),
-            const SizedBox(height: 12),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 70), // Leave space for the footer
-                child: Row(
-                  children: const [
-                    // Table Selection Section
-                    Expanded(
-                      flex: 2,
-                      child: WaiterTableSelectionLandscapePage(),
-                    ),
-                    VerticalDivider(width: 1, thickness: 1, color: AppColors.ashGrey),
-                    // Menu Section
-                    Expanded(
-                      flex: 5,
-                      child: WaiterMenuLandscapePage(),
-                    ),
-                  ],
-                ),
-              ),
+    return Container(
+      color: AppColors.bg,
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Table Selection Section
+          Expanded(
+            flex: 2,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: const WaiterTableSelectionLandscapePage(),
             ),
-          ],
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('Error: $error')),
+          ),
+          const SizedBox(width: 16),
+          // Menu Section
+          Expanded(
+            flex: 3,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: const WaiterMenuLandscapePage(),
+            ),
+          ),
+          const SizedBox(width: 16),
+          // Current Order Section
+          Expanded(
+            flex: 2,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: const CurrentOrderSection(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

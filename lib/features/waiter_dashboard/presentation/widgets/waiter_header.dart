@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
+import 'package:nextrestro/core/network/session_service.dart';
 import 'package:nextrestro/core/utils/time_formatter.dart';
 import 'package:nextrestro/features/shift/presentation/providers/shift_management_provider.dart';
 
@@ -14,86 +15,94 @@ class WaiterHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final shiftState = ref.watch(shiftManagementControllerProvider);
+    final sessionService = ref.watch(sessionServiceProvider);
+    final userMap = sessionService.getUser();
+    
+    // Prefer username for the greeting, fallback to fullName or 'User'
+    final String username = userMap?['username'] ?? userMap?['fullName'] ?? 'User';
+    final String fullName = userMap?['fullName'] ?? userMap?['username'] ?? 'User';
+    final String role = userMap?['role'] ?? 'Waiter';
+    final String firstName = username.split(' ').first;
+
     return Container(
-      height: 60,
+      height: 70,
       color: AppColors.white,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.black,
-            ),
-          ),
-          const SizedBox(width: 24),
-          Expanded(
-            child: _buildShiftHeaderInfo(context, ref),
-          ),
-          const Chip(
-            avatar: CircleAvatar(
-              backgroundColor: AppColors.primary,
-              child: Text(
-                'W',
-                style: TextStyle(color: AppColors.white),
-              ),
-            ),
-            label: Text('Waiter'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildShiftHeaderInfo(BuildContext context, WidgetRef ref) {
-    final shiftState = ref.watch(shiftManagementControllerProvider);
-
-    return shiftState.maybeWhen(
-      data: (state) {
-        final shift = state.shifts.isNotEmpty && state.shifts.first.shiftStatus == 1 ? state.shifts.first : null;
-        if (shift == null) {
-          return const Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'No shift open',
-                style: TextStyle(color: AppColors.grey),
+                '$title',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.black,
+                  fontFamily: 'Manrope',
+                ),
               ),
-              SizedBox(width: 16),
-            ],
-          );
-        }
-
-        return Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.schedule, size: 16, color: AppColors.primary),
-                  const SizedBox(width: 8),
-                  Text(
+              shiftState.maybeWhen(
+                data: (state) {
+                  final shift = state.shifts.isNotEmpty && state.shifts.first.shiftStatus == 1 ? state.shifts.first : null;
+                  if (shift == null) return const Text('No active shift', style: TextStyle(fontSize: 12, color: AppColors.grey));
+                  
+                  return Text(
                     '${shift.shiftName} • ${TimeFormatter.formatTimeAgo(shift.openingTime)}',
                     style: const TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
+                      color: AppColors.grey,
                     ),
-                  ),
-                ],
+                  );
+                },
+                orElse: () => const Text('Loading shift...', style: TextStyle(fontSize: 12, color: AppColors.grey)),
               ),
-            ),
-            const Spacer(),
-          ],
-        );
-      },
-      orElse: () => const SizedBox.shrink(),
+            ],
+          ),
+          const Spacer(),
+          Row(
+            children: [
+              // Notifications hidden as requested
+              const SizedBox(width: 16),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.bg,
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(color: AppColors.ashGrey.withValues(alpha: 0.5)),
+                ),
+                child: Row(
+                  children: [
+                    const CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/man.png'),
+                      radius: 14,
+                    ),
+                    const SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          fullName,
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, height: 1.1),
+                        ),
+                        Text(
+                          role,
+                          style: const TextStyle(fontSize: 11, color: AppColors.grey, height: 1.1),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.keyboard_arrow_down_rounded, size: 18, color: AppColors.grey),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
