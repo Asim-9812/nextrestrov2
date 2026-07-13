@@ -43,10 +43,7 @@ class WaiterMenuLandscapePage extends ConsumerWidget {
                       hintText: 'Search menu items...',
                       hintStyle: const TextStyle(fontSize: 13, color: AppColors.grey),
                       prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.grey),
-                      suffixIcon: const Padding(
-                        padding: EdgeInsets.only(top: 12, right: 12),
-                        child: Text('/', style: TextStyle(color: AppColors.grey)),
-                      ),
+
                       filled: true,
                       fillColor: AppColors.bg,
                       isDense: true,
