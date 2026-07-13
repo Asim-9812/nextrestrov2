@@ -240,7 +240,23 @@ class WaiterTableSelectionLandscapePage extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: Text(table.tableNumber, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14), overflow: TextOverflow.ellipsis)),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            table.tableNumber,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            table.floorName,
+                            style: const TextStyle(fontSize: 9, color: AppColors.grey),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
                     if (isOccupied)
                       Container(width: 8, height: 8, decoration: const BoxDecoration(color: Colors.orange, shape: BoxShape.circle)),
                   ],

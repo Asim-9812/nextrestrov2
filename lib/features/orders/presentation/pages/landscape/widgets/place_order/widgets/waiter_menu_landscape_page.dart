@@ -33,8 +33,9 @@ class WaiterMenuLandscapePage extends ConsumerWidget {
                   'Menu',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Manrope'),
                 ),
-                const SizedBox(width: 24),
-                Expanded(
+                const Spacer(), // Replaced SizedBox with Spacer for a big gap
+                SizedBox(
+                  width: 200, // Fixed small width for search field
                   child: TextField(
                     onChanged: (val) => ref.read(menuSearchQueryProvider.notifier).set(val),
                     style: const TextStyle(fontSize: 13),

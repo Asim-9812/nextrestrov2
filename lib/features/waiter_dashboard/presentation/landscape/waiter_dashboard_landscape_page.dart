@@ -122,7 +122,7 @@ class _WaiterDashboardLandscapePageState extends ConsumerState<WaiterDashboardLa
             ),
           ),
           const SizedBox(width: 16),
-          // Menu Section
+          // Menu Section - Optimized width
           Expanded(
             flex: 3,
             child: ClipRRect(
