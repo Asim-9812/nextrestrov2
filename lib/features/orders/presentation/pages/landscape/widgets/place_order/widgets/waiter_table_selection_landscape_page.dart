@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
+import 'package:nextrestro/core/utils/time_formatter.dart';
 import 'package:nextrestro/features/tables/presentation/providers/table_provider.dart';
 import 'package:nextrestro/features/orders/presentation/providers/place_order_provider.dart';
 import 'package:nextrestro/features/tables/data/models/table_model.dart';
@@ -198,6 +199,8 @@ class WaiterTableSelectionLandscapePage extends ConsumerWidget {
   }
 
   Widget _buildGridView(List<TableModel> filtered, TableModel? selectedTable, WidgetRef ref) {
+    final tableOrders = ref.watch(tableOrderMapProvider);
+    
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -210,15 +213,18 @@ class WaiterTableSelectionLandscapePage extends ConsumerWidget {
       itemBuilder: (context, index) {
         final table = filtered[index];
         final isSelected = selectedTable?.tableID == table.tableID;
+        final activeOrder = tableOrders[table.tableID];
         
         Color statusColor;
         bool isOccupied = false;
+        
         switch (table.status.toLowerCase()) {
           case 'available': statusColor = Colors.green; break;
           case 'occupied': 
             statusColor = Colors.orange; 
             isOccupied = true;
             break;
+          case 'reserved': statusColor = Colors.blue; break; // Added reserved blue
           default: statusColor = AppColors.grey;
         }
 
@@ -262,6 +268,14 @@ class WaiterTableSelectionLandscapePage extends ConsumerWidget {
                   ],
                 ),
                 const Spacer(),
+                if (isOccupied && activeOrder != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Text(
+                      'Order #${activeOrder.orderId}',
+                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.orange),
+                    ),
+                  ),
                 Row(
                   children: [
                     const Icon(Icons.groups_outlined, size: 12, color: AppColors.grey),
@@ -272,13 +286,21 @@ class WaiterTableSelectionLandscapePage extends ConsumerWidget {
                 const SizedBox(height: 4),
                 isOccupied 
                   ? Row(
-                      children: const [
-                        Icon(Icons.schedule_outlined, size: 12, color: AppColors.grey),
-                        SizedBox(width: 4),
-                        Text('00:12', style: TextStyle(fontSize: 10, color: AppColors.grey)),
+                      children: [
+                        const Icon(Icons.schedule_outlined, size: 12, color: AppColors.grey),
+                        const SizedBox(width: 4),
+                        Text(
+                          activeOrder != null 
+                              ? TimeFormatter.formatDuration(activeOrder.date.toIso8601String())
+                              : '00:00',
+                          style: const TextStyle(fontSize: 10, color: AppColors.grey),
+                        ),
                       ],
                     )
-                  : Text('Available', style: TextStyle(fontSize: 10, color: statusColor, fontWeight: FontWeight.bold)),
+                  : Text(
+                      table.status == 'Reserved' ? 'Reserved' : 'Available',
+                      style: TextStyle(fontSize: 10, color: statusColor, fontWeight: FontWeight.bold),
+                    ),
               ],
             ),
           ),
@@ -288,6 +310,8 @@ class WaiterTableSelectionLandscapePage extends ConsumerWidget {
   }
 
   Widget _buildListView(List<TableModel> filtered, TableModel? selectedTable, WidgetRef ref) {
+    final tableOrders = ref.watch(tableOrderMapProvider);
+
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: filtered.length,
@@ -300,6 +324,7 @@ class WaiterTableSelectionLandscapePage extends ConsumerWidget {
         switch (table.status.toLowerCase()) {
           case 'available': statusColor = Colors.green; break;
           case 'occupied': statusColor = Colors.orange; break;
+          case 'reserved': statusColor = Colors.blue; break;
           default: statusColor = AppColors.grey;
         }
 
@@ -317,12 +342,27 @@ class WaiterTableSelectionLandscapePage extends ConsumerWidget {
             ),
             child: Row(
               children: [
-                Text(table.tableNumber, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(table.tableNumber, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                    Text(table.floorName, style: const TextStyle(fontSize: 9, color: AppColors.grey)),
+                  ],
+                ),
                 const SizedBox(width: 16),
                 const Icon(Icons.groups_outlined, size: 14, color: AppColors.grey),
                 const SizedBox(width: 4),
                 Text('${table.capacity} Seats', style: const TextStyle(fontSize: 12, color: AppColors.grey)),
                 const Spacer(),
+                if (table.status.toLowerCase() == 'occupied' && tableOrders[table.tableID] != null)
+                   Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: Text(
+                      '#${tableOrders[table.tableID]!.orderId}',
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.orange),
+                    ),
+                  ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(

@@ -35,7 +35,38 @@ class PlaceOrderNotifier extends _$PlaceOrderNotifier {
   }
 
   void selectTable(TableModel? table) {
-    state = state.copyWith(selectedTable: table);
+    if (table == null) {
+      state = state.copyWith(selectedTable: null);
+      return;
+    }
+
+    // Check if there is an active order for this table
+    final tableOrderMap = ref.read(tableOrderMapProvider);
+    final activeOrder = tableOrderMap[table.tableID];
+
+    if (activeOrder != null) {
+      // Load existing items from the active order
+      final items = activeOrder.items.map((item) => PlaceOrderItem(
+        productId: item.productId ?? 0,
+        itemName: item.productName ?? '',
+        quantity: item.quantity ?? 0,
+        unitPrice: 0, // Server doesn't always send unit price in details, might need adjustment
+        subtotal: 0,
+        specialInstructions: item.specialInstructions ?? '',
+      )).toList();
+
+      state = state.copyWith(
+        selectedTable: table,
+        items: items,
+        // We might need to find the customer as well if possible
+      );
+    } else {
+      // Table is available, start a new order
+      state = state.copyWith(
+        selectedTable: table,
+        items: [],
+      );
+    }
   }
 
   void selectCustomer(CustomerModel? customer) {

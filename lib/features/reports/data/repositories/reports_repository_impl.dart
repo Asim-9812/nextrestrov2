@@ -9,6 +9,7 @@ import '../models/product_sales_report_model.dart';
 import '../models/customer_sales_report_model.dart';
 import '../models/user_sales_report_model.dart';
 import '../models/branch_sales_report_model.dart';
+import '../models/payment_method_report_model.dart';
 
 final reportsRepositoryProvider = Provider<ReportsRepository>((ref) {
   return ReportsRepositoryImpl(ref.read(reportsRemoteDataSourceProvider));
@@ -71,6 +72,18 @@ class ReportsRepositoryImpl implements ReportsRepository {
   Future<Either<Failure, BranchSalesReportResponse>> getBranchSalesReport(BranchSalesReportRequest request) async {
     try {
       final response = await _remoteDataSource.getBranchSalesReport(request);
+      return Right(response);
+    } on DioException catch (e) {
+      return Left(ServerFailure(e.message ?? 'Server Error'));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, PaymentMethodReportResponse>> getPaymentMethodSalesReport(PaymentMethodReportRequest request) async {
+    try {
+      final response = await _remoteDataSource.getPaymentMethodSalesReport(request);
       return Right(response);
     } on DioException catch (e) {
       return Left(ServerFailure(e.message ?? 'Server Error'));

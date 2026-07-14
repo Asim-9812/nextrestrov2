@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +9,7 @@ import 'package:nextrestro/features/customer/presentation/providers/customer_pro
 import 'package:nextrestro/features/tables/presentation/providers/table_provider.dart';
 import '../providers/reports_controller.dart';
 import '../../../fiscal_year/data/models/fiscal_year_model.dart';
+import '../../data/models/sales_report_model.dart';
 
 class SalesReportContent extends ConsumerStatefulWidget {
   final bool isPortrait;
@@ -30,11 +32,14 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
   String _searchQuery = '';
 
   final ExpansionTileController _filterController = ExpansionTileController();
+  
+  final ScrollController _horizontalScrollController = ScrollController();
 
   @override
   void dispose() {
     _invoiceController.dispose();
     _searchController.dispose();
+    _horizontalScrollController.dispose();
     super.dispose();
   }
 
@@ -46,14 +51,24 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
     final customersAsync = ref.watch(customersProvider);
     final tablesAsync = ref.watch(tablesStreamProvider);
 
+    const columnWidths = {
+      0: FixedColumnWidth(150), // Invoice No
+      1: FixedColumnWidth(180), // Date
+      2: FixedColumnWidth(180), // Customer
+      3: FixedColumnWidth(100), // Table
+      4: FixedColumnWidth(130), // SubTotal
+      5: FixedColumnWidth(130), // Tax
+      6: FixedColumnWidth(150), // Grand Total
+    };
+
     return Column(
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Filter Header
-                Container(
+          child: CustomScrollView(
+            slivers: [
+              // Filter Header
+              SliverToBoxAdapter(
+                child: Container(
                   padding: const EdgeInsets.all(16),
                   color: AppColors.white,
                   child: widget.isPortrait 
@@ -70,10 +85,12 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
                         ],
                       ),
                 ),
+              ),
 
-                // Search Bar Area
-                if (reportState.asData?.value != null)
-                  Padding(
+              // Search Bar Area
+              if (reportState.asData?.value != null)
+                SliverToBoxAdapter(
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: TextField(
                       controller: _searchController,
@@ -95,51 +112,124 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
                       ),
                     ),
                   ),
+                ),
 
-                // Data Table Section
-                reportState.when(
-                  data: (data) {
-                    if (data == null) {
-                      return const Center(
+              // Data Table Section
+              reportState.when(
+                data: (data) {
+                  if (data == null) {
+                    return const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(
                         child: Padding(
                           padding: EdgeInsets.all(32.0),
                           child: Text('Click Search to view the report'),
                         ),
-                      );
-                    }
-                    
-                    final filteredData = data.data.where((item) {
-                      final query = _searchQuery.toLowerCase();
-                      return (item.invoiceNo?.toLowerCase().contains(query) ?? false) ||
-                             (item.customerName?.toLowerCase().contains(query) ?? false);
-                    }).toList();
+                      ),
+                    );
+                  }
+                  
+                  final filteredData = data.data.where((item) {
+                    final query = _searchQuery.toLowerCase();
+                    return (item.invoiceNo?.toLowerCase().contains(query) ?? false) ||
+                           (item.customerName?.toLowerCase().contains(query) ?? false);
+                  }).toList();
 
-                    if (filteredData.isEmpty) {
-                      return const Center(
+                  if (filteredData.isEmpty) {
+                    return const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(
                         child: Padding(
                           padding: EdgeInsets.all(32.0),
                           child: Text('No matching records found'),
                         ),
-                      );
-                    }
+                      ),
+                    );
+                  }
 
-                    return _buildDataTable(filteredData);
-                  },
-                  loading: () => const Center(
+                  return SliverMainAxisGroup(
+                    slivers: [
+                      SliverPersistentHeader(
+                        pinned: true,
+                        delegate: _SliverAppBarDelegate(
+                          minHeight: 50,
+                          maxHeight: 50,
+                          child: Container(
+                            color: AppColors.bg,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: SingleChildScrollView(
+                              controller: _horizontalScrollController,
+                              scrollDirection: Axis.horizontal,
+                              child: StickyHeader(
+                                columnWidths: columnWidths,
+                                children: [
+                                  _headerCell('Invoice No'),
+                                  _headerCell('Date'),
+                                  _headerCell('Customer'),
+                                  _headerCell('Table'),
+                                  _headerCell('SubTotal'),
+                                  _headerCell('Tax'),
+                                  _headerCell('Grand Total'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: SingleChildScrollView(
+                          controller: _horizontalScrollController,
+                          scrollDirection: Axis.horizontal,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Table(
+                              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                              columnWidths: columnWidths,
+                              border: TableBorder(
+                                horizontalInside: BorderSide(color: AppColors.ashGrey, width: 0.5),
+                              ),
+                              children: filteredData.map((item) => TableRow(
+                                children: [
+                                  _dataCell(item.invoiceNo ?? ''),
+                                  _dataCell(DateFormat('MMM dd, yyyy HH:mm').format(DateTime.parse(item.billingDate!))),
+                                  _dataCell(item.customerName ?? '-'),
+                                  _dataCell(item.tableNumber ?? '-'),
+                                  _dataCell(item.subTotal.toStringAsFixed(2)),
+                                  _dataCell(item.tax.toStringAsFixed(2)),
+                                  _dataCell(
+                                    item.grandTotal.toStringAsFixed(2),
+                                    isBold: true,
+                                    color: AppColors.primary,
+                                  ),
+                                ],
+                              )).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+                loading: () => const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
                     child: Padding(
                       padding: EdgeInsets.all(32.0),
                       child: CircularProgressIndicator(),
                     ),
                   ),
-                  error: (error, _) => Center(
+                ),
+                error: (error, _) => SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
                     child: Padding(
                       padding: EdgeInsets.all(32.0),
                       child: Text('Error: $error'),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
 
@@ -222,50 +312,6 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
     AsyncValue<dynamic> customers,
     AsyncValue<dynamic> tables,
   ) {
-    if (widget.isPortrait) {
-      return Column(
-        children: [
-          Row(
-            children: [
-              Expanded(child: _buildDatePicker('From', fromDate, (date) => setState(() => fromDate = date))),
-              const SizedBox(width: 8),
-              Expanded(child: _buildDatePicker('To', toDate, (date) => setState(() => toDate = date))),
-            ],
-          ),
-          const SizedBox(height: 12),
-          _buildFiscalYearDropdown(fiscalYears),
-          const SizedBox(height: 12),
-          _buildBranchDropdown(branches),
-          const SizedBox(height: 12),
-          _buildCustomerDropdown(customers),
-          const SizedBox(height: 12),
-          _buildTableDropdown(tables),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _invoiceController,
-            decoration: const InputDecoration(
-              labelText: 'Invoice No',
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            ),
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _onSearch,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.white,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-              child: const Text('Search'),
-            ),
-          ),
-        ],
-      );
-    }
-
     return Column(
       children: [
         Row(
@@ -316,7 +362,7 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
     );
   }
 
-  Widget _buildSummaryCards(dynamic summary) {
+  Widget _buildSummaryCards(SalesReportSummary summary) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -429,7 +475,6 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
   Widget _buildFiscalYearDropdown(AsyncValue<List<FiscalYearModel>> fiscalYearsAsync) {
     return fiscalYearsAsync.when(
       data: (years) {
-        // Ensure unique IDs to avoid "There should be exactly one item with [DropdownButton]'s value" crash
         final uniqueYears = <int, FiscalYearModel>{};
         for (var y in years) {
           if (y.fiscalYearId != null) {
@@ -538,85 +583,24 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
     );
   }
 
-  Widget _buildDataTable(List<dynamic> data) {
-    const columnWidths = {
-      0: FixedColumnWidth(150), // Invoice No
-      1: FixedColumnWidth(180), // Date
-      2: FixedColumnWidth(180), // Customer
-      3: FixedColumnWidth(100), // Table
-      4: FixedColumnWidth(130), // SubTotal
-      5: FixedColumnWidth(130), // Tax
-      6: FixedColumnWidth(150), // Grand Total
-    };
+  void _onSearch() {
+    if (selectedFiscalYearID == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a fiscal year')));
+      return;
+    }
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          dividerTheme: const DividerThemeData(thickness: 0.5),
-        ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Row
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  border: Border(bottom: BorderSide(color: AppColors.border, width: 0.5)),
-                ),
-                child: Table(
-                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                  columnWidths: columnWidths,
-                  children: [
-                    TableRow(
-                      children: [
-                        _headerCell('Invoice No'),
-                        _headerCell('Date'),
-                        _headerCell('Customer'),
-                        _headerCell('Table'),
-                        _headerCell('SubTotal'),
-                        _headerCell('Tax'),
-                        _headerCell('Grand Total'),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              // Body Rows
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Table(
-                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                    columnWidths: columnWidths,
-                    border: TableBorder(
-                      horizontalInside: BorderSide(color: AppColors.ashGrey, width: 0.5),
-                    ),
-                    children: data.map((item) => TableRow(
-                      children: [
-                        _dataCell(item.invoiceNo ?? ''),
-                        _dataCell(DateFormat('MMM dd, yyyy HH:mm').format(DateTime.parse(item.billingDate))),
-                        _dataCell(item.customerName ?? '-'),
-                        _dataCell(item.tableNumber ?? '-'),
-                        _dataCell(item.subTotal.toStringAsFixed(2)),
-                        _dataCell(item.tax.toStringAsFixed(2)),
-                        _dataCell(
-                          item.grandTotal.toStringAsFixed(2),
-                          isBold: true,
-                          color: AppColors.primary,
-                        ),
-                      ],
-                    )).toList(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    if (widget.isPortrait) {
+      _filterController.collapse();
+    }
+
+    ref.read(salesReportControllerProvider.notifier).fetchSalesReport(
+      fromDate: fromDate,
+      toDate: toDate,
+      fiscalYearID: selectedFiscalYearID!,
+      branchID: selectedBranchID ?? 0,
+      customerID: selectedCustomerID,
+      tableID: selectedTableID,
+      invoiceNo: _invoiceController.text,
     );
   }
 
@@ -643,20 +627,65 @@ class _SalesReportContentState extends ConsumerState<SalesReportContent> {
       ),
     );
   }
+}
 
-  void _onSearch() {
-    if (selectedFiscalYearID == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a fiscal year')));
-      return;
-    }
-    ref.read(salesReportControllerProvider.notifier).fetchSalesReport(
-      fromDate: fromDate,
-      toDate: toDate,
-      fiscalYearID: selectedFiscalYearID!,
-      branchID: selectedBranchID ?? 0,
-      customerID: selectedCustomerID,
-      tableID: selectedTableID,
-      invoiceNo: _invoiceController.text,
+class StickyHeader extends StatelessWidget {
+  final Map<int, TableColumnWidth> columnWidths;
+  final List<Widget> children;
+
+  const StickyHeader({
+    super.key,
+    required this.columnWidths,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        border: Border(bottom: BorderSide(color: AppColors.border, width: 0.5)),
+      ),
+      child: Table(
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        columnWidths: columnWidths,
+        children: [
+          TableRow(
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+            ),
+            children: children,
+          ),
+        ],
+      ),
     );
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate({
+    required this.minHeight,
+    required this.maxHeight,
+    required this.child,
+  });
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+
+  @override
+  double get minExtent => minHeight;
+  @override
+  double get maxExtent => math.max(maxHeight, minHeight);
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return SizedBox.expand(child: child);
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight ||
+        child != oldDelegate.child;
   }
 }

@@ -8,6 +8,7 @@ import '../widgets/product_sales_report_content.dart';
 import '../widgets/customer_sales_report_content.dart';
 import '../widgets/user_sales_report_content.dart';
 import '../widgets/branch_sales_report_content.dart';
+import '../widgets/payment_method_report_content.dart';
 import '../../../menu/presentation/landscape/widgets/menu_sidebar_item.dart';
 
 class ReportsLandscapePage extends ConsumerWidget {
@@ -64,6 +65,12 @@ class ReportsLandscapePage extends ConsumerWidget {
                       isSelected: selectedIndex == 4,
                       onTap: () => ref.read(selectedReportTabProvider.notifier).set(4),
                     ),
+                    MenuSidebarItem(
+                      icon: MaterialSymbols.payments,
+                      label: 'Payment Method Report',
+                      isSelected: selectedIndex == 5,
+                      onTap: () => ref.read(selectedReportTabProvider.notifier).set(5),
+                    ),
                   ],
                 ),
               ),
@@ -96,6 +103,8 @@ class ReportsLandscapePage extends ConsumerWidget {
         return const UserSalesReportContent();
       case 4:
         return const BranchSalesReportContent();
+      case 5:
+        return const PaymentMethodReportContent();
       default:
         return const Center(child: Text('Select a report from the menu'));
     }

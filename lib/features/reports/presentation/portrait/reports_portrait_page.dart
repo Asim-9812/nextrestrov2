@@ -7,6 +7,7 @@ import '../widgets/product_sales_report_content.dart';
 import '../widgets/customer_sales_report_content.dart';
 import '../widgets/user_sales_report_content.dart';
 import '../widgets/branch_sales_report_content.dart';
+import '../widgets/payment_method_report_content.dart';
 
 class ReportsPortraitPage extends ConsumerWidget {
   const ReportsPortraitPage({super.key});
@@ -44,6 +45,10 @@ class ReportsPortraitPage extends ConsumerWidget {
             icon: Icon(Icons.store),
             label: 'Branch',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.payment),
+            label: 'Payment',
+          ),
         ],
       ),
     );
@@ -61,6 +66,8 @@ class ReportsPortraitPage extends ConsumerWidget {
         return const UserSalesReportContent(isPortrait: true);
       case 4:
         return const BranchSalesReportContent(isPortrait: true);
+      case 5:
+        return const PaymentMethodReportContent(isPortrait: true);
       default:
         return const Center(child: Text('Select a report'));
     }

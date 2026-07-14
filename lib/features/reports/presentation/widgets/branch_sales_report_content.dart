@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -26,10 +27,13 @@ class _BranchSalesReportContentState extends ConsumerState<BranchSalesReportCont
   String _searchQuery = '';
 
   final ExpansionTileController _filterController = ExpansionTileController();
+  
+  final ScrollController _horizontalScrollController = ScrollController();
 
   @override
   void dispose() {
     _searchController.dispose();
+    _horizontalScrollController.dispose();
     super.dispose();
   }
 
@@ -39,14 +43,24 @@ class _BranchSalesReportContentState extends ConsumerState<BranchSalesReportCont
     final fiscalYearsAsync = ref.watch(fiscalYearsProvider);
     final branchesAsync = ref.watch(branchesProvider);
 
+    const columnWidths = {
+      0: FixedColumnWidth(60),  // SN
+      1: FixedColumnWidth(220), // Branch Name
+      2: FixedColumnWidth(100), // Bills
+      3: FixedColumnWidth(100), // Qty
+      4: FixedColumnWidth(130), // Gross
+      5: FixedColumnWidth(130), // Tax
+      6: FixedColumnWidth(150), // Net
+    };
+
     return Column(
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Filter Header
-                Container(
+          child: CustomScrollView(
+            slivers: [
+              // Filter Header
+              SliverToBoxAdapter(
+                child: Container(
                   padding: const EdgeInsets.all(16),
                   color: AppColors.white,
                   child: widget.isPortrait 
@@ -63,10 +77,12 @@ class _BranchSalesReportContentState extends ConsumerState<BranchSalesReportCont
                         ],
                       ),
                 ),
+              ),
 
-                // Search Bar Area
-                if (reportState.asData?.value != null)
-                  Padding(
+              // Search Bar Area
+              if (reportState.asData?.value != null)
+                SliverToBoxAdapter(
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: TextField(
                       controller: _searchController,
@@ -88,50 +104,123 @@ class _BranchSalesReportContentState extends ConsumerState<BranchSalesReportCont
                       ),
                     ),
                   ),
+                ),
 
-                // Data Table Section
-                reportState.when(
-                  data: (data) {
-                    if (data == null) {
-                      return const Center(
+              // Data Table Section
+              reportState.when(
+                data: (data) {
+                  if (data == null) {
+                    return const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(
                         child: Padding(
                           padding: EdgeInsets.all(32.0),
                           child: Text('Click Search to view the report'),
                         ),
-                      );
-                    }
-                    
-                    final filteredData = data.data.where((item) {
-                      final query = _searchQuery.toLowerCase();
-                      return (item.branchName?.toLowerCase().contains(query) ?? false);
-                    }).toList();
+                      ),
+                    );
+                  }
+                  
+                  final filteredData = data.data.where((item) {
+                    final query = _searchQuery.toLowerCase();
+                    return (item.branchName?.toLowerCase().contains(query) ?? false);
+                  }).toList();
 
-                    if (filteredData.isEmpty) {
-                      return const Center(
+                  if (filteredData.isEmpty) {
+                    return const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(
                         child: Padding(
                           padding: EdgeInsets.all(32.0),
                           child: Text('No matching records found'),
                         ),
-                      );
-                    }
+                      ),
+                    );
+                  }
 
-                    return _buildDataTable(filteredData);
-                  },
-                  loading: () => const Center(
+                  return SliverMainAxisGroup(
+                    slivers: [
+                      SliverPersistentHeader(
+                        pinned: true,
+                        delegate: _SliverAppBarDelegate(
+                          minHeight: 50,
+                          maxHeight: 50,
+                          child: Container(
+                            color: AppColors.bg,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: SingleChildScrollView(
+                              controller: _horizontalScrollController,
+                              scrollDirection: Axis.horizontal,
+                              child: StickyHeader(
+                                columnWidths: columnWidths,
+                                children: [
+                                  _headerCell('SN'),
+                                  _headerCell('Branch Name'),
+                                  _headerCell('Bills'),
+                                  _headerCell('Qty'),
+                                  _headerCell('Gross'),
+                                  _headerCell('Tax'),
+                                  _headerCell('Net'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: SingleChildScrollView(
+                          controller: _horizontalScrollController,
+                          scrollDirection: Axis.horizontal,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Table(
+                              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                              columnWidths: columnWidths,
+                              border: TableBorder(
+                                horizontalInside: BorderSide(color: AppColors.ashGrey, width: 0.5),
+                              ),
+                              children: filteredData.map((item) => TableRow(
+                                children: [
+                                  _dataCell(item.sn?.toString() ?? ''),
+                                  _dataCell(item.branchName ?? ''),
+                                  _dataCell(item.totalBills.toString()),
+                                  _dataCell(item.quantity.toString()),
+                                  _dataCell(item.grossAmount.toStringAsFixed(2)),
+                                  _dataCell(item.taxAmount.toStringAsFixed(2)),
+                                  _dataCell(
+                                    item.netAmount.toStringAsFixed(2),
+                                    isBold: true,
+                                    color: AppColors.primary,
+                                  ),
+                                ],
+                              )).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+                loading: () => const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
                     child: Padding(
                       padding: EdgeInsets.all(32.0),
                       child: CircularProgressIndicator(),
                     ),
                   ),
-                  error: (error, _) => Center(
+                ),
+                error: (error, _) => SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
                     child: Padding(
                       padding: EdgeInsets.all(32.0),
                       child: Text('Error: $error'),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
 
@@ -153,7 +242,7 @@ class _BranchSalesReportContentState extends ConsumerState<BranchSalesReportCont
       controller: _filterController,
       initiallyExpanded: true,
       title: const Text(
-        'Branch Sales Report Filters',
+        'Report Filters',
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       tilePadding: EdgeInsets.zero,
@@ -197,37 +286,6 @@ class _BranchSalesReportContentState extends ConsumerState<BranchSalesReportCont
     AsyncValue<List<FiscalYearModel>> fiscalYears,
     AsyncValue<dynamic> branches,
   ) {
-    if (widget.isPortrait) {
-      return Column(
-        children: [
-          Row(
-            children: [
-              Expanded(child: _buildDatePicker('From', fromDate, (date) => setState(() => fromDate = date))),
-              const SizedBox(width: 8),
-              Expanded(child: _buildDatePicker('To', toDate, (date) => setState(() => toDate = date))),
-            ],
-          ),
-          const SizedBox(height: 12),
-          _buildFiscalYearDropdown(fiscalYears),
-          const SizedBox(height: 12),
-          _buildBranchDropdown(branches),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _onSearch,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.white,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-              child: const Text('Search'),
-            ),
-          ),
-        ],
-      );
-    }
-
     return Column(
       children: [
         Row(
@@ -249,7 +307,7 @@ class _BranchSalesReportContentState extends ConsumerState<BranchSalesReportCont
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+                padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 18),
               ),
               child: const Text('Search'),
             ),
@@ -387,7 +445,7 @@ class _BranchSalesReportContentState extends ConsumerState<BranchSalesReportCont
         final isValidValue = sortedYears.any((y) => y.fiscalYearId == selectedFiscalYearID);
 
         return DropdownButtonFormField<int>(
-          initialValue: isValidValue ? selectedFiscalYearID : (sortedYears.isNotEmpty ? sortedYears.first.fiscalYearId : null),
+          value: isValidValue ? selectedFiscalYearID : (sortedYears.isNotEmpty ? sortedYears.first.fiscalYearId : null),
           decoration: const InputDecoration(
             labelText: 'Fiscal Year',
             border: OutlineInputBorder(),
@@ -413,7 +471,7 @@ class _BranchSalesReportContentState extends ConsumerState<BranchSalesReportCont
         final isValidValue = selectedBranchID == 0 || branchList.any((b) => b.branchID == selectedBranchID);
 
         return DropdownButtonFormField<int>(
-          initialValue: isValidValue ? selectedBranchID : 0,
+          value: isValidValue ? selectedBranchID : 0,
           decoration: const InputDecoration(
             labelText: 'Branch',
             border: OutlineInputBorder(),
@@ -431,85 +489,21 @@ class _BranchSalesReportContentState extends ConsumerState<BranchSalesReportCont
     );
   }
 
-  Widget _buildDataTable(List<BranchSalesData> data) {
-    const columnWidths = {
-      0: FixedColumnWidth(60),  // SN
-      1: FixedColumnWidth(220), // Branch Name
-      2: FixedColumnWidth(100), // Bills
-      3: FixedColumnWidth(100), // Qty
-      4: FixedColumnWidth(130), // Gross
-      5: FixedColumnWidth(130), // Tax
-      6: FixedColumnWidth(150), // Net
-    };
+  void _onSearch() {
+    if (selectedFiscalYearID == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a fiscal year')));
+      return;
+    }
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          dividerTheme: const DividerThemeData(thickness: 0.5),
-        ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Row
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  border: Border(bottom: BorderSide(color: AppColors.border, width: 0.5)),
-                ),
-                child: Table(
-                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                  columnWidths: columnWidths,
-                  children: [
-                    TableRow(
-                      children: [
-                        _headerCell('SN'),
-                        _headerCell('Branch Name'),
-                        _headerCell('Bills'),
-                        _headerCell('Qty'),
-                        _headerCell('Gross'),
-                        _headerCell('Tax'),
-                        _headerCell('Net'),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              // Body Rows
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Table(
-                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                    columnWidths: columnWidths,
-                    border: TableBorder(
-                      horizontalInside: BorderSide(color: AppColors.ashGrey, width: 0.5),
-                    ),
-                    children: data.map((item) => TableRow(
-                      children: [
-                        _dataCell(item.sn?.toString() ?? ''),
-                        _dataCell(item.branchName ?? ''),
-                        _dataCell(item.totalBills.toString()),
-                        _dataCell(item.quantity.toString()),
-                        _dataCell(item.grossAmount.toStringAsFixed(2)),
-                        _dataCell(item.taxAmount.toStringAsFixed(2)),
-                        _dataCell(
-                          item.netAmount.toStringAsFixed(2),
-                          isBold: true,
-                          color: AppColors.primary,
-                        ),
-                      ],
-                    )).toList(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    if (widget.isPortrait) {
+      _filterController.collapse();
+    }
+
+    ref.read(branchSalesReportControllerProvider.notifier).fetchBranchSalesReport(
+      fromDate: fromDate,
+      toDate: toDate,
+      fiscalYearID: selectedFiscalYearID!,
+      branchID: selectedBranchID?.toString() ?? '0',
     );
   }
 
@@ -536,22 +530,65 @@ class _BranchSalesReportContentState extends ConsumerState<BranchSalesReportCont
       ),
     );
   }
+}
 
-  void _onSearch() {
-    if (selectedFiscalYearID == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a fiscal year')));
-      return;
-    }
+class StickyHeader extends StatelessWidget {
+  final Map<int, TableColumnWidth> columnWidths;
+  final List<Widget> children;
 
-    if (widget.isPortrait) {
-      _filterController.collapse();
-    }
+  const StickyHeader({
+    super.key,
+    required this.columnWidths,
+    required this.children,
+  });
 
-    ref.read(branchSalesReportControllerProvider.notifier).fetchBranchSalesReport(
-      fromDate: fromDate,
-      toDate: toDate,
-      fiscalYearID: selectedFiscalYearID!,
-      branchID: selectedBranchID?.toString() ?? '0',
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        border: Border(bottom: BorderSide(color: AppColors.border, width: 0.5)),
+      ),
+      child: Table(
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        columnWidths: columnWidths,
+        children: [
+          TableRow(
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+            ),
+            children: children,
+          ),
+        ],
+      ),
     );
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate({
+    required this.minHeight,
+    required this.maxHeight,
+    required this.child,
+  });
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+
+  @override
+  double get minExtent => minHeight;
+  @override
+  double get maxExtent => math.max(maxHeight, minHeight);
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return SizedBox.expand(child: child);
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight ||
+        child != oldDelegate.child;
   }
 }

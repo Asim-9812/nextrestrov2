@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/core/utils/toaster.dart';
+import 'package:nextrestro/core/utils/time_formatter.dart';
 import 'package:nextrestro/features/orders/presentation/providers/place_order_provider.dart';
 import 'package:nextrestro/features/orders/presentation/pages/landscape/widgets/common/customer_selection_landscape_dialog.dart';
+import 'package:nextrestro/features/tables/presentation/providers/table_provider.dart';
 
 class CurrentOrderSection extends ConsumerWidget {
   const CurrentOrderSection({super.key});
@@ -58,7 +60,7 @@ class CurrentOrderSection extends ConsumerWidget {
           const SizedBox(height: 16),
           
           // Table Info Grid
-          _buildTableInfoGrid(state),
+          _buildTableInfoGrid(state, ref),
           const SizedBox(height: 16),
           
           // Customer Section
@@ -116,18 +118,26 @@ class CurrentOrderSection extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: state.orderPlacementStatus.isLoading ? null : () => _handlePlaceOrder(context, state, notifier),
-                  icon: state.orderPlacementStatus.isLoading 
-                    ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                    : const Icon(Icons.check_circle_outline, size: 18),
-                  label: const Text('Place Order', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: (state.selectedTable == null || state.items.isEmpty) ? AppColors.grey : AppColors.success,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
+                child: Builder(
+                  builder: (context) {
+                    final isOccupied = state.selectedTable?.status.toLowerCase() == 'occupied';
+                    final buttonLabel = isOccupied ? 'Update Order' : 'Place Order';
+                    final buttonColor = isOccupied ? AppColors.primary : AppColors.success;
+                    
+                    return ElevatedButton.icon(
+                      onPressed: state.orderPlacementStatus.isLoading ? null : () => _handlePlaceOrder(context, state, notifier, buttonLabel),
+                      icon: state.orderPlacementStatus.isLoading 
+                        ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                        : const Icon(Icons.check_circle_outline, size: 18),
+                      label: Text(buttonLabel, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: (state.selectedTable == null || state.items.isEmpty) ? AppColors.grey : buttonColor,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    );
+                  }
                 ),
               ),
             ],
@@ -149,7 +159,18 @@ class CurrentOrderSection extends ConsumerWidget {
     );
   }
 
-  Widget _buildTableInfoGrid(PlaceOrderState state) {
+  Widget _buildTableInfoGrid(PlaceOrderState state, WidgetRef ref) {
+    final tableOrders = ref.watch(tableOrderMapProvider);
+    final activeOrder = state.selectedTable != null ? tableOrders[state.selectedTable!.tableID] : null;
+    
+    String orderTime = '-';
+    String duration = '00:00';
+    
+    if (activeOrder != null) {
+      orderTime = TimeFormatter.formatTimeOnly(activeOrder.date.toIso8601String());
+      duration = TimeFormatter.formatDuration(activeOrder.date.toIso8601String());
+    }
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -168,9 +189,9 @@ class CurrentOrderSection extends ConsumerWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              _infoTile(Icons.schedule_outlined, 'Order Time', '10:32 AM'), // Mock for now
+              _infoTile(Icons.schedule_outlined, 'Order Time', orderTime),
               const Spacer(),
-              _infoTile(Icons.timer_outlined, 'Duration', '00:12'), // Mock for now
+              _infoTile(Icons.timer_outlined, 'Duration', duration),
             ],
           ),
         ],
@@ -319,27 +340,33 @@ class CurrentOrderSection extends ConsumerWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: AppColors.bg,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: AppColors.ashGrey.withValues(alpha: 0.3)),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    item.specialInstructions.isEmpty ? 'No special request' : item.specialInstructions,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: AppColors.grey.withValues(alpha: 0.6),
-                                      fontStyle: FontStyle.italic,
+                          child: InkWell(
+                            onTap: () => _showSpecialRequestDialog(context, item, notifier),
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: AppColors.bg,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: AppColors.ashGrey.withValues(alpha: 0.3)),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      item.specialInstructions.isEmpty ? 'No special request' : item.specialInstructions,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: item.specialInstructions.isEmpty 
+                                            ? AppColors.grey.withValues(alpha: 0.6)
+                                            : AppColors.blackGrey,
+                                        fontStyle: item.specialInstructions.isEmpty ? FontStyle.italic : FontStyle.normal,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                const Icon(Icons.edit_outlined, size: 16, color: AppColors.grey),
-                              ],
+                                  const Icon(Icons.edit_outlined, size: 16, color: AppColors.grey),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -381,13 +408,13 @@ class CurrentOrderSection extends ConsumerWidget {
     );
   }
 
-  void _handlePlaceOrder(BuildContext context, PlaceOrderState state, PlaceOrderNotifier notifier) {
+  void _handlePlaceOrder(BuildContext context, PlaceOrderState state, PlaceOrderNotifier notifier, String buttonLabel) {
     if (state.selectedTable == null || state.items.isEmpty) {
       String message = state.selectedTable == null ? 'Please select a table first.' : 'Please add at least one item first.';
       Toaster.error(context: context, message: message, isLandscape: true);
       return;
     }
-    _showConfirmDialog(context, 'Place Order', 'Confirm kitchen order?', () => notifier.placeOrder());
+    _showConfirmDialog(context, buttonLabel, 'Confirm kitchen order?', () => notifier.placeOrder());
   }
 
   void _showConfirmDialog(BuildContext context, String title, String message, VoidCallback onConfirm) {
@@ -405,6 +432,43 @@ class CurrentOrderSection extends ConsumerWidget {
             },
             style: ElevatedButton.styleFrom(backgroundColor: title.contains('Clear') ? AppColors.error : AppColors.primary, foregroundColor: Colors.white),
             child: const Text('CONFIRM'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSpecialRequestDialog(BuildContext context, dynamic item, PlaceOrderNotifier notifier) {
+    final controller = TextEditingController(text: item.specialInstructions);
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Request for ${item.itemName}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        content: TextField(
+          controller: controller,
+          maxLines: 3,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: 'e.g. Extra spicy, No onions...',
+            hintStyle: TextStyle(fontSize: 14, color: AppColors.grey.withValues(alpha: 0.5)),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            filled: true,
+            fillColor: AppColors.bg,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('CANCEL'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              notifier.updateSpecialInstruction(item.productId, controller.text);
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+            child: const Text('SAVE'),
           ),
         ],
       ),

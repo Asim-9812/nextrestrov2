@@ -5,29 +5,23 @@ import 'package:intl/intl.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/fiscal_year/presentation/providers/fiscal_year_provider.dart';
 import 'package:nextrestro/features/branch/presentation/providers/branch_provider.dart';
-import 'package:nextrestro/features/menu/presentation/providers/menu_provider.dart';
 import '../providers/reports_controller.dart';
 import '../../../fiscal_year/data/models/fiscal_year_model.dart';
-import '../../data/models/product_sales_report_model.dart';
 
-class ProductSalesReportContent extends ConsumerStatefulWidget {
+class PaymentMethodReportContent extends ConsumerStatefulWidget {
   final bool isPortrait;
-  const ProductSalesReportContent({super.key, this.isPortrait = false});
+  const PaymentMethodReportContent({super.key, this.isPortrait = false});
 
   @override
-  ConsumerState<ProductSalesReportContent> createState() => _ProductSalesReportContentState();
+  ConsumerState<PaymentMethodReportContent> createState() => _PaymentMethodReportContentState();
 }
 
-class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportContent> {
+class _PaymentMethodReportContentState extends ConsumerState<PaymentMethodReportContent> {
   DateTime fromDate = DateTime.now().subtract(const Duration(days: 30));
   DateTime toDate = DateTime.now();
   int? selectedFiscalYearID;
   int? selectedBranchID;
-  int selectedCategoryID = 0;
-  int selectedProductID = 0;
-  
-  final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
+  String selectedPaymentMethod = '1'; // Default: Cash (1)
 
   final ExpansionTileController _filterController = ExpansionTileController();
   
@@ -35,27 +29,25 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
 
   @override
   void dispose() {
-    _searchController.dispose();
     _horizontalScrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final reportState = ref.watch(productSalesReportControllerProvider);
+    final reportState = ref.watch(paymentMethodReportControllerProvider);
     final fiscalYearsAsync = ref.watch(fiscalYearsProvider);
     final branchesAsync = ref.watch(branchesProvider);
-    final categoriesAsync = ref.watch(categoriesProvider);
-    final productsAsync = ref.watch(productsProvider);
 
     const columnWidths = {
-      0: FixedColumnWidth(150), // Invoice No
-      1: FixedColumnWidth(220), // Product Name
-      2: FixedColumnWidth(150), // Category
-      3: FixedColumnWidth(80),  // Qty
-      4: FixedColumnWidth(130), // Unit Price
-      5: FixedColumnWidth(130), // Total
-      6: FixedColumnWidth(180), // Customer
+      0: FixedColumnWidth(50),  // SN
+      1: FixedColumnWidth(150), // Payment Method
+      2: FixedColumnWidth(100), // Total Bills
+      3: FixedColumnWidth(100), // Quantity
+      4: FixedColumnWidth(130), // Gross Amount
+      5: FixedColumnWidth(130), // Discount
+      6: FixedColumnWidth(130), // Tax
+      7: FixedColumnWidth(150), // Net Amount
     };
 
     return Column(
@@ -69,47 +61,20 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
                   padding: const EdgeInsets.all(16),
                   color: AppColors.white,
                   child: widget.isPortrait 
-                    ? _buildPortraitFilters(fiscalYearsAsync, branchesAsync, categoriesAsync, productsAsync)
+                    ? _buildPortraitFilters(fiscalYearsAsync, branchesAsync)
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Product Sales Report Filters',
+                            'Payment Method Report Filters',
                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 16),
-                          _buildFilters(fiscalYearsAsync, branchesAsync, categoriesAsync, productsAsync),
+                          _buildFilters(fiscalYearsAsync, branchesAsync),
                         ],
                       ),
                 ),
               ),
-
-              // Search Bar Area
-              if (reportState.asData?.value != null)
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: TextField(
-                      controller: _searchController,
-                      onChanged: (value) => setState(() => _searchQuery = value),
-                      decoration: InputDecoration(
-                        hintText: 'Search across all fields...',
-                        prefixIcon: const Icon(Icons.search, size: 20),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                        suffixIcon: _searchQuery.isNotEmpty 
-                          ? IconButton(
-                              icon: const Icon(Icons.clear, size: 20),
-                              onPressed: () {
-                                _searchController.clear();
-                                setState(() => _searchQuery = '');
-                              },
-                            )
-                          : null,
-                      ),
-                    ),
-                  ),
-                ),
 
               // Data Table Section
               reportState.when(
@@ -126,19 +91,13 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
                     );
                   }
                   
-                  final filteredData = data.data.where((item) {
-                    final query = _searchQuery.toLowerCase();
-                    return (item.productName?.toLowerCase().contains(query) ?? false) ||
-                           (item.invoiceNo?.toLowerCase().contains(query) ?? false);
-                  }).toList();
-
-                  if (filteredData.isEmpty) {
+                  if (data.data.isEmpty) {
                     return const SliverFillRemaining(
                       hasScrollBody: false,
                       child: Center(
                         child: Padding(
                           padding: EdgeInsets.all(32.0),
-                          child: Text('No matching records found'),
+                          child: Text('No records found'),
                         ),
                       ),
                     );
@@ -160,13 +119,14 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
                               child: StickyHeader(
                                 columnWidths: columnWidths,
                                 children: [
-                                  _headerCell('Invoice No'),
-                                  _headerCell('Product Name'),
-                                  _headerCell('Category'),
+                                  _headerCell('SN'),
+                                  _headerCell('Payment Method'),
+                                  _headerCell('Total Bills'),
                                   _headerCell('Qty'),
-                                  _headerCell('Unit Price'),
-                                  _headerCell('Total'),
-                                  _headerCell('Customer'),
+                                  _headerCell('Gross'),
+                                  _headerCell('Discount'),
+                                  _headerCell('Tax'),
+                                  _headerCell('Net Amount'),
                                 ],
                               ),
                             ),
@@ -185,19 +145,20 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
                               border: TableBorder(
                                 horizontalInside: BorderSide(color: AppColors.ashGrey, width: 0.5),
                               ),
-                              children: filteredData.map((item) => TableRow(
+                              children: data.data.map((item) => TableRow(
                                 children: [
-                                  _dataCell(item.invoiceNo ?? ''),
-                                  _dataCell(item.productName ?? ''),
-                                  _dataCell(item.categoryName ?? '-'),
+                                  _dataCell(item.sn?.toString() ?? '-'),
+                                  _dataCell(_getPaymentMethodName(item.paymentMethod)),
+                                  _dataCell(item.totalBills.toString()),
                                   _dataCell(item.quantity.toString()),
-                                  _dataCell(item.unitPrice.toStringAsFixed(2)),
+                                  _dataCell(item.grossAmount.toStringAsFixed(2)),
+                                  _dataCell(item.discountAmount.toStringAsFixed(2)),
+                                  _dataCell(item.taxAmount.toStringAsFixed(2)),
                                   _dataCell(
-                                    'Rs. ${item.total.toStringAsFixed(2)}',
+                                    item.netAmount.toStringAsFixed(2),
                                     isBold: true,
                                     color: AppColors.primary,
                                   ),
-                                  _dataCell(item.customerName ?? '-'),
                                 ],
                               )).toList(),
                             ),
@@ -243,8 +204,6 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
   Widget _buildPortraitFilters(
     AsyncValue<List<FiscalYearModel>> fiscalYears,
     AsyncValue<dynamic> branches,
-    AsyncValue<dynamic> categories,
-    AsyncValue<dynamic> products,
   ) {
     return ExpansionTile(
       controller: _filterController,
@@ -271,9 +230,7 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
               const SizedBox(height: 12),
               _buildBranchDropdown(branches),
               const SizedBox(height: 12),
-              _buildCategoryDropdown(categories),
-              const SizedBox(height: 12),
-              _buildProductDropdown(products),
+              _buildPaymentMethodDropdown(),
               const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
@@ -297,8 +254,6 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
   Widget _buildFilters(
     AsyncValue<List<FiscalYearModel>> fiscalYears,
     AsyncValue<dynamic> branches,
-    AsyncValue<dynamic> categories,
-    AsyncValue<dynamic> products,
   ) {
     return Column(
       children: [
@@ -316,9 +271,7 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
           children: [
             Expanded(child: _buildBranchDropdown(branches)),
             const SizedBox(width: 12),
-            Expanded(child: _buildCategoryDropdown(categories)),
-            const SizedBox(width: 12),
-            Expanded(child: _buildProductDropdown(products)),
+            Expanded(child: _buildPaymentMethodDropdown()),
             const SizedBox(width: 12),
             ElevatedButton(
               onPressed: _onSearch,
@@ -335,7 +288,7 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
     );
   }
 
-  Widget _buildSummaryCards(ProductSalesReportSummary summary) {
+  Widget _buildSummaryCards(dynamic summary) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -351,7 +304,7 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
                   const SizedBox(width: 8),
                   _summaryCard('Net Amount', 'Rs. ${summary.netAmount.toStringAsFixed(2)}'),
                   const SizedBox(width: 8),
-                  _summaryCard('Total Qty', summary.totalQuantity.toString()),
+                  _summaryCard('Quantity', summary.totalQuantity.toString()),
                   const SizedBox(width: 8),
                   _summaryCard('Tax', 'Rs. ${summary.taxAmount.toStringAsFixed(2)}'),
                 ],
@@ -361,7 +314,7 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
               children: [
                 Expanded(child: _summaryCard('Total Bills', summary.totalBills.toString())),
                 const SizedBox(width: 12),
-                Expanded(child: _summaryCard('Total Qty', summary.totalQuantity.toString())),
+                Expanded(child: _summaryCard('Quantity', summary.totalQuantity.toString())),
                 const SizedBox(width: 12),
                 Expanded(child: _summaryCard('Gross Amount', 'Rs. ${summary.grossAmount.toStringAsFixed(2)}')),
                 const SizedBox(width: 12),
@@ -506,67 +459,34 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
     );
   }
 
-  Widget _buildCategoryDropdown(AsyncValue<dynamic> categoriesAsync) {
-    return categoriesAsync.when(
-      data: (categories) {
-        final categoryList = categories as List;
-        
-        final isValidValue = selectedCategoryID == 0 || categoryList.any((c) => c.categoryId == selectedCategoryID);
-
-        return DropdownButtonFormField<int>(
-          value: isValidValue ? selectedCategoryID : 0,
-          decoration: const InputDecoration(
-            labelText: 'Category',
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          ),
-          items: [
-            const DropdownMenuItem(value: 0, child: Text('All Categories')),
-            ...categoryList.map((c) => DropdownMenuItem(value: c.categoryId as int, child: Text(c.categoryName as String))),
-          ],
-          onChanged: (val) => setState(() => selectedCategoryID = val ?? 0),
-        );
-      },
-      loading: () => const LinearProgressIndicator(),
-      error: (_, __) => const Text('Error loading categories'),
+  Widget _buildPaymentMethodDropdown() {
+    return DropdownButtonFormField<String>(
+      value: selectedPaymentMethod,
+      decoration: const InputDecoration(
+        labelText: 'Payment Method',
+        border: OutlineInputBorder(),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      ),
+      items: const [
+        DropdownMenuItem(value: '0', child: Text('Credit')),
+        DropdownMenuItem(value: '1', child: Text('Cash')),
+        DropdownMenuItem(value: '2', child: Text('Online')),
+        DropdownMenuItem(value: '3', child: Text('Split Payment')),
+      ],
+      onChanged: (val) => setState(() => selectedPaymentMethod = val ?? '1'),
     );
   }
 
-  Widget _buildProductDropdown(AsyncValue<dynamic> productsAsync) {
-    return productsAsync.when(
-      data: (products) {
-        final productList = products as List;
-        
-        final isValidValue = selectedProductID == 0 || productList.any((p) => p.productId == selectedProductID);
-
-        return DropdownButtonFormField<int>(
-          value: isValidValue ? selectedProductID : 0,
-          decoration: const InputDecoration(
-            labelText: 'Product',
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          ),
-          items: [
-            const DropdownMenuItem(value: 0, child: Text('All Products')),
-            ...productList.map((p) => DropdownMenuItem(value: p.productId as int, child: Text(p.productName as String))),
-          ],
-          onChanged: (val) => setState(() => selectedProductID = val ?? 0),
-        );
-      },
-      loading: () => const LinearProgressIndicator(),
-      error: (_, __) => const Text('Error loading products'),
-    );
-  }
-
-  Widget _buildDataTable(List<ProductSalesData> data) {
+  Widget _buildDataTable(List<dynamic> data) {
     const columnWidths = {
-      0: FixedColumnWidth(150), // Invoice No
-      1: FixedColumnWidth(220), // Product Name
-      2: FixedColumnWidth(150), // Category
-      3: FixedColumnWidth(80),  // Qty
-      4: FixedColumnWidth(130), // Unit Price
-      5: FixedColumnWidth(130), // Total
-      6: FixedColumnWidth(180), // Customer
+      0: FixedColumnWidth(50),  // SN
+      1: FixedColumnWidth(150), // Payment Method
+      2: FixedColumnWidth(100), // Total Bills
+      3: FixedColumnWidth(100), // Quantity
+      4: FixedColumnWidth(130), // Gross Amount
+      5: FixedColumnWidth(130), // Discount
+      6: FixedColumnWidth(130), // Tax
+      7: FixedColumnWidth(150), // Net Amount
     };
 
     return Container(
@@ -593,13 +513,14 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
                   children: [
                     TableRow(
                       children: [
-                        _headerCell('Invoice No'),
-                        _headerCell('Product Name'),
-                        _headerCell('Category'),
+                        _headerCell('SN'),
+                        _headerCell('Payment Method'),
+                        _headerCell('Total Bills'),
                         _headerCell('Qty'),
-                        _headerCell('Unit Price'),
-                        _headerCell('Total'),
-                        _headerCell('Customer'),
+                        _headerCell('Gross'),
+                        _headerCell('Discount'),
+                        _headerCell('Tax'),
+                        _headerCell('Net Amount'),
                       ],
                     ),
                   ],
@@ -614,17 +535,18 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
                 ),
                 children: data.map((item) => TableRow(
                   children: [
-                    _dataCell(item.invoiceNo ?? ''),
-                    _dataCell(item.productName ?? ''),
-                    _dataCell(item.categoryName ?? '-'),
+                    _dataCell(item.sn?.toString() ?? '-'),
+                    _dataCell(_getPaymentMethodName(item.paymentMethod)),
+                    _dataCell(item.totalBills.toString()),
                     _dataCell(item.quantity.toString()),
-                    _dataCell(item.unitPrice.toStringAsFixed(2)),
+                    _dataCell(item.grossAmount.toStringAsFixed(2)),
+                    _dataCell(item.discountAmount.toStringAsFixed(2)),
+                    _dataCell(item.taxAmount.toStringAsFixed(2)),
                     _dataCell(
-                      'Rs. ${item.total.toStringAsFixed(2)}',
+                      item.netAmount.toStringAsFixed(2),
                       isBold: true,
                       color: AppColors.primary,
                     ),
-                    _dataCell(item.customerName ?? '-'),
                   ],
                 )).toList(),
               ),
@@ -633,6 +555,16 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
         ),
       ),
     );
+  }
+
+  String _getPaymentMethodName(String? method) {
+    switch (method) {
+      case '0': return 'Credit';
+      case '1': return 'Cash';
+      case '2': return 'Online';
+      case '3': return 'Split Payment';
+      default: return method ?? '-';
+    }
   }
 
   Widget _headerCell(String text) {
@@ -669,13 +601,12 @@ class _ProductSalesReportContentState extends ConsumerState<ProductSalesReportCo
       _filterController.collapse();
     }
 
-    ref.read(productSalesReportControllerProvider.notifier).fetchProductSalesReport(
+    ref.read(paymentMethodReportControllerProvider.notifier).fetchPaymentMethodReport(
       fromDate: fromDate,
       toDate: toDate,
       fiscalYearID: selectedFiscalYearID!,
       branchID: selectedBranchID?.toString() ?? '0',
-      categoryID: selectedCategoryID,
-      productID: selectedProductID,
+      paymentMethod: selectedPaymentMethod,
     );
   }
 }

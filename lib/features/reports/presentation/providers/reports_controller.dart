@@ -4,6 +4,7 @@ import '../../data/models/product_sales_report_model.dart';
 import '../../data/models/customer_sales_report_model.dart';
 import '../../data/models/user_sales_report_model.dart';
 import '../../data/models/branch_sales_report_model.dart';
+import '../../data/models/payment_method_report_model.dart';
 import '../../data/repositories/reports_repository_impl.dart';
 
 part 'reports_controller.g.dart';
@@ -173,6 +174,39 @@ class BranchSalesReportController extends _$BranchSalesReportController {
     );
 
     final result = await ref.read(reportsRepositoryProvider).getBranchSalesReport(request);
+    
+    state = result.fold(
+      (failure) => AsyncValue.error(failure.message, StackTrace.current),
+      (response) => AsyncValue.data(response.data),
+    );
+  }
+}
+
+@riverpod
+class PaymentMethodReportController extends _$PaymentMethodReportController {
+  @override
+  AsyncValue<PaymentMethodReportData?> build() {
+    return const AsyncValue.data(null);
+  }
+
+  Future<void> fetchPaymentMethodReport({
+    required DateTime fromDate,
+    required DateTime toDate,
+    required int fiscalYearID,
+    String branchID = '0',
+    String paymentMethod = '1',
+  }) async {
+    state = const AsyncValue.loading();
+    
+    final request = PaymentMethodReportRequest(
+      fromDate: fromDate.toIso8601String(),
+      toDate: toDate.toIso8601String(),
+      fiscalYearID: fiscalYearID,
+      branchID: branchID,
+      paymentMethod: paymentMethod,
+    );
+
+    final result = await ref.read(reportsRepositoryProvider).getPaymentMethodSalesReport(request);
     
     state = result.fold(
       (failure) => AsyncValue.error(failure.message, StackTrace.current),
