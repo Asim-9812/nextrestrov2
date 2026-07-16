@@ -6,7 +6,7 @@ import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/fiscal_year/presentation/providers/fiscal_year_provider.dart';
 import 'package:nextrestro/features/branch/presentation/providers/branch_provider.dart';
 import '../providers/reports_controller.dart';
-import '../../../fiscal_year/data/models/fiscal_year_model.dart';
+import 'package:nextrestro/features/fiscal_year/data/models/fiscal_year_model.dart';
 
 class PaymentMethodReportContent extends ConsumerStatefulWidget {
   final bool isPortrait;

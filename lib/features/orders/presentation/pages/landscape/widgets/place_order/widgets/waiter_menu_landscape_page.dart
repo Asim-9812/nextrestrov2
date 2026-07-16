@@ -6,7 +6,7 @@ import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/menu/presentation/providers/menu_provider.dart';
 import 'package:nextrestro/features/orders/presentation/providers/place_order_provider.dart';
 import 'package:nextrestro/features/menu/data/models/menu_item_model.dart';
-import '../../../../../../data/models/place_order_request.dart';
+import 'package:nextrestro/features/orders/data/models/place_order_request.dart';
 
 class WaiterMenuLandscapePage extends ConsumerWidget {
   const WaiterMenuLandscapePage({super.key});

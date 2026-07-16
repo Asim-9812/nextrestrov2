@@ -8,7 +8,7 @@ import 'package:nextrestro/features/branch/presentation/providers/branch_provide
 import 'package:nextrestro/features/customer/presentation/providers/customer_provider.dart';
 import 'package:nextrestro/features/tables/presentation/providers/table_provider.dart';
 import '../providers/reports_controller.dart';
-import '../../../fiscal_year/data/models/fiscal_year_model.dart';
+import 'package:nextrestro/features/fiscal_year/data/models/fiscal_year_model.dart';
 import '../../data/models/sales_report_model.dart';
 
 class SalesReportContent extends ConsumerStatefulWidget {
