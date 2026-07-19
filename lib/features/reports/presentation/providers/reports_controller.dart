@@ -5,6 +5,7 @@ import '../../data/models/customer_sales_report_model.dart';
 import '../../data/models/user_sales_report_model.dart';
 import '../../data/models/branch_sales_report_model.dart';
 import '../../data/models/payment_method_report_model.dart';
+import '../../data/models/top_selling_products_report_model.dart';
 import '../../data/repositories/reports_repository_impl.dart';
 
 part 'reports_controller.g.dart';
@@ -207,6 +208,43 @@ class PaymentMethodReportController extends _$PaymentMethodReportController {
     );
 
     final result = await ref.read(reportsRepositoryProvider).getPaymentMethodSalesReport(request);
+    
+    state = result.fold(
+      (failure) => AsyncValue.error(failure.message, StackTrace.current),
+      (response) => AsyncValue.data(response.data),
+    );
+  }
+}
+
+@riverpod
+class TopSellingProductsReportController extends _$TopSellingProductsReportController {
+  @override
+  AsyncValue<TopSellingProductsReportData?> build() {
+    return const AsyncValue.data(null);
+  }
+
+  Future<void> fetchTopSellingProductsReport({
+    required DateTime fromDate,
+    required DateTime toDate,
+    required int fiscalYearID,
+    String branchID = '0',
+    int categoryID = 0,
+    int productID = 0,
+    int top = 10,
+  }) async {
+    state = const AsyncValue.loading();
+    
+    final request = TopSellingProductsReportRequest(
+      fromDate: fromDate.toIso8601String(),
+      toDate: toDate.toIso8601String(),
+      fiscalYearID: fiscalYearID,
+      branchID: branchID,
+      categoryID: categoryID,
+      productID: productID,
+      top: top,
+    );
+
+    final result = await ref.read(reportsRepositoryProvider).getTopSellingProductsReport(request);
     
     state = result.fold(
       (failure) => AsyncValue.error(failure.message, StackTrace.current),

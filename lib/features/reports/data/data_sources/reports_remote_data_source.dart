@@ -7,6 +7,7 @@ import '../models/customer_sales_report_model.dart';
 import '../models/user_sales_report_model.dart';
 import '../models/branch_sales_report_model.dart';
 import '../models/payment_method_report_model.dart';
+import '../models/top_selling_products_report_model.dart';
 
 final reportsRemoteDataSourceProvider = Provider<ReportsRemoteDataSource>((ref) {
   return ReportsRemoteDataSource(ref.read(apiClientProvider));
@@ -63,5 +64,13 @@ class ReportsRemoteDataSource {
       data: request.toJson(),
     );
     return PaymentMethodReportResponse.fromJson(response.data);
+  }
+
+  Future<TopSellingProductsReportResponse> getTopSellingProductsReport(TopSellingProductsReportRequest request) async {
+    final response = await _apiClient.post(
+      ApiConstants.getTopSellingProductsReportEndpoint,
+      data: request.toJson(),
+    );
+    return TopSellingProductsReportResponse.fromJson(response.data);
   }
 }

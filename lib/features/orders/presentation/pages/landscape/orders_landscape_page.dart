@@ -92,8 +92,8 @@ class _OrdersLandscapePageState extends ConsumerState<OrdersLandscapePage> {
           const SizedBox(height: 32),
           ElevatedButton(
             onPressed: () {
-              // Navigate back or to dashboard
-              Navigator.pop(context);
+              // Navigate back to dashboard home tab
+              ref.read(adminDashboardTabControllerProvider.notifier).set(0);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,

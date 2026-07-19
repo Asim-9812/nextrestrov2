@@ -8,6 +8,7 @@ import '../widgets/customer_sales_report_content.dart';
 import '../widgets/user_sales_report_content.dart';
 import '../widgets/branch_sales_report_content.dart';
 import '../widgets/payment_method_report_content.dart';
+import '../widgets/top_selling_products_report_content.dart';
 
 class ReportsPortraitPage extends ConsumerWidget {
   const ReportsPortraitPage({super.key});
@@ -24,30 +25,36 @@ class ReportsPortraitPage extends ConsumerWidget {
         unselectedItemColor: AppColors.grey,
         type: BottomNavigationBarType.fixed,
         onTap: (index) => ref.read(selectedReportTabProvider.notifier).set(index),
+        selectedFontSize: 10,
+        unselectedFontSize: 10,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
+            icon: Icon(Icons.bar_chart, size: 20),
             label: 'Sales',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.inventory),
+            icon: Icon(Icons.inventory, size: 20),
             label: 'Product',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.group),
+            icon: Icon(Icons.group, size: 20),
             label: 'Customer',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person, size: 20),
             label: 'User',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.store),
+            icon: Icon(Icons.store, size: 20),
             label: 'Branch',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.payment),
+            icon: Icon(Icons.payment, size: 20),
             label: 'Payment',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.trending_up, size: 20),
+            label: 'Top Items',
           ),
         ],
       ),
@@ -68,6 +75,8 @@ class ReportsPortraitPage extends ConsumerWidget {
         return const BranchSalesReportContent(isPortrait: true);
       case 5:
         return const PaymentMethodReportContent(isPortrait: true);
+      case 6:
+        return const TopSellingProductsReportContent(isPortrait: true);
       default:
         return const Center(child: Text('Select a report'));
     }

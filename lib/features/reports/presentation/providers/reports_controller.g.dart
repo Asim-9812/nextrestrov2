@@ -411,6 +411,76 @@ abstract class _$PaymentMethodReportController
   }
 }
 
+@ProviderFor(TopSellingProductsReportController)
+final topSellingProductsReportControllerProvider =
+    TopSellingProductsReportControllerProvider._();
+
+final class TopSellingProductsReportControllerProvider
+    extends
+        $NotifierProvider<
+          TopSellingProductsReportController,
+          AsyncValue<TopSellingProductsReportData?>
+        > {
+  TopSellingProductsReportControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'topSellingProductsReportControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() =>
+      _$topSellingProductsReportControllerHash();
+
+  @$internal
+  @override
+  TopSellingProductsReportController create() =>
+      TopSellingProductsReportController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AsyncValue<TopSellingProductsReportData?> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride:
+          $SyncValueProvider<AsyncValue<TopSellingProductsReportData?>>(value),
+    );
+  }
+}
+
+String _$topSellingProductsReportControllerHash() =>
+    r'991ed4006d542f47f4a1eadc3ed2d4ef9a9dc579';
+
+abstract class _$TopSellingProductsReportController
+    extends $Notifier<AsyncValue<TopSellingProductsReportData?>> {
+  AsyncValue<TopSellingProductsReportData?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<TopSellingProductsReportData?>,
+              AsyncValue<TopSellingProductsReportData?>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<TopSellingProductsReportData?>,
+                AsyncValue<TopSellingProductsReportData?>
+              >,
+              AsyncValue<TopSellingProductsReportData?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
 @ProviderFor(SelectedReportTab)
 final selectedReportTabProvider = SelectedReportTabProvider._();
 

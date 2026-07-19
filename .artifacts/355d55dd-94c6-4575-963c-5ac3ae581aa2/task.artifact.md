@@ -1,0 +1,10 @@
+- [x] Add `getTopSellingProductsReportEndpoint` to `api_constants.dart`
+- [x] Create `top_selling_products_report_model.dart`
+- [x] Update `ReportsRepository` interface
+- [x] Update `ReportsRemoteDataSource`
+- [x] Update `ReportsRepositoryImpl`
+- [x] Add `TopSellingProductsReportController` to `reports_controller.dart`
+- [x] Create `top_selling_products_report_content.dart` UI widget
+- [x] Add tab to `ReportsLandscapePage`
+- [x] Add tab to `ReportsPortraitPage`
+- [ ] Run build_runner to generate files (User Action)

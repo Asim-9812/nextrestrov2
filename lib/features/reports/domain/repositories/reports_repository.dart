@@ -6,6 +6,7 @@ import '../../data/models/customer_sales_report_model.dart';
 import '../../data/models/user_sales_report_model.dart';
 import '../../data/models/branch_sales_report_model.dart';
 import '../../data/models/payment_method_report_model.dart';
+import '../../data/models/top_selling_products_report_model.dart';
 
 abstract class ReportsRepository {
   Future<Either<Failure, SalesReportResponse>> getSalesReport(SalesReportRequest request);
@@ -14,4 +15,5 @@ abstract class ReportsRepository {
   Future<Either<Failure, UserSalesReportResponse>> getUserSalesReport(UserSalesReportRequest request);
   Future<Either<Failure, BranchSalesReportResponse>> getBranchSalesReport(BranchSalesReportRequest request);
   Future<Either<Failure, PaymentMethodReportResponse>> getPaymentMethodSalesReport(PaymentMethodReportRequest request);
+  Future<Either<Failure, TopSellingProductsReportResponse>> getTopSellingProductsReport(TopSellingProductsReportRequest request);
 }

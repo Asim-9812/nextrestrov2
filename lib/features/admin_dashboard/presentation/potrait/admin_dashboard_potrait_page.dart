@@ -30,6 +30,7 @@ import 'package:nextrestro/features/department/presentation/pages/department_pag
 import 'package:nextrestro/features/shift/presentation/providers/shift_management_provider.dart';
 import 'package:nextrestro/features/admin_dashboard/presentation/widgets/quick_actions_row.dart';
 import 'package:nextrestro/features/orders/presentation/providers/order_provider.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/providers/admin_navigation_provider.dart';
 
 class AdminDashboardPotraitPage extends ConsumerStatefulWidget {
   const AdminDashboardPotraitPage({super.key});
@@ -40,7 +41,7 @@ class AdminDashboardPotraitPage extends ConsumerStatefulWidget {
 }
 
 class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotraitPage> {
-  int _selectedIndex = 0;
+  // int _selectedIndex = 0; // Removed local state
 
   void _handleLogout() {
     showDialog(
@@ -74,8 +75,8 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
     );
   }
 
-  String _getPageTitle() {
-    switch (_selectedIndex) {
+  String _getPageTitle(int selectedIndex) {
+    switch (selectedIndex) {
       case 0:
         return 'Dashboard';
       case 1:
@@ -103,12 +104,14 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
 
   @override
   Widget build(BuildContext context) {
+    final selectedIndex = ref.watch(adminDashboardTabControllerProvider);
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
         iconTheme: const IconThemeData(color: AppColors.white),
         title: Text(
-          _getPageTitle(),
+          _getPageTitle(selectedIndex),
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -129,11 +132,11 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
           ),
         ],
       ),
-      drawer: _buildDrawer(),
-      body: _selectedIndex == 0 
-          ? _buildHomeTab() 
+      drawer: _buildDrawer(selectedIndex),
+      body: selectedIndex == 0
+          ? _buildHomeTab()
           : IndexedStack(
-              index: _selectedIndex,
+              index: selectedIndex,
               children: [
                 const SizedBox.shrink(), // Home handled separately
                 const OrdersPage(),
@@ -246,7 +249,7 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
     );
   }
 
-  Widget _buildDrawer() {
+  Widget _buildDrawer(int selectedIndex) {
     return Drawer(
       width: 200,
       child: Column(
@@ -269,16 +272,16 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _buildDrawerItem(0, 'Dashboard', MaterialSymbols.space_dashboard_rounded),
-                _buildDrawerItem(1, 'Orders', Ion.receipt),
-                _buildDrawerItem(2, 'Tables', MaterialSymbols.table_bar),
-                _buildDrawerItem(3, 'Menu', Bx.food_menu),
-                _buildDrawerItem(4, 'Shift', MaterialSymbols.schedule),
-                _buildDrawerItem(5, 'Reports', MaterialSymbols.bar_chart),
-                _buildDrawerItem(6, 'Customers', Ion.ios_people),
-                _buildDrawerItem(7, 'Staffs', Ion.people_circle_sharp),
-                _buildDrawerItem(8, 'Branch', MaterialSymbols.store),
-                _buildDrawerItem(9, 'Department', MaterialSymbols.account_balance),
+                _buildDrawerItem(0, 'Dashboard', MaterialSymbols.space_dashboard_rounded, selectedIndex),
+                _buildDrawerItem(1, 'Orders', Ion.receipt, selectedIndex),
+                _buildDrawerItem(2, 'Tables', MaterialSymbols.table_bar, selectedIndex),
+                _buildDrawerItem(3, 'Menu', Bx.food_menu, selectedIndex),
+                _buildDrawerItem(4, 'Shift', MaterialSymbols.schedule, selectedIndex),
+                _buildDrawerItem(5, 'Reports', MaterialSymbols.bar_chart, selectedIndex),
+                _buildDrawerItem(6, 'Customers', Ion.ios_people, selectedIndex),
+                _buildDrawerItem(7, 'Staffs', Ion.people_circle_sharp, selectedIndex),
+                _buildDrawerItem(8, 'Branch', MaterialSymbols.store, selectedIndex),
+                _buildDrawerItem(9, 'Department', MaterialSymbols.account_balance, selectedIndex),
               ],
             ),
           ),
@@ -297,8 +300,8 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
     );
   }
 
-  Widget _buildDrawerItem(int index, String title, String icon) {
-    final isSelected = _selectedIndex == index;
+  Widget _buildDrawerItem(int index, String title, String icon, int selectedIndex) {
+    final isSelected = selectedIndex == index;
     return ListTile(
       leading: Iconify(
         icon,
@@ -316,9 +319,7 @@ class _AdminDashboardPotraitPageState extends ConsumerState<AdminDashboardPotrai
       selected: isSelected,
       selectedTileColor: AppColors.primary.withValues(alpha: 0.1),
       onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
+        ref.read(adminDashboardTabControllerProvider.notifier).set(index);
         Navigator.pop(context);
       },
     );

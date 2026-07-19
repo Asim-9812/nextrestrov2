@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:nextrestro/core/error/exception.dart';
@@ -40,6 +41,14 @@ class ApiClient {
     _dio.interceptors.add(_LoggingInterceptor(_logger));
     _dio.interceptors.add(_AuthInterceptor(_sessionService));
     _dio.interceptors.add(_ErrorInterceptor(_sessionService));
+
+    // Temporary bypass for SSL testing
+    (_dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+      final client = HttpClient();
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
   }
 
   Dio get dio => _dio;

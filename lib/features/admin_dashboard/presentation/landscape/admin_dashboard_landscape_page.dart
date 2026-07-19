@@ -183,7 +183,7 @@ class _AdminDashboardLandscapePageState
               final shift = state.shifts.isNotEmpty && state.shifts.first.shiftStatus == 1 ? state.shifts.first : null;
               
               return shift == null 
-                  ? _buildNoShiftCard() 
+                  ? _buildNoShiftCard(state.shifts) 
                   : ActiveShiftCard(
                       shift: shift,
                       openerName: state.selectedShiftOpenerName,
@@ -306,7 +306,7 @@ class _AdminDashboardLandscapePageState
     );
   }
 
-  Widget _buildNoShiftCard() {
+  Widget _buildNoShiftCard(List<ShiftModel> allShifts) {
     return Container(
       height: 140,
       padding: const EdgeInsets.all(24),
@@ -335,7 +335,7 @@ class _AdminDashboardLandscapePageState
           ),
           const Spacer(),
           ElevatedButton(
-            onPressed: () => _showOpenShiftDialog(context, ref, []),
+            onPressed: () => _showOpenShiftDialog(context, ref, allShifts),
             child: const Text('Open Shift'),
           ),
         ],

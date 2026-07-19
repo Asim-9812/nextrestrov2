@@ -203,7 +203,7 @@ class ManageMenuPortraitPage extends ConsumerWidget {
                 padding: const EdgeInsets.all(16),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  childAspectRatio: 0.65,
+                  childAspectRatio: 0.6,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 10,
                 ),

@@ -33,7 +33,7 @@ final class ShiftControllerProvider
   ShiftController create() => ShiftController();
 }
 
-String _$shiftControllerHash() => r'33d7d162127466142867a16f0c5618149af60fa3';
+String _$shiftControllerHash() => r'8ac6705419850309648b8e71ee670251969cd85c';
 
 abstract class _$ShiftController
     extends $AsyncNotifier<(ShiftModel?, String?)> {

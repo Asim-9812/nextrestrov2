@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
 import 'package:nextrestro/features/shift/presentation/providers/shift_provider.dart';
 import 'package:nextrestro/features/orders/presentation/pages/portrait/widgets/manage_orders/manage_orders_portrait_page.dart';
+import 'package:nextrestro/features/admin_dashboard/presentation/providers/admin_navigation_provider.dart';
 import 'widgets/dashboard/orders_dashboard_portrait_page.dart';
 import 'widgets/place_order/orders_place_order_portrait_page.dart';
 
@@ -106,7 +107,7 @@ class _OrdersPortraitPageState extends ConsumerState<OrdersPortraitPage> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  ref.read(adminDashboardTabControllerProvider.notifier).set(0);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
