@@ -38,6 +38,11 @@ class _ManageCategoryPortraitPageState extends ConsumerState<ManageCategoryPortr
     final filteredCategories = ref.watch(filteredManageCategoriesProvider);
     final selectedCategory = ref.watch(selectedCategoryForEditProvider);
     final isAdding = ref.watch(isAddingCategoryProvider);
+    final updateState = ref.watch(updateCategoryStateProvider);
+    final deleteState = ref.watch(deleteCategoryStateProvider);
+    final createState = ref.watch(createCategoryStateProvider);
+    
+    final isAnyLoading = updateState.isLoading || deleteState.isLoading || createState.isLoading;
 
     // Sync controllers if selected category changes
     ref.listen<CategoryModel?>(selectedCategoryForEditProvider, (prev, next) {
@@ -60,8 +65,8 @@ class _ManageCategoryPortraitPageState extends ConsumerState<ManageCategoryPortr
             ),
             child: Row(
               children: [
-                _buildTabItem(0, 'Categories', Icons.category_outlined, !isAdding),
-                _buildTabItem(1, 'Add New', Icons.add_circle_outline, isAdding),
+                _buildTabItem(0, 'Categories', Icons.category_outlined, !isAdding && !isAnyLoading),
+                _buildTabItem(1, 'Add New', Icons.add_circle_outline, isAdding && !isAnyLoading),
               ],
             ),
           ),
@@ -75,6 +80,7 @@ class _ManageCategoryPortraitPageState extends ConsumerState<ManageCategoryPortr
               height: 38,
               child: TextField(
                 onChanged: (val) => ref.read(manageCategorySearchQueryProvider.notifier).set(val),
+                enabled: !isAnyLoading,
                 style: const TextStyle(fontSize: 13),
                 decoration: InputDecoration(
                   hintText: 'Search Categories...',
@@ -98,8 +104,8 @@ class _ManageCategoryPortraitPageState extends ConsumerState<ManageCategoryPortr
 
         Expanded(
           child: isAdding 
-            ? _buildAddForm() 
-            : (selectedCategory != null ? _buildEditView(selectedCategory) : _buildList(filteredCategories)),
+            ? _buildAddForm(createState) 
+            : (selectedCategory != null ? _buildEditView(selectedCategory, updateState, deleteState) : _buildList(filteredCategories)),
         ),
       ],
     );
@@ -213,14 +219,15 @@ class _ManageCategoryPortraitPageState extends ConsumerState<ManageCategoryPortr
     );
   }
 
-  Widget _buildEditView(CategoryModel category) {
+  Widget _buildEditView(CategoryModel category, AsyncValue updateState, AsyncValue deleteState) {
+    final isLoading = updateState.isLoading || deleteState.isLoading;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
-            onTap: () => ref.read(selectedCategoryForEditProvider.notifier).select(null),
+            onTap: isLoading ? null : () => ref.read(selectedCategoryForEditProvider.notifier).select(null),
             child: Row(
               children: [
                 const Icon(Icons.arrow_back_ios, size: 14, color: AppColors.primary),
@@ -240,29 +247,33 @@ class _ManageCategoryPortraitPageState extends ConsumerState<ManageCategoryPortr
             ],
           ),
           const SizedBox(height: 24),
-          _buildField('Category Name', _nameController, icon: Icons.label_outline),
+          _buildField('Category Name', _nameController, icon: Icons.label_outline, enabled: !isLoading),
           const SizedBox(height: 16),
-          _buildField('Description', _descController, isMultiline: true, icon: Icons.description_outlined),
+          _buildField('Description', _descController, isMultiline: true, icon: Icons.description_outlined, enabled: !isLoading),
           const SizedBox(height: 32),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => _handleUpdate(category.categoryId),
+              onPressed: isLoading ? null : () => _handleUpdate(category.categoryId),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              child: const Text('Save Changes', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+              child: updateState.isLoading
+                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                : const Text('Save Changes', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
             ),
           ),
           const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: () => _handleDelete(category),
-              icon: const Icon(Icons.delete_outline, size: 16),
+              onPressed: isLoading ? null : () => _handleDelete(category),
+              icon: deleteState.isLoading
+                ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(color: AppColors.error, strokeWidth: 2))
+                : const Icon(Icons.delete_outline, size: 16),
               label: const Text('Delete Category', style: TextStyle(fontSize: 13)),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.error,
@@ -277,7 +288,8 @@ class _ManageCategoryPortraitPageState extends ConsumerState<ManageCategoryPortr
     );
   }
 
-  Widget _buildAddForm() {
+  Widget _buildAddForm(AsyncValue createState) {
+    final isLoading = createState.isLoading;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -285,21 +297,23 @@ class _ManageCategoryPortraitPageState extends ConsumerState<ManageCategoryPortr
         children: [
           const Text('New Category', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 24),
-          _buildField('Category Name', _nameController, hint: 'e.g. Italian', icon: Icons.label_outline),
+          _buildField('Category Name', _nameController, hint: 'e.g. Italian', icon: Icons.label_outline, enabled: !isLoading),
           const SizedBox(height: 16),
-          _buildField('Description', _descController, hint: 'Optional description...', isMultiline: true, icon: Icons.description_outlined),
+          _buildField('Description', _descController, hint: 'Optional description...', isMultiline: true, icon: Icons.description_outlined, enabled: !isLoading),
           const SizedBox(height: 32),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: _handleCreate,
+              onPressed: isLoading ? null : _handleCreate,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              child: const Text('Create Category', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+              child: createState.isLoading
+                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                : const Text('Create Category', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
             ),
           ),
         ],
@@ -307,7 +321,7 @@ class _ManageCategoryPortraitPageState extends ConsumerState<ManageCategoryPortr
     );
   }
 
-  Widget _buildField(String label, TextEditingController controller, {bool isMultiline = false, String? hint, IconData? icon}) {
+  Widget _buildField(String label, TextEditingController controller, {bool isMultiline = false, String? hint, IconData? icon, bool enabled = true}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -315,6 +329,7 @@ class _ManageCategoryPortraitPageState extends ConsumerState<ManageCategoryPortr
         const SizedBox(height: 6),
         TextField(
           controller: controller,
+          enabled: enabled,
           maxLines: isMultiline ? 3 : 1,
           style: const TextStyle(fontSize: 13),
           decoration: InputDecoration(

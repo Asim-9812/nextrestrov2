@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
-import 'package:nextrestro/core/error/error_handler.dart';
+import 'package:nextrestro/core/network/session_service.dart';
 import 'package:nextrestro/core/utils/toaster.dart';
 import '../../../data/models/product_model.dart';
 import '../../providers/menu_provider.dart';
 import '../../landscape/sections/manage_products_landscape_page.dart';
+
 
 class ManageProductsPortraitPage extends ConsumerStatefulWidget {
   const ManageProductsPortraitPage({super.key});
@@ -18,10 +22,12 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
   late TextEditingController _nameController;
   late TextEditingController _descController;
   late TextEditingController _priceController;
-  late TextEditingController _imageUrlController;
   int? _selectedCategoryId;
+  int? _selectedSubCategoryId;
   bool _isTaxable = false;
   int _isActive = 1;
+  File? _selectedImage;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -30,8 +36,8 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
     _nameController = TextEditingController(text: selected?.productName ?? '');
     _descController = TextEditingController(text: selected?.description ?? '');
     _priceController = TextEditingController(text: selected?.price.toString() ?? '');
-    _imageUrlController = TextEditingController(text: selected?.imageUrl ?? '');
     _selectedCategoryId = selected?.categoryId;
+    _selectedSubCategoryId = selected?.subCategoryId;
     _isTaxable = selected?.isTaxable ?? false;
     _isActive = selected?.isActive ?? 1;
   }
@@ -41,8 +47,16 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
     _nameController.dispose();
     _descController.dispose();
     _priceController.dispose();
-    _imageUrlController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+      });
+    }
   }
 
   @override
@@ -50,6 +64,11 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
     final filteredProducts = ref.watch(filteredManageProductsProvider);
     final selectedProduct = ref.watch(selectedProductForEditProvider);
     final isAdding = ref.watch(isAddingProductProvider);
+    final updateState = ref.watch(updateProductStateProvider);
+    final deleteState = ref.watch(deleteProductStateProvider);
+    final createState = ref.watch(createProductStateProvider);
+    
+    final isAnyLoading = updateState.isLoading || deleteState.isLoading || createState.isLoading;
 
     // Sync controllers
     ref.listen<ProductModel?>(selectedProductForEditProvider, (prev, next) {
@@ -57,11 +76,12 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
         _nameController.text = next.productName;
         _descController.text = next.description ?? '';
         _priceController.text = next.price.toString();
-        _imageUrlController.text = next.imageUrl ?? '';
         setState(() {
           _selectedCategoryId = next.categoryId;
+          _selectedSubCategoryId = next.subCategoryId;
           _isTaxable = next.isTaxable;
           _isActive = next.isActive;
+          _selectedImage = null;
         });
       }
     });
@@ -79,8 +99,8 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
             ),
             child: Row(
               children: [
-                _buildTabItem(0, 'Products', Icons.inventory_2_outlined, !isAdding),
-                _buildTabItem(1, 'Add New', Icons.add_circle_outline, isAdding),
+                _buildTabItem(0, 'Products', Icons.inventory_2_outlined, !isAdding && !isAnyLoading),
+                _buildTabItem(1, 'Add New', Icons.add_circle_outline, isAdding && !isAnyLoading),
               ],
             ),
           ),
@@ -94,6 +114,7 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
               height: 38,
               child: TextField(
                 onChanged: (val) => ref.read(manageProductSearchQueryProvider.notifier).set(val),
+                enabled: !isAnyLoading,
                 style: const TextStyle(fontSize: 13),
                 decoration: InputDecoration(
                   hintText: 'Search Products...',
@@ -117,8 +138,8 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
 
         Expanded(
           child: isAdding 
-            ? _buildAddForm() 
-            : (selectedProduct != null ? _buildEditView(selectedProduct) : _buildList(filteredProducts)),
+            ? _buildAddForm(createState) 
+            : (selectedProduct != null ? _buildEditView(selectedProduct, updateState, deleteState) : _buildList(filteredProducts)),
         ),
       ],
     );
@@ -170,10 +191,11 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
     _nameController.clear();
     _descController.clear();
     _priceController.clear();
-    _imageUrlController.clear();
     _selectedCategoryId = null;
+    _selectedSubCategoryId = null;
     _isTaxable = false;
     _isActive = 1;
+    _selectedImage = null;
   }
 
   Widget _buildList(List<ProductModel> products) {
@@ -228,14 +250,15 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
     );
   }
 
-  Widget _buildEditView(ProductModel p) {
+  Widget _buildEditView(ProductModel p, AsyncValue updateState, AsyncValue deleteState) {
+    final isLoading = updateState.isLoading || deleteState.isLoading;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
-            onTap: () => ref.read(selectedProductForEditProvider.notifier).select(null),
+            onTap: isLoading ? null : () => ref.read(selectedProductForEditProvider.notifier).select(null),
             child: Row(
               children: [
                 const Icon(Icons.arrow_back_ios, size: 14, color: AppColors.primary),
@@ -245,48 +268,81 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
             ),
           ),
           const SizedBox(height: 20),
-          Center(child: ProductImage(product: p, size: 80)),
+          Center(
+            child: Stack(
+              children: [
+                ProductImage(product: p, size: 80, localImage: _selectedImage),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: InkWell(
+                    onTap: isLoading ? null : _pickImage,
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: const BoxDecoration(
+                        color: AppColors.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.camera_alt, color: Colors.white, size: 14),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 20),
-          _buildField('Product Name', _nameController, icon: Icons.shopping_bag_outlined),
-          const SizedBox(height: 16),
-          _buildField('Description', _descController, isMultiline: true, icon: Icons.description_outlined),
-          const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: _buildField('Price', _priceController, isNumber: true, icon: Icons.payments_outlined)),
+              Expanded(
+                flex: 2,
+                child: _buildField('Product Name', _nameController, icon: Icons.shopping_bag_outlined, enabled: !isLoading),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _buildCategoryDropdown()),
+              Expanded(
+                flex: 1,
+                child: _buildField('Price', _priceController, isNumber: true, icon: Icons.payments_outlined, enabled: !isLoading),
+              ),
             ],
           ),
           const SizedBox(height: 16),
-          _buildField('Image URL', _imageUrlController, icon: Icons.image_outlined),
+          _buildField('Description', _descController, isMultiline: true, icon: Icons.description_outlined, enabled: !isLoading),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(child: _buildCategoryDropdown(isLoading)),
+              const SizedBox(width: 12),
+              Expanded(child: _buildSubCategoryDropdown(isLoading)),
+            ],
+          ),
           const SizedBox(height: 16),
           SwitchListTile(
             dense: true,
             title: const Text('Is Taxable?', style: TextStyle(fontSize: 13)),
             value: _isTaxable,
-            onChanged: (v) => setState(() => _isTaxable = v),
+            onChanged: isLoading ? null : (v) => setState(() => _isTaxable = v),
             activeColor: AppColors.primary,
           ),
           SwitchListTile(
             dense: true,
             title: const Text('Active Status', style: TextStyle(fontSize: 13)),
             value: _isActive == 1,
-            onChanged: (v) => setState(() => _isActive = v ? 1 : 0),
+            onChanged: isLoading ? null : (v) => setState(() => _isActive = v ? 1 : 0),
             activeColor: AppColors.primary,
           ),
           const SizedBox(height: 32),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => _handleUpdate(p),
+              onPressed: isLoading ? null : () => _handleUpdate(p),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              child: const Text('Save Changes', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+              child: updateState.isLoading
+                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                : const Text('Save Changes', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
             ),
           ),
         ],
@@ -294,39 +350,88 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
     );
   }
 
-  Widget _buildAddForm() {
+  Widget _buildAddForm(AsyncValue createState) {
+    final isLoading = createState.isLoading;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('New Product', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 20),
+          Center(
+            child: Stack(
+              children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: _selectedImage != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.file(_selectedImage!, fit: BoxFit.cover),
+                        )
+                      : const Icon(Icons.image, size: 30, color: AppColors.primary),
+                ),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: InkWell(
+                    onTap: isLoading ? null : _pickImage,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: AppColors.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.add_a_photo, color: Colors.white, size: 14),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 24),
-          _buildField('Product Name', _nameController, hint: 'e.g. Burger', icon: Icons.shopping_bag_outlined),
-          const SizedBox(height: 16),
-          _buildField('Description', _descController, hint: 'Optional...', isMultiline: true, icon: Icons.description_outlined),
-          const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: _buildField('Price', _priceController, hint: '0.00', isNumber: true, icon: Icons.payments_outlined)),
+              Expanded(
+                flex: 2,
+                child: _buildField('Product Name', _nameController, hint: 'e.g. Burger', icon: Icons.shopping_bag_outlined, enabled: !isLoading),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _buildCategoryDropdown()),
+              Expanded(
+                flex: 1,
+                child: _buildField('Price', _priceController, hint: '0.00', isNumber: true, icon: Icons.payments_outlined, enabled: !isLoading),
+              ),
             ],
           ),
           const SizedBox(height: 16),
-          _buildField('Image URL', _imageUrlController, hint: 'https://...', icon: Icons.image_outlined),
+          _buildField('Description', _descController, hint: 'Optional...', isMultiline: true, icon: Icons.description_outlined, enabled: !isLoading),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(child: _buildCategoryDropdown(isLoading)),
+              const SizedBox(width: 12),
+              Expanded(child: _buildSubCategoryDropdown(isLoading)),
+            ],
+          ),
           const SizedBox(height: 32),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: _handleCreate,
+              onPressed: isLoading ? null : _handleCreate,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              child: const Text('Add Product', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+              child: createState.isLoading
+                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                : const Text('Add Product', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
             ),
           ),
         ],
@@ -334,7 +439,7 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
     );
   }
 
-  Widget _buildField(String label, TextEditingController controller, {bool isMultiline = false, bool isNumber = false, String? hint, IconData? icon}) {
+  Widget _buildField(String label, TextEditingController controller, {bool isMultiline = false, bool isNumber = false, String? hint, IconData? icon, bool enabled = true}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -342,6 +447,7 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
         const SizedBox(height: 6),
         TextField(
           controller: controller,
+          enabled: enabled,
           maxLines: isMultiline ? 3 : 1,
           keyboardType: isNumber ? TextInputType.number : TextInputType.text,
           style: const TextStyle(fontSize: 13),
@@ -358,7 +464,7 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
     );
   }
 
-  Widget _buildCategoryDropdown() {
+  Widget _buildCategoryDropdown(bool isLoading) {
     final catsAsync = ref.watch(categoriesProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -368,14 +474,49 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
         catsAsync.when(
           data: (cats) => DropdownButtonFormField<int>(
             value: cats.any((c) => c.categoryId == _selectedCategoryId) ? _selectedCategoryId : null,
-            items: cats.map((c) => DropdownMenuItem(value: c.categoryId, child: Text(c.categoryName, style: const TextStyle(fontSize: 13)))).toList(),
-            onChanged: (v) => setState(() => _selectedCategoryId = v),
+            isExpanded: true,
+            items: cats.map((c) => DropdownMenuItem(value: c.categoryId, child: Text(c.categoryName, style: const TextStyle(fontSize: 11), overflow: TextOverflow.ellipsis))).toList(),
+            onChanged: isLoading ? null : (v) {
+              setState(() {
+                _selectedCategoryId = v;
+                _selectedSubCategoryId = null; // Reset sub-category
+              });
+            },
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.ashGrey)),
               enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.ashGrey)),
             ),
           ),
+          loading: () => const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+          error: (_, __) => const Text('Error', style: TextStyle(fontSize: 11)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubCategoryDropdown(bool isLoading) {
+    final subsAsync = ref.watch(subCategoryEntitiesProvider);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Sub Category', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 6),
+        subsAsync.when(
+          data: (subs) {
+            final filteredSubs = subs.where((s) => s.categoryId == _selectedCategoryId).toList();
+            return DropdownButtonFormField<int>(
+              value: filteredSubs.any((s) => s.subCategoryId == _selectedSubCategoryId) ? _selectedSubCategoryId : null,
+              isExpanded: true,
+              items: filteredSubs.map((s) => DropdownMenuItem(value: s.subCategoryId, child: Text(s.subCategoryName, style: const TextStyle(fontSize: 11), overflow: TextOverflow.ellipsis))).toList(),
+              onChanged: isLoading ? null : (v) => setState(() => _selectedSubCategoryId = v),
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.ashGrey)),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.ashGrey)),
+              ),
+            );
+          },
           loading: () => const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2)),
           error: (_, __) => const Text('Error', style: TextStyle(fontSize: 11)),
         ),
@@ -389,12 +530,15 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
         productName: _nameController.text,
         description: _descController.text,
         price: double.tryParse(_priceController.text) ?? 0.0,
-        imageUrl: _imageUrlController.text,
         categoryId: _selectedCategoryId ?? 0,
+        subCategoryId: _selectedSubCategoryId ?? 0,
         isTaxable: _isTaxable,
         isActive: _isActive,
       );
-      await ref.read(updateProductStateProvider.notifier).updateProduct(updated);
+      await ref.read(updateProductStateProvider.notifier).updateProduct(
+        updated, 
+        image: _selectedImage,
+      );
       if (mounted) Toaster.success(context: context, message: 'Updated');
     } catch (e) {
       if (mounted) Toaster.error(context: context, message: 'Update failed');
@@ -407,17 +551,22 @@ class _ManageProductsPortraitPageState extends ConsumerState<ManageProductsPortr
       return;
     }
     try {
+      final userId = ref.read(sessionServiceProvider).getUser()?['userId'] ?? 0;
       final p = ProductModel(
         productId: 0,
         productName: _nameController.text,
         description: _descController.text,
         price: double.tryParse(_priceController.text) ?? 0.0,
         categoryId: _selectedCategoryId!,
-        imageUrl: _imageUrlController.text,
+        subCategoryId: _selectedSubCategoryId ?? 0,
         isTaxable: _isTaxable,
         isActive: _isActive,
+        createdBy: userId is int ? userId : int.tryParse(userId.toString()) ?? 0,
       );
-      await ref.read(createProductStateProvider.notifier).createProduct(p);
+      await ref.read(createProductStateProvider.notifier).createProduct(
+        p, 
+        image: _selectedImage,
+      );
       if (mounted) {
         Toaster.success(context: context, message: 'Added');
         ref.read(isAddingProductProvider.notifier).set(false);

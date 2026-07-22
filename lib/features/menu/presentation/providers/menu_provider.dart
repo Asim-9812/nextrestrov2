@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/models/category_model.dart';
 import '../../data/models/menu_item_model.dart';
@@ -405,12 +407,12 @@ class CreateProductState extends _$CreateProductState {
   @override
   AsyncValue<void> build() => const AsyncValue.data(null);
 
-  Future<void> createProduct(ProductModel product) async {
+  Future<void> createProduct(ProductModel product, {File? image}) async {
     final link = ref.keepAlive();
     state = const AsyncValue.loading();
     try {
       final repository = ref.read(menuRepositoryProvider);
-      await repository.createProduct(product);
+      await repository.createProduct(product, image: image);
       ref.invalidate(productsProvider);
       state = const AsyncValue.data(null);
     } catch (e, stack) {
@@ -427,12 +429,12 @@ class UpdateProductState extends _$UpdateProductState {
   @override
   AsyncValue<void> build() => const AsyncValue.data(null);
 
-  Future<void> updateProduct(ProductModel product) async {
+  Future<void> updateProduct(ProductModel product, {File? image}) async {
     final link = ref.keepAlive();
     state = const AsyncValue.loading();
     try {
       final repository = ref.read(menuRepositoryProvider);
-      await repository.updateProduct(product);
+      await repository.updateProduct(product, image: image);
       ref.invalidate(productsProvider);
       state = const AsyncValue.data(null);
     } catch (e, stack) {

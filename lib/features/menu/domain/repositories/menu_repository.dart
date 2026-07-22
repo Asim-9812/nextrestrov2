@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../data/models/category_model.dart';
 import '../../data/models/menu_item_model.dart';
 import '../../data/models/product_model.dart';
@@ -19,7 +21,7 @@ abstract class MenuRepository {
   
   // Product Methods
   Future<List<ProductModel>> getProducts();
-  Future<void> createProduct(ProductModel product);
-  Future<void> updateProduct(ProductModel product);
+  Future<void> createProduct(ProductModel product, {File? image});
+  Future<void> updateProduct(ProductModel product, {File? image});
   Future<void> deleteProduct(int productId);
 }

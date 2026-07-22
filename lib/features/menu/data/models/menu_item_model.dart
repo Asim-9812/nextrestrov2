@@ -8,11 +8,12 @@ abstract class MenuItemModel with _$MenuItemModel {
   const factory MenuItemModel({
     required int categoryID,
     required String categoryName,
-    required int subCategoryID,
-    required String subCategoryName,
+    String? image,
     required int itemID,
     required String itemName,
     required double price,
+    required int subCategoryID,
+    required String subCategoryName,
   }) = _MenuItemModel;
 
   factory MenuItemModel.fromJson(Map<String, dynamic> json) =>

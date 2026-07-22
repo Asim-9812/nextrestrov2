@@ -53,6 +53,7 @@ dependencies:
   # UI & Assets
   flutter_svg: ^2.2.4
   cached_network_image: ^3.4.1
+  image_picker: ^1.1.2
   iconify_flutter: ^0.0.7
 
   # Utils & Local Storage

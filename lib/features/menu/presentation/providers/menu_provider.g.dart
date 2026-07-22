@@ -1642,7 +1642,7 @@ final class CreateProductStateProvider
 }
 
 String _$createProductStateHash() =>
-    r'62c2452c341a1f8bc72ca3bb03bbb968702a0def';
+    r'ea1455446ad00472f74d6a7da6ddfcb2d97aca9b';
 
 abstract class _$CreateProductState extends $Notifier<AsyncValue<void>> {
   AsyncValue<void> build();
@@ -1695,7 +1695,7 @@ final class UpdateProductStateProvider
 }
 
 String _$updateProductStateHash() =>
-    r'ed71e78ec01ad9d044a9519d9d1b45698f362b5a';
+    r'a3caca9537e6f5c371fd805aeef81ed480575642';
 
 abstract class _$UpdateProductState extends $Notifier<AsyncValue<void>> {
   AsyncValue<void> build();

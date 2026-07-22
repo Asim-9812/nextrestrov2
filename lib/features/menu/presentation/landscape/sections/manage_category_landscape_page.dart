@@ -78,7 +78,29 @@ class ManageCategoryLandscapePage extends ConsumerWidget {
                   child: categoriesAsync.when(
                     data: (_) {
                       if (filteredCategories.isEmpty) {
-                        return const Center(child: Text('No categories found'));
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  ref.read(isAddingCategoryProvider.notifier).set(true);
+                                  ref.read(selectedCategoryForEditProvider.notifier).select(null);
+                                },
+                                icon: const Icon(Icons.add, size: 18),
+                                label: const Text('Add New Category'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: const Size(double.infinity, 48),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 100,),
+                            Text('No categories found'),
+                          ],
+                        );
                       }
                       return Column(
                         children: [
@@ -297,6 +319,9 @@ class _CategoryEditSectionState extends ConsumerState<CategoryEditSection> {
   Widget build(BuildContext context) {
     final selectedCategory = ref.watch(selectedCategoryForEditProvider);
     final itemsMapAsync = ref.watch(categoryItemsMapProvider);
+    final updateState = ref.watch(updateCategoryStateProvider);
+    final deleteState = ref.watch(deleteCategoryStateProvider);
+    final isLoading = updateState.isLoading || deleteState.isLoading;
 
     // Update controllers when selected category changes
     ref.listen<CategoryModel?>(selectedCategoryForEditProvider, (previous, next) {
@@ -381,34 +406,38 @@ class _CategoryEditSectionState extends ConsumerState<CategoryEditSection> {
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'Manrope'),
           ),
           const SizedBox(height: 12),
-          _buildTextField('Category Name', _nameController),
+          _buildTextField('Category Name', _nameController, enabled: !isLoading),
           const SizedBox(height: 16),
-          _buildTextField('Description', _descController, isMultiline: true),
+          _buildTextField('Description', _descController, isMultiline: true, enabled: !isLoading),
           const SizedBox(height: 32),
           Row(
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () => _handleUpdate(context),
+                  onPressed: isLoading ? null : () => _handleUpdate(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Save Changes', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: updateState.isLoading
+                    ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                    : const Text('Save Changes', style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ),
               const SizedBox(width: 16),
               OutlinedButton(
-                onPressed: () => _handleDelete(context),
+                onPressed: isLoading ? null : () => _handleDelete(context),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.error,
                   side: const BorderSide(color: AppColors.error),
                   padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Icon(Icons.delete_outline),
+                child: deleteState.isLoading
+                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: AppColors.error, strokeWidth: 2))
+                  : const Icon(Icons.delete_outline),
               ),
             ],
           ),
@@ -417,7 +446,7 @@ class _CategoryEditSectionState extends ConsumerState<CategoryEditSection> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, {bool isMultiline = false}) {
+  Widget _buildTextField(String label, TextEditingController controller, {bool isMultiline = false, bool enabled = true}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -425,6 +454,7 @@ class _CategoryEditSectionState extends ConsumerState<CategoryEditSection> {
         const SizedBox(height: 8),
         TextField(
           controller: controller,
+          enabled: enabled,
           maxLines: isMultiline ? 3 : 1,
           style: TextStyle(fontSize: 14),
           decoration: InputDecoration(
@@ -549,6 +579,7 @@ class _AddCategorySectionState extends ConsumerState<AddCategorySection> {
 
   @override
   Widget build(BuildContext context) {
+    final createState = ref.watch(createCategoryStateProvider);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),
       child: Column(
@@ -557,7 +588,7 @@ class _AddCategorySectionState extends ConsumerState<AddCategorySection> {
           Row(
             children: [
               IconButton(
-                onPressed: () => ref.read(isAddingCategoryProvider.notifier).set(false),
+                onPressed: createState.isLoading ? null : () => ref.read(isAddingCategoryProvider.notifier).set(false),
                 icon: const Icon(Icons.arrow_back),
               ),
               const SizedBox(width: 8),
@@ -577,6 +608,7 @@ class _AddCategorySectionState extends ConsumerState<AddCategorySection> {
             _nameController,
             hint: 'e.g. Italian Cuisine',
             icon: Icons.label_outline,
+            enabled: !createState.isLoading,
           ),
           const SizedBox(height: 16),
           _buildTextField(
@@ -585,19 +617,22 @@ class _AddCategorySectionState extends ConsumerState<AddCategorySection> {
             isMultiline: true,
             hint: 'Describe the contents of this category...',
             icon: Icons.description_outlined,
+            enabled: !createState.isLoading,
           ),
           const SizedBox(height: 32),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => _handleCreate(context),
+              onPressed: createState.isLoading ? null : () => _handleCreate(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: const Text('Create Category', style: TextStyle(fontWeight: FontWeight.bold)),
+              child: createState.isLoading
+                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                : const Text('Create Category', style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ),
         ],
@@ -605,7 +640,7 @@ class _AddCategorySectionState extends ConsumerState<AddCategorySection> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, {bool isMultiline = false, String? hint, IconData? icon}) {
+  Widget _buildTextField(String label, TextEditingController controller, {bool isMultiline = false, String? hint, IconData? icon, bool enabled = true}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -613,6 +648,7 @@ class _AddCategorySectionState extends ConsumerState<AddCategorySection> {
         const SizedBox(height: 8),
         TextField(
           controller: controller,
+          enabled: enabled,
           maxLines: isMultiline ? 3 : 1,
           decoration: InputDecoration(
             hintText: hint,

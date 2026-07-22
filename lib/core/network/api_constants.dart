@@ -1,6 +1,7 @@
 class ApiConstants {
   // Base URL
-  static const String baseUrl = 'https://209.50.229.192:400';
+  // static const String baseUrl = 'https://209.50.229.192:400';
+  static const String baseUrl = 'https://jvnlc-103-1-93-10.free.pinggy.net';
 
   // Timeouts (in milliseconds)
   static const Duration connectionTimeout = Duration(seconds: 30);

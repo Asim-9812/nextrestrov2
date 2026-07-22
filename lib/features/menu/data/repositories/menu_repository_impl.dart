@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:nextrestro/core/network/api_client.dart';
@@ -210,12 +213,40 @@ class MenuRepositoryImpl implements MenuRepository {
   }
 
   @override
-  Future<void> createProduct(ProductModel product) async {
+  Future<void> createProduct(ProductModel product, {File? image}) async {
     try {
       _logger.i('Creating product: ${product.productName}');
+      
+      final Map<String, dynamic> data = {
+        'ProductId': product.productId,
+        'ProductName': product.productName,
+        'Description': product.description ?? '',
+        'Price': product.price,
+        'CategoryId': product.categoryId,
+        'SubCategoryId': product.subCategoryId,
+        'IsTaxable': product.isTaxable,
+        'ImageUrl': 'string',
+        'CreatedBy': product.createdBy ?? 0,
+        'IsActive': product.isActive,
+      };
+
+      if (image != null) {
+        data['Image'] = await MultipartFile.fromFile(
+          image.path,
+          filename: image.path.split('/').last,
+        );
+      } else {
+        data['Image'] = null;
+      }
+
+      final formData = FormData.fromMap(data);
+
       await _apiClient.post(
         ApiConstants.createProductEndpoint,
-        data: product.toJson(),
+        data: formData,
+        options: Options(
+          contentType: 'multipart/form-data',
+        ),
       );
       _logger.i('Product creation successful');
     } catch (e) {
@@ -225,12 +256,40 @@ class MenuRepositoryImpl implements MenuRepository {
   }
 
   @override
-  Future<void> updateProduct(ProductModel product) async {
+  Future<void> updateProduct(ProductModel product, {File? image}) async {
     try {
       _logger.i('Updating product: ${product.productId}');
+      
+      final Map<String, dynamic> data = {
+        'ProductId': product.productId,
+        'ProductName': product.productName,
+        'Description': product.description ?? '',
+        'Price': product.price,
+        'CategoryId': product.categoryId,
+        'SubCategoryId': product.subCategoryId,
+        'IsTaxable': product.isTaxable,
+        'ImageUrl': 'string',
+        'CreatedBy': product.createdBy ?? 0,
+        'IsActive': product.isActive,
+      };
+
+      if (image != null) {
+        data['Image'] = await MultipartFile.fromFile(
+          image.path,
+          filename: image.path.split('/').last,
+        );
+      } else {
+        data['Image'] = null;
+      }
+
+      final formData = FormData.fromMap(data);
+
       await _apiClient.put(
         ApiConstants.updateProductEndpoint,
-        data: product.toJson(),
+        data: formData,
+        options: Options(
+          contentType: 'multipart/form-data',
+        ),
       );
       _logger.i('Product update successful');
     } catch (e) {

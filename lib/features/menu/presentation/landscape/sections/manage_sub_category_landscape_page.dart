@@ -78,7 +78,29 @@ class ManageSubCategoryLandscapePage extends ConsumerWidget {
                   child: subCategoriesAsync.when(
                     data: (_) {
                       if (filteredSubCategories.isEmpty) {
-                        return const Center(child: Text('No sub-categories found'));
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  ref.read(isAddingSubCategoryProvider.notifier).set(true);
+                                  ref.read(selectedSubCategoryForEditProvider.notifier).select(null);
+                                },
+                                icon: const Icon(Icons.add, size: 18),
+                                label: const Text('Add New Sub Category'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: const Size(double.infinity, 48),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 100,),
+                            Text('No sub-categories found'),
+                          ],
+                        );
                       }
                       return Column(
                         children: [

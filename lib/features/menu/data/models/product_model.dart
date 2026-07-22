@@ -11,8 +11,11 @@ abstract class ProductModel with _$ProductModel {
     String? description,
     required double price,
     required int categoryId,
+    required int subCategoryId,
     required bool isTaxable,
     String? imageUrl,
+    String? image,
+    int? createdBy,
     required int isActive,
   }) = _ProductModel;
 

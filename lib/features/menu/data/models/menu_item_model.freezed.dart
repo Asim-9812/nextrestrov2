@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MenuItemModel {
 
- int get categoryID; String get categoryName; int get subCategoryID; String get subCategoryName; int get itemID; String get itemName; double get price;
+ int get categoryID; String get categoryName; String? get image; int get itemID; String get itemName; double get price; int get subCategoryID; String get subCategoryName;
 /// Create a copy of MenuItemModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $MenuItemModelCopyWith<MenuItemModel> get copyWith => _$MenuItemModelCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MenuItemModel&&(identical(other.categoryID, categoryID) || other.categoryID == categoryID)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.subCategoryID, subCategoryID) || other.subCategoryID == subCategoryID)&&(identical(other.subCategoryName, subCategoryName) || other.subCategoryName == subCategoryName)&&(identical(other.itemID, itemID) || other.itemID == itemID)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.price, price) || other.price == price));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MenuItemModel&&(identical(other.categoryID, categoryID) || other.categoryID == categoryID)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.image, image) || other.image == image)&&(identical(other.itemID, itemID) || other.itemID == itemID)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.price, price) || other.price == price)&&(identical(other.subCategoryID, subCategoryID) || other.subCategoryID == subCategoryID)&&(identical(other.subCategoryName, subCategoryName) || other.subCategoryName == subCategoryName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,categoryID,categoryName,subCategoryID,subCategoryName,itemID,itemName,price);
+int get hashCode => Object.hash(runtimeType,categoryID,categoryName,image,itemID,itemName,price,subCategoryID,subCategoryName);
 
 @override
 String toString() {
-  return 'MenuItemModel(categoryID: $categoryID, categoryName: $categoryName, subCategoryID: $subCategoryID, subCategoryName: $subCategoryName, itemID: $itemID, itemName: $itemName, price: $price)';
+  return 'MenuItemModel(categoryID: $categoryID, categoryName: $categoryName, image: $image, itemID: $itemID, itemName: $itemName, price: $price, subCategoryID: $subCategoryID, subCategoryName: $subCategoryName)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $MenuItemModelCopyWith<$Res>  {
   factory $MenuItemModelCopyWith(MenuItemModel value, $Res Function(MenuItemModel) _then) = _$MenuItemModelCopyWithImpl;
 @useResult
 $Res call({
- int categoryID, String categoryName, int subCategoryID, String subCategoryName, int itemID, String itemName, double price
+ int categoryID, String categoryName, String? image, int itemID, String itemName, double price, int subCategoryID, String subCategoryName
 });
 
 
@@ -65,16 +65,17 @@ class _$MenuItemModelCopyWithImpl<$Res>
 
 /// Create a copy of MenuItemModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? categoryID = null,Object? categoryName = null,Object? subCategoryID = null,Object? subCategoryName = null,Object? itemID = null,Object? itemName = null,Object? price = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? categoryID = null,Object? categoryName = null,Object? image = freezed,Object? itemID = null,Object? itemName = null,Object? price = null,Object? subCategoryID = null,Object? subCategoryName = null,}) {
   return _then(_self.copyWith(
 categoryID: null == categoryID ? _self.categoryID : categoryID // ignore: cast_nullable_to_non_nullable
 as int,categoryName: null == categoryName ? _self.categoryName : categoryName // ignore: cast_nullable_to_non_nullable
-as String,subCategoryID: null == subCategoryID ? _self.subCategoryID : subCategoryID // ignore: cast_nullable_to_non_nullable
-as int,subCategoryName: null == subCategoryName ? _self.subCategoryName : subCategoryName // ignore: cast_nullable_to_non_nullable
-as String,itemID: null == itemID ? _self.itemID : itemID // ignore: cast_nullable_to_non_nullable
+as String,image: freezed == image ? _self.image : image // ignore: cast_nullable_to_non_nullable
+as String?,itemID: null == itemID ? _self.itemID : itemID // ignore: cast_nullable_to_non_nullable
 as int,itemName: null == itemName ? _self.itemName : itemName // ignore: cast_nullable_to_non_nullable
 as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
-as double,
+as double,subCategoryID: null == subCategoryID ? _self.subCategoryID : subCategoryID // ignore: cast_nullable_to_non_nullable
+as int,subCategoryName: null == subCategoryName ? _self.subCategoryName : subCategoryName // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int categoryID,  String categoryName,  int subCategoryID,  String subCategoryName,  int itemID,  String itemName,  double price)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int categoryID,  String categoryName,  String? image,  int itemID,  String itemName,  double price,  int subCategoryID,  String subCategoryName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MenuItemModel() when $default != null:
-return $default(_that.categoryID,_that.categoryName,_that.subCategoryID,_that.subCategoryName,_that.itemID,_that.itemName,_that.price);case _:
+return $default(_that.categoryID,_that.categoryName,_that.image,_that.itemID,_that.itemName,_that.price,_that.subCategoryID,_that.subCategoryName);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.categoryID,_that.categoryName,_that.subCategoryID,_that.su
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int categoryID,  String categoryName,  int subCategoryID,  String subCategoryName,  int itemID,  String itemName,  double price)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int categoryID,  String categoryName,  String? image,  int itemID,  String itemName,  double price,  int subCategoryID,  String subCategoryName)  $default,) {final _that = this;
 switch (_that) {
 case _MenuItemModel():
-return $default(_that.categoryID,_that.categoryName,_that.subCategoryID,_that.subCategoryName,_that.itemID,_that.itemName,_that.price);case _:
+return $default(_that.categoryID,_that.categoryName,_that.image,_that.itemID,_that.itemName,_that.price,_that.subCategoryID,_that.subCategoryName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.categoryID,_that.categoryName,_that.subCategoryID,_that.su
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int categoryID,  String categoryName,  int subCategoryID,  String subCategoryName,  int itemID,  String itemName,  double price)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int categoryID,  String categoryName,  String? image,  int itemID,  String itemName,  double price,  int subCategoryID,  String subCategoryName)?  $default,) {final _that = this;
 switch (_that) {
 case _MenuItemModel() when $default != null:
-return $default(_that.categoryID,_that.categoryName,_that.subCategoryID,_that.subCategoryName,_that.itemID,_that.itemName,_that.price);case _:
+return $default(_that.categoryID,_that.categoryName,_that.image,_that.itemID,_that.itemName,_that.price,_that.subCategoryID,_that.subCategoryName);case _:
   return null;
 
 }
@@ -215,16 +216,17 @@ return $default(_that.categoryID,_that.categoryName,_that.subCategoryID,_that.su
 @JsonSerializable()
 
 class _MenuItemModel implements MenuItemModel {
-  const _MenuItemModel({required this.categoryID, required this.categoryName, required this.subCategoryID, required this.subCategoryName, required this.itemID, required this.itemName, required this.price});
+  const _MenuItemModel({required this.categoryID, required this.categoryName, this.image, required this.itemID, required this.itemName, required this.price, required this.subCategoryID, required this.subCategoryName});
   factory _MenuItemModel.fromJson(Map<String, dynamic> json) => _$MenuItemModelFromJson(json);
 
 @override final  int categoryID;
 @override final  String categoryName;
-@override final  int subCategoryID;
-@override final  String subCategoryName;
+@override final  String? image;
 @override final  int itemID;
 @override final  String itemName;
 @override final  double price;
+@override final  int subCategoryID;
+@override final  String subCategoryName;
 
 /// Create a copy of MenuItemModel
 /// with the given fields replaced by the non-null parameter values.
@@ -239,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MenuItemModel&&(identical(other.categoryID, categoryID) || other.categoryID == categoryID)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.subCategoryID, subCategoryID) || other.subCategoryID == subCategoryID)&&(identical(other.subCategoryName, subCategoryName) || other.subCategoryName == subCategoryName)&&(identical(other.itemID, itemID) || other.itemID == itemID)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.price, price) || other.price == price));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MenuItemModel&&(identical(other.categoryID, categoryID) || other.categoryID == categoryID)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.image, image) || other.image == image)&&(identical(other.itemID, itemID) || other.itemID == itemID)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.price, price) || other.price == price)&&(identical(other.subCategoryID, subCategoryID) || other.subCategoryID == subCategoryID)&&(identical(other.subCategoryName, subCategoryName) || other.subCategoryName == subCategoryName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,categoryID,categoryName,subCategoryID,subCategoryName,itemID,itemName,price);
+int get hashCode => Object.hash(runtimeType,categoryID,categoryName,image,itemID,itemName,price,subCategoryID,subCategoryName);
 
 @override
 String toString() {
-  return 'MenuItemModel(categoryID: $categoryID, categoryName: $categoryName, subCategoryID: $subCategoryID, subCategoryName: $subCategoryName, itemID: $itemID, itemName: $itemName, price: $price)';
+  return 'MenuItemModel(categoryID: $categoryID, categoryName: $categoryName, image: $image, itemID: $itemID, itemName: $itemName, price: $price, subCategoryID: $subCategoryID, subCategoryName: $subCategoryName)';
 }
 
 
@@ -259,7 +261,7 @@ abstract mixin class _$MenuItemModelCopyWith<$Res> implements $MenuItemModelCopy
   factory _$MenuItemModelCopyWith(_MenuItemModel value, $Res Function(_MenuItemModel) _then) = __$MenuItemModelCopyWithImpl;
 @override @useResult
 $Res call({
- int categoryID, String categoryName, int subCategoryID, String subCategoryName, int itemID, String itemName, double price
+ int categoryID, String categoryName, String? image, int itemID, String itemName, double price, int subCategoryID, String subCategoryName
 });
 
 
@@ -276,16 +278,17 @@ class __$MenuItemModelCopyWithImpl<$Res>
 
 /// Create a copy of MenuItemModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? categoryID = null,Object? categoryName = null,Object? subCategoryID = null,Object? subCategoryName = null,Object? itemID = null,Object? itemName = null,Object? price = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? categoryID = null,Object? categoryName = null,Object? image = freezed,Object? itemID = null,Object? itemName = null,Object? price = null,Object? subCategoryID = null,Object? subCategoryName = null,}) {
   return _then(_MenuItemModel(
 categoryID: null == categoryID ? _self.categoryID : categoryID // ignore: cast_nullable_to_non_nullable
 as int,categoryName: null == categoryName ? _self.categoryName : categoryName // ignore: cast_nullable_to_non_nullable
-as String,subCategoryID: null == subCategoryID ? _self.subCategoryID : subCategoryID // ignore: cast_nullable_to_non_nullable
-as int,subCategoryName: null == subCategoryName ? _self.subCategoryName : subCategoryName // ignore: cast_nullable_to_non_nullable
-as String,itemID: null == itemID ? _self.itemID : itemID // ignore: cast_nullable_to_non_nullable
+as String,image: freezed == image ? _self.image : image // ignore: cast_nullable_to_non_nullable
+as String?,itemID: null == itemID ? _self.itemID : itemID // ignore: cast_nullable_to_non_nullable
 as int,itemName: null == itemName ? _self.itemName : itemName // ignore: cast_nullable_to_non_nullable
 as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
-as double,
+as double,subCategoryID: null == subCategoryID ? _self.subCategoryID : subCategoryID // ignore: cast_nullable_to_non_nullable
+as int,subCategoryName: null == subCategoryName ? _self.subCategoryName : subCategoryName // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

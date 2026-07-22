@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nextrestro/core/constants/app_colors.dart';
+import 'package:nextrestro/core/network/api_constants.dart';
 import '../../../data/models/menu_item_model.dart';
 
 class MenuItemCard extends StatelessWidget {
@@ -14,12 +16,6 @@ class MenuItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String imagePath = 'assets/images/momo.jpg';
-    if (item.categoryName.toLowerCase().contains('drink') || 
-        item.categoryName.toLowerCase().contains('beverage')) {
-      imagePath = 'assets/images/drinks.jpg';
-    }
-
     // Font size scaling for portrait density
     final double titleSize = isPortrait ? 10.5 : 14;
     final double subTitleSize = isPortrait ? 8.5 : 12;
@@ -45,11 +41,7 @@ class MenuItemCard extends StatelessWidget {
           children: [
             Expanded(
               flex: 3,
-              child: Image.asset(
-                imagePath,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
+              child: _buildImage(),
             ),
             Expanded(
               flex: 2,
@@ -115,6 +107,53 @@ class MenuItemCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildImage() {
+    if (item.image != null && item.image!.isNotEmpty) {
+      final url = item.image!.startsWith('http') 
+          ? item.image! 
+          : '${ApiConstants.baseUrl}/${item.image}';
+      
+      return CachedNetworkImage(
+        imageUrl: url,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => _buildAssetPlaceholder(),
+        errorWidget: (context, url, error) => _buildInitialPlaceholder(),
+      );
+    }
+    return _buildInitialPlaceholder();
+  }
+
+  Widget _buildInitialPlaceholder() {
+    return Container(
+      width: double.infinity,
+      color: AppColors.primary.withOpacity(0.1),
+      child: Center(
+        child: Text(
+          item.itemName.isNotEmpty ? item.itemName[0].toUpperCase() : '?',
+          style: const TextStyle(
+            color: AppColors.primary,
+            fontWeight: FontWeight.bold,
+            fontSize: 32,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAssetPlaceholder() {
+    String imagePath = 'assets/images/momo.jpg';
+    if (item.categoryName.toLowerCase().contains('drink') || 
+        item.categoryName.toLowerCase().contains('beverage')) {
+      imagePath = 'assets/images/drinks.jpg';
+    }
+    return Image.asset(
+      imagePath,
+      width: double.infinity,
+      fit: BoxFit.cover,
     );
   }
 }
