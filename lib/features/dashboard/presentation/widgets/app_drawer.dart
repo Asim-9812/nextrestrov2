@@ -11,6 +11,7 @@ import '../../../auth/presentation/bloc/auth_event.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import '../../../notification/presentation/pages/notification_page.dart';
 import '../../../order_tracking/presentation/pages/order_tracking_page.dart';
+import '../../../order/presentation/pages/my_orders_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../pets/presentation/pages/my_pets_page.dart';
 
@@ -174,7 +175,13 @@ class AppDrawer extends StatelessWidget {
                 style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MyOrdersPage()),
+                  );
+                },
                 child: Row(
                   children: [
                     Text(

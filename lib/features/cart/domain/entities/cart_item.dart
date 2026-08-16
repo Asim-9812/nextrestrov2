@@ -25,6 +25,32 @@ class CartItem extends Equatable {
     required this.totalAmount,
   });
 
+  CartItem copyWith({
+    int? cartItemId,
+    int? cartId,
+    int? productId,
+    String? productName,
+    String? productCode,
+    String? imageUrl,
+    int? quantity,
+    double? unitPrice,
+    double? discountAmount,
+    double? totalAmount,
+  }) {
+    return CartItem(
+      cartItemId: cartItemId ?? this.cartItemId,
+      cartId: cartId ?? this.cartId,
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      productCode: productCode ?? this.productCode,
+      imageUrl: imageUrl ?? this.imageUrl,
+      quantity: quantity ?? this.quantity,
+      unitPrice: unitPrice ?? this.unitPrice,
+      discountAmount: discountAmount ?? this.discountAmount,
+      totalAmount: totalAmount ?? this.totalAmount,
+    );
+  }
+
   @override
   List<Object?> get props => [
         cartItemId,

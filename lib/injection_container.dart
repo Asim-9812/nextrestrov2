@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'core/network/dio_client.dart';
+import 'core/network/session_manager.dart';
 import 'features/auth/data/datasources/auth_local_data_source.dart';
 import 'features/auth/data/datasources/auth_remote_data_source.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -19,6 +20,10 @@ import 'features/product_type/data/datasources/product_type_remote_data_source.d
 import 'features/product_type/data/repositories/product_type_repository_impl.dart';
 import 'features/product_type/domain/repositories/product_type_repository.dart';
 import 'features/product_type/presentation/bloc/product_type_bloc.dart';
+import 'features/order/data/datasources/order_remote_data_source.dart';
+import 'features/order/data/repositories/order_repository_impl.dart';
+import 'features/order/domain/repositories/order_repository.dart';
+import 'features/order/presentation/bloc/order_bloc.dart';
 import 'features/pet_type/data/datasources/pet_type_remote_data_source.dart';
 import 'features/pet_type/data/repositories/pet_type_repository_impl.dart';
 import 'features/pet_type/domain/repositories/pet_type_repository.dart';
@@ -38,8 +43,11 @@ final sl = GetIt.instance;
 Future<void> init() async {
   // Core
   await Hive.initFlutter();
+  sl.registerLazySingleton(() => SessionManager());
+  await sl<SessionManager>().initialize();
+  
   sl.registerLazySingleton(() => Dio());
-  sl.registerLazySingleton(() => DioClient(sl()));
+  sl.registerLazySingleton(() => DioClient(sl(), sl()));
 
   // Features - Auth
   sl.registerFactory(() => AuthBloc(authRepository: sl()));
@@ -47,6 +55,7 @@ Future<void> init() async {
     () => AuthRepositoryImpl(
       remoteDataSource: sl(),
       localDataSource: sl(),
+      sessionManager: sl(),
     ),
   );
   sl.registerLazySingleton<AuthRemoteDataSource>(
@@ -90,6 +99,15 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<PetTypeRemoteDataSource>(
     () => PetTypeRemoteDataSourceImpl(sl()),
+  );
+
+  // Features - Order
+  sl.registerFactory(() => OrderBloc(orderRepository: sl()));
+  sl.registerLazySingleton<OrderRepository>(
+    () => OrderRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<OrderRemoteDataSource>(
+    () => OrderRemoteDataSourceImpl(sl()),
   );
 
   // Features - Product

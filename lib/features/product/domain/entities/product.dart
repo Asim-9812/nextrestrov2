@@ -28,6 +28,18 @@ class Product extends Equatable {
   final String? productTypeName;
   final String? categoryName;
   final String? petTypeName;
+  
+  // New e-commerce fields
+  final double? salesPrice;
+  final double? mrp;
+  final String? sku;
+  final int? productBatchId;
+  final String? batchNo;
+  final String? manufactureDate;
+  final String? expiryDate;
+  final double? purchasePriceNPR;
+  final double? purchasePriceINR;
+  final double? exchangeRate;
 
   Product({
     required this.id,
@@ -55,6 +67,16 @@ class Product extends Equatable {
     this.productTypeName,
     this.categoryName,
     this.petTypeName,
+    this.salesPrice,
+    this.mrp,
+    this.sku,
+    this.productBatchId,
+    this.batchNo,
+    this.manufactureDate,
+    this.expiryDate,
+    this.purchasePriceNPR,
+    this.purchasePriceINR,
+    this.exchangeRate,
   });
 
   @override

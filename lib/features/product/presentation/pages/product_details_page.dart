@@ -105,9 +105,9 @@ class ProductDetailsPage extends StatelessWidget {
             AppSizes.gapH32,
 
             // Bottom Sections: Recommendations
-            const RelatedProductsSection(),
+            RelatedProductsSection(currentProduct: product),
             AppSizes.gapH32,
-            const RecommendedProductsSection(),
+            RecommendedProductsSection(currentProduct: product),
             AppSizes.gapH32,
           ],
         ),

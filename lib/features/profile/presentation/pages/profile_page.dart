@@ -7,6 +7,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../notification/presentation/pages/notification_page.dart';
+import '../../../order/presentation/pages/my_orders_page.dart';
 import '../../../pets/presentation/pages/my_pets_page.dart';
 import '../../../pets/presentation/widgets/profile_pets_section.dart';
 import 'settings_page.dart';
@@ -72,7 +73,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               const Text('My Orders', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const MyOrdersPage()),
+                                  );
+                                },
                                 child: Row(
                                   children: [
                                     Text(

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import '../../../../core/error/failure.dart';
+import '../../../../core/network/session_manager.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_local_data_source.dart';
@@ -10,10 +11,12 @@ import '../models/user_model.dart';
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final AuthLocalDataSource localDataSource;
+  final SessionManager sessionManager;
 
   AuthRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
+    required this.sessionManager,
   });
 
   @override
@@ -21,6 +24,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final userModel = await remoteDataSource.login(username, password);
       await localDataSource.cacheUser(userModel);
+      sessionManager.updateSession(userModel);
       return Right(userModel);
     } on DioException catch (e) {
       return Left(ServerFailure(e.message ?? 'Login failed'));
@@ -65,6 +69,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, void>> logout() async {
     try {
       await localDataSource.clearCache();
+      await sessionManager.logout();
       return const Right(null);
     } catch (e) {
       return Left(CacheFailure(e.toString()));
@@ -100,6 +105,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final userModel = await remoteDataSource.getProfile();
       await localDataSource.cacheUser(userModel);
+      sessionManager.updateSession(userModel);
       return Right(userModel);
     } on DioException catch (e) {
       return Left(ServerFailure(e.message ?? 'Failed to fetch profile'));

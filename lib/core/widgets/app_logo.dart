@@ -54,7 +54,7 @@ class AppLogo extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               physics: const NeverScrollableScrollPhysics(),
               child: Text(
-                'ivine pets',
+                'Divine pets',
                 style: AppTextStyles.h2.copyWith(
                   color: logoColor,
                   fontSize: size * 0.85,

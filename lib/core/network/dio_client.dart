@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:hive/hive.dart';
 import 'api_endpoints.dart';
 import 'dio_interceptor.dart';
+import 'session_manager.dart';
 
 class DioClient {
   final Dio _dio;
+  final SessionManager _sessionManager;
 
-  DioClient(this._dio) {
+  DioClient(this._dio, this._sessionManager) {
     _dio
       ..options.baseUrl = ApiEndpoints.baseUrl
       ..options.connectTimeout = const Duration(milliseconds: ApiEndpoints.connectionTimeout)
@@ -14,18 +15,17 @@ class DioClient {
       ..options.responseType = ResponseType.json
       ..interceptors.add(AppDioInterceptor())
       ..interceptors.add(InterceptorsWrapper(
-        onRequest: (options, handler) async {
-          final box = await Hive.openBox('user_box');
-          final userData = box.get('cached_user');
-          if (userData != null) {
-            final token = userData['token'];
-            if (token != null) {
-              options.headers['Authorization'] = 'Bearer $token';
-            }
+        onRequest: (options, handler) {
+          final token = _sessionManager.token;
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
           }
           return handler.next(options);
         },
         onError: (DioException e, handler) {
+          if (e.response?.statusCode == 401) {
+            _sessionManager.triggerSessionExpired();
+          }
           final errorMessage = _getErrorMessage(e);
           return handler.next(e.copyWith(message: errorMessage));
         },

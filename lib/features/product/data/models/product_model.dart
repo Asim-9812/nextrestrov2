@@ -27,10 +27,25 @@ class ProductModel extends Product {
     super.productTypeName,
     super.categoryName,
     super.petTypeName,
+    super.salesPrice,
+    super.mrp,
+    super.sku,
+    super.productBatchId,
+    super.batchNo,
+    super.manufactureDate,
+    super.expiryDate,
+    super.purchasePriceNPR,
+    super.purchasePriceINR,
+    super.exchangeRate,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     final idInt = (json['productId'] as num?)?.toInt() ?? 0;
+    final apiSalesPrice = (json['salesPrice'] as num?)?.toDouble();
+    final apiMrp = (json['mrp'] as num?)?.toDouble();
+    
+    // Use salesPrice if available, otherwise constant 1200.0
+    final displayPrice = apiSalesPrice ?? 1200.0;
     
     return ProductModel(
       id: idInt.toString(),
@@ -38,8 +53,8 @@ class ProductModel extends Product {
       name: json['productName'] ?? 'Product $idInt',
       category: json['categoryName'] ?? 'Uncategorized',
       description: json['description'] ?? 'No description available.',
-      price: (json['price'] as num? ?? 1200.0).toDouble(),
-      oldPrice: (json['oldPrice'] as num? ?? 1500.0).toDouble(),
+      price: displayPrice,
+      oldPrice: apiMrp ?? (displayPrice * 1.2), // Use MRP as old price if available
       rating: (json['rating'] as num? ?? 4.5).toDouble(),
       reviewCount: (json['reviewCount'] as num? ?? 120).toInt(),
       images: [
@@ -60,6 +75,16 @@ class ProductModel extends Product {
       productTypeName: json['productTypeName'],
       categoryName: json['categoryName'],
       petTypeName: json['petTypeName'],
+      salesPrice: apiSalesPrice,
+      mrp: apiMrp,
+      sku: json['sku'],
+      productBatchId: (json['productBatchId'] as num?)?.toInt(),
+      batchNo: json['batchNo'],
+      manufactureDate: json['manufactureDate'],
+      expiryDate: json['expiryDate'],
+      purchasePriceNPR: (json['purchasePriceNPR'] as num?)?.toDouble(),
+      purchasePriceINR: (json['purchasePriceINR'] as num?)?.toDouble(),
+      exchangeRate: (json['exchangeRate'] as num?)?.toDouble(),
     );
   }
 

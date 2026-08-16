@@ -12,6 +12,8 @@ import '../bloc/cart_bloc.dart';
 import '../widgets/cart_item_tile.dart';
 import '../widgets/free_delivery_banner.dart';
 import '../../../dashboard/presentation/widgets/product_card.dart';
+import '../../../product/presentation/bloc/product_bloc.dart';
+import '../../../product/presentation/bloc/product_state.dart';
 import '../../../../core/widgets/app_confirmation_dialog.dart';
 
 class CartPage extends StatefulWidget {
@@ -117,22 +119,45 @@ class _CartPageState extends State<CartPage> {
                           const Spacer(),
                           Text('${cart.items.length} items', style: const TextStyle(color: Colors.grey, fontSize: 12)),
                           AppSizes.gapW12,
-                          GestureDetector(
-                            onTap: () {
-                              final authState = context.read<AuthBloc>().state;
-                              if (authState is Authenticated) {
-                                context.read<CartBloc>().add(ClearCartEvent(authState.user.userId));
-                              }
-                            },
-                            child: Row(
-                              children: const [
-                                Icon(Icons.delete_outline, color: Colors.redAccent, size: 18),
-                                SizedBox(width: 4),
-                                Text('Remove all', style: TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.w500)),
-                              ],
-                            ),
+                      if (selectedItemIds.isNotEmpty)
+                        GestureDetector(
+                          onTap: () {
+                            final authState = context.read<AuthBloc>().state;
+                            if (authState is Authenticated) {
+                              context.read<CartBloc>().add(RemoveSelectedFromCartEvent(
+                                    customerId: authState.user.userId,
+                                    cartItemIds: selectedItemIds.toList(),
+                                  ));
+                              setState(() {
+                                selectedItemIds.clear();
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: const [
+                              Icon(Icons.delete_sweep_outlined, color: Colors.orangeAccent, size: 18),
+                              SizedBox(width: 4),
+                              Text('Remove selected', style: TextStyle(color: Colors.orangeAccent, fontSize: 12, fontWeight: FontWeight.w500)),
+                            ],
                           ),
-                        ],
+                        )
+                      else
+                        GestureDetector(
+                          onTap: () {
+                            final authState = context.read<AuthBloc>().state;
+                            if (authState is Authenticated) {
+                              context.read<CartBloc>().add(ClearCartEvent(authState.user.userId));
+                            }
+                          },
+                          child: Row(
+                            children: const [
+                              Icon(Icons.delete_outline, color: Colors.redAccent, size: 18),
+                              SizedBox(width: 4),
+                              Text('Remove all', style: TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        ),
+                    ],
                       ),
                     ),
                     AppSizes.gapH12,
@@ -241,25 +266,35 @@ class _CartPageState extends State<CartPage> {
   }
 
   Widget _buildRecommendationsGrid() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: MasonryGridView.count(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        itemCount: 5,
-        itemBuilder: (context, index) {
-          if (index == 1) {
-            return _buildNewArrivalsBanner();
-          }
-          return ProductCard(
-            product: sampleProducts[index + 10],
-            imageHeight: index % 2 == 0 ? 120 : 150,
+    return BlocBuilder<ProductBloc, ProductState>(
+      builder: (context, state) {
+        if (state is ProductLoaded && state.products.isNotEmpty) {
+          final products = List.from(state.products)..shuffle();
+          final displayProducts = products.take(5).toList();
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: MasonryGridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              itemCount: displayProducts.length,
+              itemBuilder: (context, index) {
+                if (index == 1) {
+                  return _buildNewArrivalsBanner();
+                }
+                return ProductCard(
+                  product: displayProducts[index],
+                  imageHeight: index % 2 == 0 ? 120 : 150,
+                );
+              },
+            ),
           );
-        },
-      ),
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 

@@ -9,10 +9,11 @@ abstract class CartEvent extends Equatable {
 
 class GetCartEvent extends CartEvent {
   final int customerId;
-  const GetCartEvent(this.customerId);
+  final bool showLoading;
+  const GetCartEvent(this.customerId, {this.showLoading = true});
 
   @override
-  List<Object?> get props => [customerId];
+  List<Object?> get props => [customerId, showLoading];
 }
 
 class AddToCartEvent extends CartEvent {
@@ -58,6 +59,19 @@ class RemoveFromCartEvent extends CartEvent {
 
   @override
   List<Object?> get props => [customerId, cartItemId];
+}
+
+class RemoveSelectedFromCartEvent extends CartEvent {
+  final int customerId;
+  final List<int> cartItemIds;
+
+  const RemoveSelectedFromCartEvent({
+    required this.customerId,
+    required this.cartItemIds,
+  });
+
+  @override
+  List<Object?> get props => [customerId, cartItemIds];
 }
 
 class ClearCartEvent extends CartEvent {

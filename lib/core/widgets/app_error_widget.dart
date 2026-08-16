@@ -239,7 +239,6 @@ class _BackgroundPattern extends StatelessWidget {
             );
           }
         }
-        
         return Stack(children: patternItems);
       },
     );

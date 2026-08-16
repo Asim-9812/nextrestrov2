@@ -1,5 +1,5 @@
 class ApiEndpoints {
-  static const String baseUrl = "https://xrbfi-103-1-93-10.run.pinggy-free.link"; // Replace with actual base URL
+  static const String baseUrl = "https://pets.codeinfinitynepal.com"; // Replace with actual base URL
   static const int receiveTimeout = 15000;
   static const int connectionTimeout = 15000;
 
@@ -78,6 +78,7 @@ class ApiEndpoints {
   static const String getProductById = "/api/Product/getbyid";
   static const String getAllProducts = "/api/Product/getall";
   static const String changeProductStatus = "/api/Product/changestatus";
+  static const String getEcommerceProducts = "/api/Product/getecommerceproducts";
 
   // Product Batch
   static const String saveProductBatch = "/api/ProductBatch/save";
@@ -101,4 +102,7 @@ class ApiEndpoints {
   static const String getUnitById = "/api/Unit/getbyid";
   static const String getAllUnits = "/api/Unit/getall";
   static const String changeUnitStatus = "/api/Unit/changestatus";
+
+  // Order
+  static const String getAllOrders = "/api/Order/getall";
 }
