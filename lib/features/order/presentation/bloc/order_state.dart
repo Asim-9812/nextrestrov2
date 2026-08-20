@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import '../../domain/entities/cod_order_response_entity.dart';
+import '../../domain/entities/order_detail_entity.dart';
 import '../../domain/entities/order_entity.dart';
 
 abstract class OrderState extends Equatable {
@@ -18,6 +20,22 @@ class OrderLoaded extends OrderState {
 
   @override
   List<Object?> get props => [orders];
+}
+
+class OrderDetailsLoaded extends OrderState {
+  final OrderDetailEntity order;
+  const OrderDetailsLoaded(this.order);
+
+  @override
+  List<Object?> get props => [order];
+}
+
+class CODOrderSuccess extends OrderState {
+  final CODOrderResponseEntity response;
+  const CODOrderSuccess(this.response);
+
+  @override
+  List<Object?> get props => [response];
 }
 
 class OrderError extends OrderState {

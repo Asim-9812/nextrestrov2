@@ -121,7 +121,7 @@ class _ProductBottomActionBarState extends State<ProductBottomActionBar> {
                           customerId: authState.user.userId,
                           productId: widget.product.productId ?? 0,
                           quantity: quantity,
-                          unitPrice: 1200,
+                          unitPrice: widget.product.salesPrice ?? 100,
                         ),
                       );
                   ScaffoldMessenger.of(context).showSnackBar(

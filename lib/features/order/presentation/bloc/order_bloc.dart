@@ -8,6 +8,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   OrderBloc({required this.orderRepository}) : super(OrderInitial()) {
     on<FetchOrdersEvent>(_onFetchOrders);
+    on<CreateCODOrderEvent>(_onCreateCODOrder);
+    on<FetchOrderDetailsEvent>(_onFetchOrderDetails);
   }
 
   Future<void> _onFetchOrders(FetchOrdersEvent event, Emitter<OrderState> emit) async {
@@ -16,6 +18,30 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     result.fold(
       (failure) => emit(OrderError(failure.message)),
       (orders) => emit(OrderLoaded(orders)),
+    );
+  }
+
+  Future<void> _onFetchOrderDetails(FetchOrderDetailsEvent event, Emitter<OrderState> emit) async {
+    emit(OrderLoading());
+    final result = await orderRepository.getOrderById(event.orderId);
+    result.fold(
+      (failure) => emit(OrderError(failure.message)),
+      (order) => emit(OrderDetailsLoaded(order)),
+    );
+  }
+
+  Future<void> _onCreateCODOrder(CreateCODOrderEvent event, Emitter<OrderState> emit) async {
+    emit(OrderLoading());
+    final result = await orderRepository.createCODOrder(
+      customerId: event.customerId,
+      voucherTypeId: event.voucherTypeId,
+      createdBy: event.createdBy,
+      remarks: event.remarks,
+      details: event.details,
+    );
+    result.fold(
+      (failure) => emit(OrderError(failure.message)),
+      (response) => emit(CODOrderSuccess(response)),
     );
   }
 }

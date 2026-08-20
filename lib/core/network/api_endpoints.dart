@@ -79,6 +79,7 @@ class ApiEndpoints {
   static const String getAllProducts = "/api/Product/getall";
   static const String changeProductStatus = "/api/Product/changestatus";
   static const String getEcommerceProducts = "/api/Product/getecommerceproducts";
+  static const String getEcommerceProductDetails = "/api/Product/getecommerceproductdetails";
 
   // Product Batch
   static const String saveProductBatch = "/api/ProductBatch/save";
@@ -104,5 +105,22 @@ class ApiEndpoints {
   static const String changeUnitStatus = "/api/Unit/changestatus";
 
   // Order
+  static const String getOrderById = "/api/Order/getbyid";
   static const String getAllOrders = "/api/Order/getall";
+  static const String changeOrderStatus = "/api/Order/changestatus";
+  static const String cancelOrder = "/api/Order/cancel";
+  static const String createCODOrder = "/api/Order/create-cod";
+
+  // Payment
+  static const String createPayment = "/api/Payment/create";
+  static String getPaymentById(int id) => "/api/Payment/$id";
+  static String getPaymentByOrderId(int id) => "/api/Payment/order/$id";
+  static const String initiatePayment = "/api/Payment/initiate";
+  static const String processingPayment = "/api/Payment/processing";
+  static const String paymentSuccess = "/api/Payment/success";
+  static const String paymentFailed = "/api/Payment/failed";
+  static const String paymentUnknown = "/api/Payment/unknown";
+  static const String cancelPayment = "/api/Payment/cancel";
+  static const String unresolvedPayment = "/api/Payment/unresolved";
+  static const String esewaPaymentSuccess = "/api/Payment/esewa/success";
 }

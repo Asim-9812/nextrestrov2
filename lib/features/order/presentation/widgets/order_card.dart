@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../injection_container.dart' as di;
+import '../bloc/order_bloc.dart';
 import '../../domain/entities/order_entity.dart';
+import '../pages/order_details_page.dart';
 
 class OrderCard extends StatelessWidget {
   final OrderEntity order;
@@ -18,7 +22,17 @@ class OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => di.sl<OrderBloc>(),
+              child: OrderDetailsPage(orderId: order.orderId),
+            ),
+          ),
+        );
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
@@ -48,7 +62,7 @@ class OrderCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Order ${order.orderNumber}',
+                        'Order #${order.orderId} ${order.orderNumber}',
                         style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold, fontSize: 14),
                       ),
                       const SizedBox(height: 4),
@@ -94,16 +108,6 @@ class OrderCard extends StatelessWidget {
                     const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
                   ],
                 ),
-              ],
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
-              child: Divider(height: 1),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                _buildActionButton(context),
               ],
             ),
           ],
@@ -235,33 +239,6 @@ class OrderCard extends StatelessWidget {
           style: const TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.w500),
         ),
       ],
-    );
-  }
-
-  Widget _buildActionButton(BuildContext context) {
-    String label = 'View Details';
-    Color bgColor = const Color(0xFFF2EEFF);
-    Color textColor = AppColors.primary;
-
-    if (order.status == OrderStatus.toPay) {
-      label = 'Pay Now';
-      bgColor = AppColors.primary;
-      textColor = Colors.white;
-    } else if (order.status == OrderStatus.shipped) {
-      label = 'Track Order';
-    }
-
-    return ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        backgroundColor: bgColor,
-        foregroundColor: textColor,
-        elevation: 0,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-        minimumSize: const Size(0, 36),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-      child: Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
     );
   }
 }

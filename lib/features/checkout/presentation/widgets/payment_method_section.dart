@@ -3,7 +3,8 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 
 class PaymentMethodSection extends StatefulWidget {
-  const PaymentMethodSection({super.key});
+  final Function(int) onPaymentMethodChanged;
+  const PaymentMethodSection({super.key, required this.onPaymentMethodChanged});
 
   @override
   State<PaymentMethodSection> createState() => _PaymentMethodSectionState();
@@ -11,6 +12,15 @@ class PaymentMethodSection extends StatefulWidget {
 
 class _PaymentMethodSectionState extends State<PaymentMethodSection> {
   int _selectedMethodIndex = 0; // 0: COD, 1: eSewa, 2: Khalti
+
+  @override
+  void initState() {
+    super.initState();
+    // Report initial selection
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onPaymentMethodChanged(_selectedMethodIndex);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +98,10 @@ class _PaymentMethodSectionState extends State<PaymentMethodSection> {
   }) {
     final isSelected = _selectedMethodIndex == index;
     return GestureDetector(
-      onTap: () => setState(() => _selectedMethodIndex = index),
+      onTap: () {
+        setState(() => _selectedMethodIndex = index);
+        widget.onPaymentMethodChanged(index);
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),

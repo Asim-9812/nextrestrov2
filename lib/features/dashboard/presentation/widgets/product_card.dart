@@ -140,11 +140,11 @@ class ProductCard extends StatelessWidget {
                                         customerId: authState.user.userId,
                                         productId: product.productId ?? 0,
                                         quantity: 1,
-                                        unitPrice: product.price,
+                                        unitPrice: product.salesPrice ?? 100,
                                       ),
                                     );
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
+                                   SnackBar(
                                     content: Text('${product.name} added to cart!'),
                                     duration: const Duration(seconds: 1),
                                     backgroundColor: AppColors.primary,

@@ -5,9 +5,12 @@ import 'package:divinepets/core/constants/app_colors.dart';
 import 'package:divinepets/core/constants/app_sizes.dart';
 import 'package:divinepets/core/constants/app_text_styles.dart';
 import 'package:divinepets/features/dashboard/presentation/pages/main_navigation_page.dart';
+import 'package:intl/intl.dart';
+import '../../../order/domain/entities/cod_order_response_entity.dart';
 
 class ThankYouPage extends StatelessWidget {
-  const ThankYouPage({super.key});
+  final CODOrderResponseEntity? orderResponse;
+  const ThankYouPage({super.key, this.orderResponse});
 
   @override
   Widget build(BuildContext context) {
@@ -96,14 +99,14 @@ class ThankYouPage extends StatelessWidget {
                             _buildOrderInfoItem(
                               icon: Icons.shopping_bag_outlined,
                               label: 'Order Number',
-                              value: 'DYWE678UUJJSHD',
+                              value: orderResponse?.transactionReference ?? 'N/A',
                               showCopy: true,
                             ),
                             const VerticalDivider(color: Colors.grey, thickness: 0.2, indent: 5, endIndent: 5),
                             _buildOrderInfoItem(
                               icon: Icons.calendar_today_outlined,
                               label: 'Order Date',
-                              value: 'May 25, 2026 11:15 AM',
+                              value: DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.now()),
                             ),
                           ],
                         ),
