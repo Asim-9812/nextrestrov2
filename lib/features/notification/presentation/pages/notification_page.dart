@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
-import '../../../order_tracking/presentation/pages/order_tracking_page.dart';
+import '../../../order/presentation/pages/my_orders_page.dart';
 import '../../../profile/presentation/pages/settings_page.dart';
 import '../../domain/notification_model.dart';
 import '../widgets/notification_tile.dart';
@@ -50,7 +50,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
         onAction: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const OrderTrackingPage()),
+            MaterialPageRoute(builder: (context) => const MyOrdersPage()),
           );
         },
       ),
@@ -124,7 +124,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
           style: AppTextStyles.h2.copyWith(
             color: AppColors.primary, 
             fontWeight: FontWeight.w900,
-            fontSize: 24,
+            fontSize: 18,
           ),
         ),
         centerTitle: false,

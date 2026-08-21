@@ -66,7 +66,7 @@ class _MyPetsPageState extends State<MyPetsPage> {
                   style: AppTextStyles.h2.copyWith(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w900,
-                    fontSize: 22,
+                    fontSize: 18,
                   ),
                 ),
                 const SizedBox(width: 6),

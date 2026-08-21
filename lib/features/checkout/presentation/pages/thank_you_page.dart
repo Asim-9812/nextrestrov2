@@ -64,7 +64,11 @@ class ThankYouPage extends StatelessWidget {
                     delay: const Duration(milliseconds: 400),
                     child: Text(
                       'Thank You!',
-                      style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w900, fontSize: 32),
+                      style: AppTextStyles.h1.copyWith(
+                        fontWeight: FontWeight.w900, 
+                        fontSize: 28,
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                   

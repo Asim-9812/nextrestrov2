@@ -50,7 +50,7 @@ class _CategoryProductsPageState extends State<CategoryProductsPage> {
           style: AppTextStyles.h2.copyWith(
             color: AppColors.primary,
             fontWeight: FontWeight.w900,
-            fontSize: 22,
+            fontSize: 18,
           ),
         ),
         centerTitle: false,

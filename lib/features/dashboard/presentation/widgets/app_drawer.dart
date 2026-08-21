@@ -10,7 +10,6 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import '../../../notification/presentation/pages/notification_page.dart';
-import '../../../order_tracking/presentation/pages/order_tracking_page.dart';
 import '../../../order/presentation/pages/my_orders_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../pets/presentation/pages/my_pets_page.dart';
@@ -215,7 +214,7 @@ class AppDrawer extends StatelessWidget {
         Navigator.pop(context); // Close drawer
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const OrderTrackingPage()),
+          MaterialPageRoute(builder: (context) => const MyOrdersPage()),
         );
       },
       child: Column(

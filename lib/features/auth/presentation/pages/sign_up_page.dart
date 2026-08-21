@@ -129,7 +129,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+                          icon: const Icon(Icons.arrow_back, color: AppColors.primary, size: 28),
                           onPressed: () => Navigator.pop(context),
                         ),
                         AppSizes.gapH16,

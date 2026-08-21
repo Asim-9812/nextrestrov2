@@ -1,12 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:divinepets/core/constants/app_colors.dart';
+import '../../../order/domain/entities/order_detail_entity.dart';
+import '../../../order/domain/entities/order_entity.dart';
 
 class TrackingStatusCard extends StatelessWidget {
-  const TrackingStatusCard({super.key});
+  final OrderDetailEntity? order;
+  const TrackingStatusCard({super.key, this.order});
 
   @override
   Widget build(BuildContext context) {
+    // Mapping OrderStatus to StepStatus
+    StepStatus confirmedStatus = StepStatus.inactive;
+    StepStatus processingStatus = StepStatus.inactive;
+    StepStatus shippingStatus = StepStatus.inactive;
+    StepStatus deliveredStatus = StepStatus.inactive;
+
+    if (order != null) {
+      switch (order!.orderStatus) {
+        case OrderStatus.toPay:
+          confirmedStatus = StepStatus.pending;
+          break;
+        case OrderStatus.processing:
+          confirmedStatus = StepStatus.completed;
+          processingStatus = StepStatus.pending;
+          break;
+        case OrderStatus.shipped:
+          confirmedStatus = StepStatus.completed;
+          processingStatus = StepStatus.completed;
+          shippingStatus = StepStatus.pending;
+          break;
+        case OrderStatus.delivered:
+          confirmedStatus = StepStatus.completed;
+          processingStatus = StepStatus.completed;
+          shippingStatus = StepStatus.completed;
+          deliveredStatus = StepStatus.completed;
+          break;
+        case OrderStatus.cancelled:
+          // Just show them as they are or mark as inactive
+          break;
+      }
+    } else {
+      // Default static values if order is null
+      confirmedStatus = StepStatus.completed;
+      processingStatus = StepStatus.completed;
+      shippingStatus = StepStatus.pending;
+    }
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -25,17 +65,17 @@ class TrackingStatusCard extends StatelessWidget {
               ),
               Row(
                 children: [
-                  const Text(
-                    'Tracking id: NP8273798289',
-                    style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.w500),
+                  Text(
+                    'Order ID: ${order?.orderId ?? 'NP8273798289'}',
+                    style: const TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(width: 4),
                   GestureDetector(
                     onTap: () {
-                      Clipboard.setData(const ClipboardData(text: 'NP8273798289'));
+                      Clipboard.setData(ClipboardData(text: order?.orderId.toString() ?? 'NP8273798289'));
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Tracking ID copied!'),
+                          content: Text('Order ID copied!'),
                           behavior: SnackBarBehavior.floating,
                           duration: Duration(seconds: 1),
                         ),
@@ -55,26 +95,26 @@ class TrackingStatusCard extends StatelessWidget {
               _buildStep(
                 icon: Icons.receipt_long,
                 label: 'Order\nConfirmed',
-                status: StepStatus.completed,
+                status: confirmedStatus,
               ),
-              _buildLine(StepStatus.completed), // Connects 2 completed steps -> Solid
+              _buildLine(confirmedStatus),
               _buildStep(
                 icon: Icons.inventory_2,
                 label: 'Processing',
-                status: StepStatus.completed,
+                status: processingStatus,
               ),
-              _buildLine(StepStatus.pending), // Connects to a pending step -> Dashed
+              _buildLine(processingStatus),
               _buildStep(
                 icon: Icons.local_shipping,
                 label: 'On the way',
-                status: StepStatus.pending,
-                showBadge: true,
+                status: shippingStatus,
+                showBadge: shippingStatus == StepStatus.pending,
               ),
-              _buildLine(StepStatus.inactive), // Connects to inactive -> Dashed/Grey
+              _buildLine(shippingStatus),
               _buildStep(
                 icon: Icons.home,
                 label: 'Delivered',
-                status: StepStatus.inactive,
+                status: deliveredStatus,
               ),
             ],
           ),

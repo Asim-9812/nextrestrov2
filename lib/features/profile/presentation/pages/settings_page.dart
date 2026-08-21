@@ -31,7 +31,7 @@ class _SettingsPageState extends State<SettingsPage> {
           style: AppTextStyles.h2.copyWith(
             color: AppColors.primary,
             fontWeight: FontWeight.w900,
-            fontSize: 24,
+            fontSize: 18,
           ),
         ),
         centerTitle: false,

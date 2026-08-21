@@ -138,7 +138,7 @@ class WishlistPage extends StatelessWidget {
                       style: AppTextStyles.h3.copyWith(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w900,
-                        fontSize: 20,
+                        fontSize: 18,
                       ),
                     ),
                     const SizedBox(width: 6),

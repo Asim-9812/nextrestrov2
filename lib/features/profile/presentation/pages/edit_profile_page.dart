@@ -83,7 +83,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
         title: Text(
           'Edit Profile',
-          style: AppTextStyles.h2.copyWith(color: AppColors.primary, fontWeight: FontWeight.w900, fontSize: 22),
+          style: AppTextStyles.h2.copyWith(
+            color: AppColors.primary, 
+            fontWeight: FontWeight.w900, 
+            fontSize: 18,
+          ),
         ),
         centerTitle: false,
         actions: [

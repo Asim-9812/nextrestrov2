@@ -26,7 +26,7 @@ class ProductDetailsPage extends StatelessWidget {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary, size: 28),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [

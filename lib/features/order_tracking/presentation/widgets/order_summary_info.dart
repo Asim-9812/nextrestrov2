@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:divinepets/core/constants/app_colors.dart';
 import 'package:divinepets/core/constants/app_sizes.dart';
+import 'package:intl/intl.dart';
+import '../../../order/domain/entities/order_detail_entity.dart';
 
 class OrderSummaryInfo extends StatelessWidget {
-  const OrderSummaryInfo({super.key});
+  final OrderDetailEntity? order;
+  const OrderSummaryInfo({super.key, this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +33,8 @@ class OrderSummaryInfo extends StatelessWidget {
               Expanded(
               child: _buildInfoBlock(
                 context,
-                'Order Number',
-                'DYWE678UUJJSHD',
+                'Order ID',
+                order != null ? '#${order!.orderId}' : 'DYWE678UUJJSHD',
                 isPrimary: true,
                 hasCopy: true,
               ),
@@ -57,7 +60,7 @@ class OrderSummaryInfo extends StatelessWidget {
               child: _buildInfoBlock(
                 context,
                 'Order Date',
-                'May 25, 2026 11:15 AM',
+                order != null ? DateFormat('MMM dd, yyyy hh:mm a').format(order!.orderDate) : 'May 25, 2026 11:15 AM',
               ),
             ),
             const SizedBox(width: 16),
@@ -71,12 +74,12 @@ class OrderSummaryInfo extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     RichText(
-                      text: const TextSpan(
-                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 11),
+                      text: TextSpan(
+                        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 11),
                         children: [
-                          TextSpan(text: 'May 27'),
-                          TextSpan(text: ' to ', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal, fontSize: 10)),
-                          TextSpan(text: 'May 31, 2026'),
+                          TextSpan(text: order != null ? DateFormat('MMM dd').format(order!.orderDate.add(const Duration(days: 3))) : 'May 27'),
+                          const TextSpan(text: ' to ', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal, fontSize: 10)),
+                          TextSpan(text: order != null ? DateFormat('MMM dd, yyyy').format(order!.orderDate.add(const Duration(days: 7))) : 'May 31, 2026'),
                         ],
                       ),
                     ),
@@ -93,12 +96,12 @@ class OrderSummaryInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Total Paid',
+                'Total Amount',
                 style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold),
               ),
               Text(
-                'Rs. 1400',
-                style: TextStyle(
+                'Rs. ${order?.totalAmount.toStringAsFixed(0) ?? '1400'}',
+                style: const TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w900,
                   fontSize: 18,

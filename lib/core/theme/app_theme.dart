@@ -24,15 +24,19 @@ class AppTheme {
     elevatedButtonTheme: AppButtonTheme.lightElevatedButtonTheme,
     outlinedButtonTheme: AppButtonTheme.lightOutlinedButtonTheme,
     inputDecorationTheme: AppInputTheme.lightInputDecorationTheme,
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       elevation: 0,
       centerTitle: false,
       scrolledUnderElevation: 0,
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
-      iconTheme: IconThemeData(color: AppColors.textPrimary, size: 24),
-      actionsIconTheme: IconThemeData(color: AppColors.textPrimary, size: 24),
-      titleTextStyle: AppTextStyles.h3,
+      iconTheme: const IconThemeData(color: AppColors.primary, size: 28),
+      actionsIconTheme: const IconThemeData(color: AppColors.primary, size: 28),
+      titleTextStyle: AppTextStyles.h3.copyWith(
+        fontSize: 18,
+        fontWeight: FontWeight.w900,
+        color: AppColors.primary,
+      ),
     ),
     checkboxTheme: CheckboxThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),

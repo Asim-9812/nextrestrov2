@@ -47,10 +47,17 @@ class _CartPageState extends State<CartPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary, size: 28),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('Cart', style: AppTextStyles.h2.copyWith(color: AppColors.primary)),
+        title: Text(
+          'Cart', 
+          style: AppTextStyles.h2.copyWith(
+            color: AppColors.primary,
+            fontSize: 18,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
         centerTitle: true,
       ),
       body: BlocBuilder<CartBloc, CartState>(

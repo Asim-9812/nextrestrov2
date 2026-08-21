@@ -92,7 +92,7 @@ class _PetEditPageState extends State<PetEditPage> {
           style: AppTextStyles.h2.copyWith(
             color: AppColors.primary,
             fontWeight: FontWeight.w900,
-            fontSize: 22,
+            fontSize: 18,
           ),
         ),
         centerTitle: false,
