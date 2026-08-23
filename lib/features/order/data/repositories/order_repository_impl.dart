@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/cod_order_response_entity.dart';
+import '../../domain/entities/delivery_entity.dart';
 import '../../domain/entities/order_detail_entity.dart';
 import '../../domain/entities/order_entity.dart';
 import '../../domain/repositories/order_repository.dart';
@@ -42,6 +43,7 @@ class OrderRepositoryImpl implements OrderRepository {
     required int voucherTypeId,
     int? createdBy,
     String? remarks,
+    required DeliveryEntity delivery,
     required List<Map<String, dynamic>> details,
   }) async {
     try {
@@ -50,6 +52,7 @@ class OrderRepositoryImpl implements OrderRepository {
         voucherTypeId: voucherTypeId,
         createdBy: createdBy,
         remarks: remarks,
+        delivery: delivery.toJson(),
         details: details,
       );
       return Right(response);

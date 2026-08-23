@@ -10,6 +10,7 @@ import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../order/presentation/bloc/order_bloc.dart';
 import '../../../order/presentation/bloc/order_event.dart';
 import '../../../order/presentation/bloc/order_state.dart';
+import '../../../order/domain/entities/delivery_entity.dart';
 import '../widgets/address_section.dart';
 import '../widgets/delivery_details_section.dart';
 import '../widgets/payment_method_section.dart';
@@ -25,6 +26,7 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   int _selectedPaymentMethod = 0; // 0: COD, 1: eSewa, 2: Khalti
+  DeliveryEntity? _deliveryAddress;
 
   @override
   Widget build(BuildContext context) {
@@ -90,19 +92,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
               AppSizes.gapH16,
               
-              // Billing Address Section
-              const AddressSection(
-                title: 'Billing Address',
-                icon: Icons.location_on,
-              ),
-              
-              AppSizes.gapH16,
-              
-              // Delivery Address Section
-              const AddressSection(
-                title: 'Delivery Address',
-                icon: Icons.location_on,
-              ),
+            // Delivery Address Section
+            AddressSection(
+              title: 'Delivery Address',
+              icon: Icons.location_on,
+              onAddressSelected: (item) {
+                setState(() {
+                  _deliveryAddress = DeliveryEntity(
+                    address: item.addressController.text,
+                    city: item.cityController.text,
+                    state: item.stateController.text,
+                    postalCode: item.postalCodeController.text,
+                    landmark: item.landmarkController.text,
+                    deliveryNotes: item.deliveryNotesController.text,
+                  );
+                });
+              },
+            ),
               
               AppSizes.gapH16,
               
@@ -259,6 +265,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     if (_selectedPaymentMethod == 0) {
       // COD
+      if (_deliveryAddress == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a delivery address')),
+        );
+        return;
+      }
+
       final details = cartState.cart.items.map((item) {
         return {
           'productId': item.productId,
@@ -274,6 +287,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               voucherTypeId: 1,
               createdBy: authState.user.userId,
               remarks: 'Order placed from mobile app',
+              delivery: _deliveryAddress!,
               details: details,
             ),
           );

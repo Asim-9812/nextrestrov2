@@ -25,11 +25,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   // Address Lists
   final List<AddressData> _billingAddresses = [
-    AddressData(label: 'Home', line1: 'Asan, Kathmandu - 27', line2: 'Near Annapurna Mandir', city: 'Kathmandu', province: 'Bagmati', houseNo: 'BA12'),
+    AddressData(
+      label: 'Home', 
+      address: 'Asan, Kathmandu - 27', 
+      city: 'Kathmandu', 
+      state: 'Bagmati', 
+      postalCode: '44600',
+      landmark: 'Near Annapurna Mandir',
+      deliveryNotes: '',
+    ),
   ];
 
   final List<AddressData> _deliveryAddresses = [
-    AddressData(label: 'Office', line1: 'New Baneshwor', line2: 'Main Road', city: 'Kathmandu', province: 'Bagmati', houseNo: '402'),
+    AddressData(
+      label: 'Office', 
+      address: 'New Baneshwor', 
+      city: 'Kathmandu', 
+      state: 'Bagmati', 
+      postalCode: '44601',
+      landmark: 'Main Road',
+      deliveryNotes: 'Call before delivery',
+    ),
   ];
 
   final List<PetModel> _myPets = [
@@ -146,13 +162,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
               
               AppSizes.gapH32,
               _buildHeaderWithAction('Billing Address', () {
-                setState(() => _billingAddresses.add(AddressData(label: '', line1: '', line2: '', city: 'Kathmandu', province: 'Bagmati', houseNo: '', isEditing: true)));
+                setState(() => _billingAddresses.add(AddressData(
+                  label: '', 
+                  address: '', 
+                  city: 'Kathmandu', 
+                  state: 'Bagmati', 
+                  postalCode: '',
+                  landmark: '',
+                  deliveryNotes: '',
+                  isEditing: true
+                )));
               }),
               ..._billingAddresses.map((addr) => _buildAddressItem(addr, () => setState(() => _billingAddresses.remove(addr)))),
               
               AppSizes.gapH32,
               _buildHeaderWithAction('Delivery Address', () {
-                setState(() => _deliveryAddresses.add(AddressData(label: '', line1: '', line2: '', city: 'Kathmandu', province: 'Bagmati', houseNo: '', isEditing: true)));
+                setState(() => _deliveryAddresses.add(AddressData(
+                  label: '', 
+                  address: '', 
+                  city: 'Kathmandu', 
+                  state: 'Bagmati', 
+                  postalCode: '',
+                  landmark: '',
+                  deliveryNotes: '',
+                  isEditing: true
+                )));
               }),
               ..._deliveryAddresses.map((addr) => _buildAddressItem(addr, () => setState(() => _deliveryAddresses.remove(addr)))),
               
@@ -334,19 +368,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
           children: [
             _buildInputField('Label (e.g. Home, Office)', TextEditingController(text: addr.label), onChanged: (v) => addr.label = v, hint: 'Home / Office'),
             const SizedBox(height: 10),
-            _buildInputField('Address Line 1', TextEditingController(text: addr.line1), onChanged: (v) => addr.line1 = v, hint: 'Asan, Kathmandu - 27'),
-            const SizedBox(height: 10),
-            _buildInputField('Address Line 2', TextEditingController(text: addr.line2), onChanged: (v) => addr.line2 = v, hint: 'Nearby landmark'),
+            _buildInputField('Street Address', TextEditingController(text: addr.address), onChanged: (v) => addr.address = v, hint: 'Asan, Kathmandu - 27'),
             const SizedBox(height: 10),
             Row(
               children: [
-                Expanded(child: _buildDropdownField('City', addr.city, ['Kathmandu', 'Pokhara'], (v) => setState(() => addr.city = v!), fontSize: 11)),
+                Expanded(child: _buildInputField('City', TextEditingController(text: addr.city), onChanged: (v) => addr.city = v, hint: 'Kathmandu', fontSize: 11)),
                 const SizedBox(width: 8),
-                Expanded(child: _buildDropdownField('Province', addr.province, ['Bagmati', 'Gandaki'], (v) => setState(() => addr.province = v!), fontSize: 11)),
-                const SizedBox(width: 8),
-                Expanded(child: _buildInputField('House No.', TextEditingController(text: addr.houseNo), onChanged: (v) => addr.houseNo = v, hint: 'BA12', fontSize: 11)),
+                Expanded(child: _buildInputField('State / Province', TextEditingController(text: addr.state), onChanged: (v) => addr.state = v, hint: 'Bagmati', fontSize: 11)),
               ],
             ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(child: _buildInputField('Postal Code', TextEditingController(text: addr.postalCode), onChanged: (v) => addr.postalCode = v, hint: '44600', fontSize: 11)),
+                const SizedBox(width: 8),
+                Expanded(child: _buildInputField('Landmark', TextEditingController(text: addr.landmark), onChanged: (v) => addr.landmark = v, hint: 'Near Temple', fontSize: 11)),
+              ],
+            ),
+            const SizedBox(height: 10),
+            _buildInputField('Delivery Notes', TextEditingController(text: addr.deliveryNotes), onChanged: (v) => addr.deliveryNotes = v, hint: 'Extra instructions...'),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -400,7 +440,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(addr.label.isEmpty ? 'Address' : addr.label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                Text('${addr.line1}, ${addr.line2}, ${addr.city}', style: const TextStyle(color: Colors.grey, fontSize: 11), maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text('${addr.address}, ${addr.city}, ${addr.state} ${addr.postalCode}', style: const TextStyle(color: Colors.grey, fontSize: 11), maxLines: 1, overflow: TextOverflow.ellipsis),
+                if (addr.landmark.isNotEmpty)
+                  Text('Landmark: ${addr.landmark}', style: const TextStyle(color: Colors.grey, fontSize: 10), maxLines: 1, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),

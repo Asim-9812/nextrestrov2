@@ -37,6 +37,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       voucherTypeId: event.voucherTypeId,
       createdBy: event.createdBy,
       remarks: event.remarks,
+      delivery: event.delivery,
       details: event.details,
     );
     result.fold(

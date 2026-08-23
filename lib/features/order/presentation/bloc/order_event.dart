@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../domain/entities/delivery_entity.dart';
+
 abstract class OrderEvent extends Equatable {
   const OrderEvent();
 
@@ -20,6 +22,7 @@ class CreateCODOrderEvent extends OrderEvent {
   final int voucherTypeId;
   final int? createdBy;
   final String? remarks;
+  final DeliveryEntity delivery;
   final List<Map<String, dynamic>> details;
 
   const CreateCODOrderEvent({
@@ -27,11 +30,12 @@ class CreateCODOrderEvent extends OrderEvent {
     required this.voucherTypeId,
     this.createdBy,
     this.remarks,
+    required this.delivery,
     required this.details,
   });
 
   @override
-  List<Object?> get props => [customerId, voucherTypeId, createdBy, remarks, details];
+  List<Object?> get props => [customerId, voucherTypeId, createdBy, remarks, delivery, details];
 }
 
 class FetchOrderDetailsEvent extends OrderEvent {

@@ -12,6 +12,7 @@ abstract class OrderRemoteDataSource {
     required int voucherTypeId,
     int? createdBy,
     String? remarks,
+    required Map<String, dynamic> delivery,
     required List<Map<String, dynamic>> details,
   });
 }
@@ -61,6 +62,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
     required int voucherTypeId,
     int? createdBy,
     String? remarks,
+    required Map<String, dynamic> delivery,
     required List<Map<String, dynamic>> details,
   }) async {
     try {
@@ -71,6 +73,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
           'voucherTypeId': voucherTypeId,
           'createdBy': createdBy,
           'remarks': remarks,
+          'delivery': delivery,
           'details': details,
         },
       );

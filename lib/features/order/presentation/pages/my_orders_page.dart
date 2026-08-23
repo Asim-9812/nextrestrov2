@@ -264,50 +264,58 @@ class _MyOrdersPageState extends State<MyOrdersPage> with SingleTickerProviderSt
   Widget _buildSupportBanner() {
     return Container(
       margin: const EdgeInsets.only(top: 8, bottom: 24),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFF6F4FF),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primary.withOpacity(0.1)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.shade100),
       ),
       child: Row(
         children: [
-          Container(
-            height: 50,
-            width: 50,
-            decoration: BoxDecoration(
-              color: AppColors.primarySoft,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(Icons.headset_mic_rounded, color: AppColors.primary),
-          ),
-          AppSizes.gapW16,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Need help with your order?',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  'Need Help?',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
+                const SizedBox(height: 4),
                 Text(
-                  'We\'re here to help you 24/7',
+                  'Our support team is here to help you 24/7',
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
                 ),
               ],
             ),
           ),
-          OutlinedButton(
-            onPressed: () {},
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: AppColors.primary),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-            ),
-            child: const Text('Contact Support', style: TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold)),
+          Row(
+            children: [
+              _buildHelpActionIcon(Icons.phone, const Color(0xFFE67E22)),
+              const SizedBox(width: 12),
+              _buildHelpActionIcon(Icons.chat_bubble, Colors.orange),
+            ],
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildHelpActionIcon(IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.grey.shade100),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Icon(icon, color: color, size: 20),
     );
   }
 }

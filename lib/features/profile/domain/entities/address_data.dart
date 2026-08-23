@@ -1,19 +1,21 @@
 class AddressData {
   String label;
-  String line1;
-  String line2;
+  String address;
   String city;
-  String province;
-  String houseNo;
+  String state;
+  String postalCode;
+  String landmark;
+  String deliveryNotes;
   bool isEditing;
 
   AddressData({
     required this.label,
-    required this.line1,
-    required this.line2,
+    required this.address,
     required this.city,
-    required this.province,
-    required this.houseNo,
+    required this.state,
+    required this.postalCode,
+    required this.landmark,
+    required this.deliveryNotes,
     this.isEditing = false,
   });
 }

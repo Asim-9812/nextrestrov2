@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/failure.dart';
 import '../entities/cod_order_response_entity.dart';
+import '../entities/delivery_entity.dart';
 import '../entities/order_detail_entity.dart';
 import '../entities/order_entity.dart';
 
@@ -14,6 +15,7 @@ abstract class OrderRepository {
     required int voucherTypeId,
     int? createdBy,
     String? remarks,
+    required DeliveryEntity delivery,
     required List<Map<String, dynamic>> details,
   });
 }

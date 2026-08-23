@@ -5,29 +5,51 @@ import '../../../../core/constants/app_sizes.dart';
 class AddressItem {
   final TextEditingController titleController;
   final TextEditingController addressController;
+  final TextEditingController cityController;
+  final TextEditingController stateController;
+  final TextEditingController postalCodeController;
+  final TextEditingController landmarkController;
+  final TextEditingController deliveryNotesController;
   bool isEditing;
 
   AddressItem({
     required String title,
     required String address,
+    String city = '',
+    String state = '',
+    String postalCode = '',
+    String landmark = '',
+    String deliveryNotes = '',
     this.isEditing = false,
   }) : titleController = TextEditingController(text: title),
-       addressController = TextEditingController(text: address);
+       addressController = TextEditingController(text: address),
+       cityController = TextEditingController(text: city),
+       stateController = TextEditingController(text: state),
+       postalCodeController = TextEditingController(text: postalCode),
+       landmarkController = TextEditingController(text: landmark),
+       deliveryNotesController = TextEditingController(text: deliveryNotes);
 
   void dispose() {
     titleController.dispose();
     addressController.dispose();
+    cityController.dispose();
+    stateController.dispose();
+    postalCodeController.dispose();
+    landmarkController.dispose();
+    deliveryNotesController.dispose();
   }
 }
 
 class AddressSection extends StatefulWidget {
   final String title;
   final IconData icon;
+  final Function(AddressItem) onAddressSelected;
 
   const AddressSection({
     super.key,
     required this.title,
     required this.icon,
+    required this.onAddressSelected,
   });
 
   @override
@@ -54,12 +76,26 @@ class _AddressSectionState extends State<AddressSection> {
     // Initialize default addresses
     _addresses.add(AddressItem(
       title: 'Home', 
-      address: 'Asan, Kathmandu-27\nKathmandu, Bagmati Province\nNepal'
+      address: 'Asan, Kathmandu-27',
+      city: 'Kathmandu',
+      state: 'Bagmati',
+      postalCode: '44600',
+      landmark: 'Near Annapurna Mandir'
     ));
     _addresses.add(AddressItem(
       title: 'Office', 
-      address: 'New Baneshwor, Kathmandu'
+      address: 'New Baneshwor',
+      city: 'Kathmandu',
+      state: 'Bagmati',
+      postalCode: '44601'
     ));
+
+    // Report initial selection
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_addresses.isNotEmpty) {
+        widget.onAddressSelected(_addresses[_selectedAddressIndex]);
+      }
+    });
   }
 
   @override
@@ -180,8 +216,7 @@ class _AddressSectionState extends State<AddressSection> {
             final item = _addresses[index];
             return _buildAddressTile(
               index: index,
-              titleController: item.titleController,
-              addressController: item.addressController,
+              item: item,
               isEditing: item.isEditing,
               onEditToggle: () => setState(() => item.isEditing = !item.isEditing),
             );
@@ -225,14 +260,16 @@ class _AddressSectionState extends State<AddressSection> {
 
   Widget _buildAddressTile({
     required int index, 
-    required TextEditingController titleController, 
-    required TextEditingController addressController,
+    required AddressItem item,
     required bool isEditing,
     required VoidCallback onEditToggle,
   }) {
     final isSelected = _selectedAddressIndex == index;
     return GestureDetector(
-      onTap: () => setState(() => _selectedAddressIndex = index),
+      onTap: () {
+        setState(() => _selectedAddressIndex = index);
+        widget.onAddressSelected(_addresses[index]);
+      },
       child: Container(
         margin: const EdgeInsets.only(top: 8),
         padding: const EdgeInsets.all(12),
@@ -258,53 +295,91 @@ class _AddressSectionState extends State<AddressSection> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   isEditing 
-                    ? TextField(
-                        controller: titleController,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                        decoration: const InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.symmetric(vertical: 4),
-                          border: InputBorder.none,
-                          hintText: 'Label (e.g. Home)',
-                        ),
-                      )
-                    : Text(titleController.text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                  const SizedBox(height: 4),
-                  isEditing 
-                    ? TextField(
-                        controller: addressController,
-                        maxLines: null,
-                        style: const TextStyle(fontSize: 11),
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 4),
-                          isDense: true,
-                          border: InputBorder.none,
-                          hintText: 'Enter new address...',
-                        ),
-                      )
-                    : Text(
-                        addressController.text,
-                        style: TextStyle(color: Colors.grey.shade600, fontSize: 11, height: 1.4),
+                    ? _buildSmallTextField(item.titleController, 'Label (e.g. Home)')
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(item.titleController.text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                          _buildEditButton(index, isEditing, onEditToggle),
+                        ],
                       ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: onEditToggle,
-              style: TextButton.styleFrom(minimumSize: Size.zero, padding: EdgeInsets.zero),
-              child: Row(
-                children: [
-                  Icon(isEditing ? Icons.check : Icons.edit, size: 14, color: AppColors.primary),
-                  const SizedBox(width: 4),
-                  Text(
-                    isEditing ? 'Save' : 'Edit', 
-                    style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold)
-                  ),
+                  const SizedBox(height: 8),
+                  isEditing 
+                    ? Column(
+                        children: [
+                          _buildSmallTextField(item.addressController, 'Street Address'),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(child: _buildSmallTextField(item.cityController, 'City')),
+                              const SizedBox(width: 8),
+                              Expanded(child: _buildSmallTextField(item.stateController, 'State')),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(child: _buildSmallTextField(item.postalCodeController, 'Postal Code')),
+                              const SizedBox(width: 8),
+                              Expanded(child: _buildSmallTextField(item.landmarkController, 'Landmark')),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          _buildSmallTextField(item.deliveryNotesController, 'Delivery Notes (Optional)'),
+                          const SizedBox(height: 8),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: _buildEditButton(index, isEditing, onEditToggle),
+                          ),
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${item.addressController.text}, ${item.cityController.text}',
+                            style: TextStyle(color: Colors.grey.shade600, fontSize: 11, height: 1.4),
+                          ),
+                          Text(
+                            '${item.stateController.text} ${item.postalCodeController.text}',
+                            style: TextStyle(color: Colors.grey.shade600, fontSize: 11, height: 1.4),
+                          ),
+                          if (item.landmarkController.text.isNotEmpty)
+                            Text(
+                              'Landmark: ${item.landmarkController.text}',
+                              style: TextStyle(color: Colors.grey.shade600, fontSize: 11, height: 1.4),
+                            ),
+                        ],
+                      ),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildEditButton(int index, bool isEditing, VoidCallback onEditToggle) {
+    return TextButton(
+      onPressed: () {
+        onEditToggle();
+        // If we just finished editing, report the update
+        if (isEditing) {
+          widget.onAddressSelected(_addresses[index]);
+        }
+      },
+      style: TextButton.styleFrom(minimumSize: Size.zero, padding: EdgeInsets.zero),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(isEditing ? Icons.check : Icons.edit, size: 14, color: AppColors.primary),
+          const SizedBox(width: 4),
+          Text(
+            isEditing ? 'Save' : 'Edit', 
+            style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold)
+          ),
+        ],
       ),
     );
   }
