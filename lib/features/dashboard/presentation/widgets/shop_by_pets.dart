@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../core/utils/sample_data.dart';
+import '../../../pet_type/domain/entities/pet_type_entity.dart';
 import '../../../pet_type/presentation/bloc/pet_type_bloc.dart';
 import '../../../pet_type/presentation/bloc/pet_type_state.dart';
 import '../../../pet_type/presentation/pages/pet_type_products_page.dart';
@@ -53,40 +55,46 @@ class ShopByPets extends StatelessWidget {
             height: 110,
             child: Center(child: CircularProgressIndicator()),
           );
-        } else if (state is PetTypeLoaded) {
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: List.generate(state.petTypes.length, (index) {
-                final petType = state.petTypes[index];
-                
-                return Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PetTypeProductsPage(petType: petType),
-                        ),
-                      );
-                    },
-                    child: PetCategoryCard(
-                      title: '${petType.petTypeName} Items',
-                      subtitle: '150+ items',
-                      icon: _getPetIcon(petType.petTypeName),
-                      color: _getPetColor(index),
-                    ),
-                  ),
-                );
-              }),
-            ),
-          );
-        } else if (state is PetTypeError) {
-          return Center(child: Text(state.message));
         }
-        return const SizedBox.shrink();
+
+        List<PetTypeEntity> displayTypes = [];
+        if (state is PetTypeLoaded) {
+          displayTypes = state.petTypes;
+        } else {
+          displayTypes = samplePetTypes;
+        }
+
+        if (displayTypes.isEmpty) return const SizedBox.shrink();
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: List.generate(displayTypes.length, (index) {
+              final petType = displayTypes[index];
+              
+              return Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PetTypeProductsPage(petType: petType),
+                      ),
+                    );
+                  },
+                  child: PetCategoryCard(
+                    title: '${petType.petTypeName} Items',
+                    subtitle: '150+ items',
+                    icon: _getPetIcon(petType.petTypeName),
+                    color: _getPetColor(index),
+                  ),
+                ),
+              );
+            }),
+          ),
+        );
       },
     );
   }

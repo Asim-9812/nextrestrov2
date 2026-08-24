@@ -69,7 +69,7 @@ class _CartPageState extends State<CartPage> {
           if (state is CartLoaded) {
             final cart = state.cart;
             if (cart.items.isEmpty) {
-              return const Center(child: Text('Your cart is empty'));
+              return _buildEmptyState();
             }
 
             return RefreshIndicator(
@@ -243,15 +243,88 @@ class _CartPageState extends State<CartPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(state.message, style: const TextStyle(color: Colors.red)),
-                  ElevatedButton(onPressed: _loadCart, child: const Text('Retry')),
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.05),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.error_outline_rounded, size: 60, color: Colors.redAccent),
+                  ),
+                  AppSizes.gapH24,
+                  const Text('Oops! Something went wrong', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  AppSizes.gapH8,
+                  Text(state.message, style: const TextStyle(color: Colors.grey, fontSize: 13), textAlign: TextAlign.center),
+                  AppSizes.gapH32,
+                  ElevatedButton(
+                    onPressed: _loadCart,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: const Text('Retry', style: TextStyle(color: Colors.white)),
+                  ),
                 ],
               ),
             );
           }
 
-          return const Center(child: Text('Start adding items to your cart!'));
+          return _buildEmptyState();
         },
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(32),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.05),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.shopping_cart_outlined,
+                size: 80,
+                color: AppColors.primary.withOpacity(0.4),
+              ),
+            ),
+            AppSizes.gapH32,
+            Text(
+              'Your cart is empty',
+              style: AppTextStyles.h2.copyWith(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 22),
+            ),
+            AppSizes.gapH12,
+            Text(
+              'Looks like you haven\'t added any items to your cart yet. Explore our premium pet products!',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+            ),
+            AppSizes.gapH24,
+            AppSizes.gapH24,
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  elevation: 0,
+                ),
+                child: const Text(
+                  'Start Shopping',
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -33,7 +33,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       postalCode: '44600',
       landmark: 'Near Annapurna Mandir',
       deliveryNotes: '',
-    ),
+    ), 
   ];
 
   final List<AddressData> _deliveryAddresses = [

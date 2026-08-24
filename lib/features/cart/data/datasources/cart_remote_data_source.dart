@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/network/api_endpoints.dart';
 import '../models/cart_model.dart';
@@ -16,6 +17,7 @@ abstract class CartRemoteDataSource {
   });
   Future<void> removeFromCart(int cartItemId);
   Future<void> clearCart(int customerId);
+  Future<void> checkout(int customerId);
 }
 
 class CartRemoteDataSourceImpl implements CartRemoteDataSource {
@@ -33,7 +35,18 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       if (response.data != null && response.data['data'] != null) {
         return CartModel.fromJson(response.data['data']);
       }
-      throw Exception('Failed to load cart data');
+      return CartModel(cartId: 0, customerId: customerId, isCheckedOut: false, items: const []);
+    } on DioException catch (e) {
+      // If server returns 404, it means the cart is empty for this user
+      if (e.response?.statusCode == 404) {
+        return CartModel(
+          cartId: 0, 
+          customerId: customerId, 
+          isCheckedOut: false, 
+          items: const []
+        );
+      }
+      rethrow;
     } catch (e) {
       rethrow;
     }
@@ -98,6 +111,18 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     try {
       await _dioClient.delete(
         ApiEndpoints.clearCart,
+        queryParameters: {'customerId': customerId},
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> checkout(int customerId) async {
+    try {
+      await _dioClient.post(
+        ApiEndpoints.checkout,
         queryParameters: {'customerId': customerId},
       );
     } catch (e) {

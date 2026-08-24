@@ -17,6 +17,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<RemoveFromCartEvent>(_onRemoveFromCart);
     on<RemoveSelectedFromCartEvent>(_onRemoveSelectedFromCart);
     on<ClearCartEvent>(_onClearCart);
+    on<CheckoutCartEvent>(_onCheckoutCart);
+    on<ResetCartEvent>(_onResetCart);
   }
 
   Future<void> _onGetCart(GetCartEvent event, Emitter<CartState> emit) async {
@@ -150,6 +152,34 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       },
       (_) => add(GetCartEvent(event.customerId, showLoading: false)),
     );
+  }
+
+  Future<void> _onCheckoutCart(CheckoutCartEvent event, Emitter<CartState> emit) async {
+    emit(CartLoading());
+    final result = await cartRepository.checkout(event.customerId);
+    result.fold(
+      (failure) => emit(CartError(failure.message)),
+      (_) => emit(CartCheckoutSuccess()),
+    );
+  }
+
+  void _onResetCart(ResetCartEvent event, Emitter<CartState> emit) {
+    if (state is CartLoaded) {
+      final currentCart = (state as CartLoaded).cart;
+      emit(CartLoaded(CartEntity(
+        cartId: currentCart.cartId,
+        customerId: currentCart.customerId,
+        isCheckedOut: false,
+        items: const [],
+      )));
+    } else {
+      emit(const CartLoaded(CartEntity(
+        cartId: 0,
+        customerId: 0,
+        isCheckedOut: false,
+        items: [],
+      )));
+    }
   }
 }
 

@@ -47,14 +47,14 @@ class AppLogo extends StatelessWidget {
             ),
           ),
           SizedBox(width: size * 0.1),
-          // The "ivine pets" Text
+          // The "ivine Pets" Text
           Flexible(
             fit: FlexFit.loose,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               physics: const NeverScrollableScrollPhysics(),
               child: Text(
-                'Divine pets',
+                'ivine Pets',
                 style: AppTextStyles.h2.copyWith(
                   color: logoColor,
                   fontSize: size * 0.85,

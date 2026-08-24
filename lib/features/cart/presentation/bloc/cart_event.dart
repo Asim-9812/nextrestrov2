@@ -81,3 +81,15 @@ class ClearCartEvent extends CartEvent {
   @override
   List<Object?> get props => [customerId];
 }
+
+class CheckoutCartEvent extends CartEvent {
+  final int customerId;
+  const CheckoutCartEvent(this.customerId);
+
+  @override
+  List<Object?> get props => [customerId];
+}
+
+class ResetCartEvent extends CartEvent {
+  const ResetCartEvent();
+}

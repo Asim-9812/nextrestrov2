@@ -16,4 +16,5 @@ abstract class CartRepository {
   });
   Future<Either<Failure, void>> removeFromCart(int cartItemId);
   Future<Either<Failure, void>> clearCart(int customerId);
+  Future<Either<Failure, void>> checkout(int customerId);
 }

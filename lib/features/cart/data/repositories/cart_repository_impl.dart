@@ -85,4 +85,16 @@ class CartRepositoryImpl implements CartRepository {
       return Left(GenericFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> checkout(int customerId) async {
+    try {
+      await remoteDataSource.checkout(customerId);
+      return const Right(null);
+    } on DioException catch (e) {
+      return Left(ServerFailure(e.message ?? 'Checkout failed'));
+    } catch (e) {
+      return Left(GenericFailure(e.toString()));
+    }
+  }
 }

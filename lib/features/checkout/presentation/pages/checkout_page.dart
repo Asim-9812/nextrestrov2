@@ -10,6 +10,7 @@ import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../order/presentation/bloc/order_bloc.dart';
 import '../../../order/presentation/bloc/order_event.dart';
 import '../../../order/presentation/bloc/order_state.dart';
+import '../../../cart/domain/entities/cart_item.dart';
 import '../../../order/domain/entities/delivery_entity.dart';
 import '../widgets/address_section.dart';
 import '../widgets/delivery_details_section.dart';
@@ -27,39 +28,54 @@ class CheckoutPage extends StatefulWidget {
 class _CheckoutPageState extends State<CheckoutPage> {
   int _selectedPaymentMethod = 0; // 0: COD, 1: eSewa, 2: Khalti
   DeliveryEntity? _deliveryAddress;
+  List<CartItem> _itemsToOrder = [];
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<OrderBloc, OrderState>(
-      listener: (context, state) {
-        if (state is OrderLoading) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) => const Center(child: CircularProgressIndicator()),
-          );
-        } else if (state is CODOrderSuccess) {
-          Navigator.pop(context); // Close loading dialog
-          
-          // Clear Cart
-          final authState = context.read<AuthBloc>().state;
-          if (authState is Authenticated) {
-            context.read<CartBloc>().add(ClearCartEvent(authState.user.userId));
-          }
-          
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ThankYouPage(orderResponse: state.response),
-            ),
-          );
-        } else if (state is OrderError) {
-          Navigator.pop(context); // Close loading dialog
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: AppColors.accentError),
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CartBloc, CartState>(
+          listener: (context, state) {
+            if (state is CartCheckoutSuccess) {
+              _handleOrderCreation();
+            } else if (state is CartError) {
+              // Safety: Only pop if we are sure a dialog is showing. 
+              // Since CartBloc might emit error during navigation transition, 
+              // we prevent accidental page popping.
+              if (Navigator.canPop(context)) {
+                 Navigator.pop(context); // Close loading dialog if open
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message), backgroundColor: AppColors.accentError),
+              );
+            }
+          },
+        ),
+        BlocListener<OrderBloc, OrderState>(
+          listener: (context, state) {
+            if (state is CODOrderSuccess) {
+              Navigator.pop(context); // Close loading dialog
+              
+              // Clear Cart locally without hitting the API
+              context.read<CartBloc>().add(const ResetCartEvent());
+              
+              if (mounted) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ThankYouPage(orderResponse: state.response),
+                  ),
+                );
+              }
+            } else if (state is OrderError) {
+              Navigator.pop(context); // Close loading dialog
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message), backgroundColor: AppColors.accentError),
+              );
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         backgroundColor: Colors.grey.shade50,
         appBar: AppBar(
@@ -263,16 +279,30 @@ class _CheckoutPageState extends State<CheckoutPage> {
       return;
     }
 
+    if (_deliveryAddress == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a delivery address')),
+      );
+      return;
+    }
+
+    _itemsToOrder = (cartState as CartLoaded).cart.items;
+
+    // Step 1: Hit Cart Checkout API
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+    context.read<CartBloc>().add(CheckoutCartEvent(authState.user.userId));
+  }
+
+  void _handleOrderCreation() {
+    final authState = context.read<AuthBloc>().state as Authenticated;
+    
     if (_selectedPaymentMethod == 0) {
       // COD
-      if (_deliveryAddress == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select a delivery address')),
-        );
-        return;
-      }
-
-      final details = cartState.cart.items.map((item) {
+      final details = _itemsToOrder.map((item) {
         return {
           'productId': item.productId,
           'quantity': item.quantity,
@@ -293,6 +323,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           );
     } else {
       // Online payment (eSewa/Khalti) - To be implemented
+      Navigator.pop(context); // Close dialog if online payment isn't ready
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Online payment integration coming soon')),
       );

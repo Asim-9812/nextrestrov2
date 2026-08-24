@@ -32,7 +32,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           "role": "string"
         },
       );
-      return UserModel.fromJson(response.data);
+      // Login response returns the user object directly at the root
+      if (response.data != null) {
+        return UserModel.fromJson(response.data);
+      }
+      throw Exception('Invalid login response');
     } catch (e) {
       rethrow;
     }
@@ -102,7 +106,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> getProfile() async {
     try {
       final response = await _dioClient.get(ApiEndpoints.profile);
-      return UserModel.fromJson(response.data);
+      if (response.data != null && response.data['data'] != null) {
+        return UserModel.fromJson(response.data['data']);
+      }
+      throw Exception('Failed to load profile');
     } catch (e) {
       rethrow;
     }

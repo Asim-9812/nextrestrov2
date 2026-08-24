@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/utils/sample_data.dart';
+import '../../../product_type/domain/entities/product_type_entity.dart';
 import '../../../product_type/presentation/bloc/product_type_bloc.dart';
 import '../../../product_type/presentation/bloc/product_type_state.dart';
 import '../../../product_type/presentation/pages/product_type_products_page.dart';
@@ -25,74 +27,81 @@ class ShopCategoryIcons extends StatelessWidget {
             height: 80,
             child: Center(child: CircularProgressIndicator()),
           );
-        } else if (state is ProductTypeLoaded) {
-          return Container(
-            height: 90,
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              itemCount: state.productTypes.length,
-              itemBuilder: (context, index) {
-                final type = state.productTypes[index];
-                final color = pastelColors[index % pastelColors.length];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductTypeProductsPage(productType: type),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 55,
-                          width: 55,
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: const Center(
-                            child: Icon(Icons.category_outlined, color: Colors.black54, size: 24),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          width: 70,
-                          child: Text(
-                            type.productTypeName,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold, 
-                              fontSize: 10,
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          );
-        } else if (state is ProductTypeError) {
-          return Center(child: Text(state.message));
         }
-        return const SizedBox.shrink();
+        
+        List<ProductTypeEntity> displayTypes = [];
+        if (state is ProductTypeLoaded) {
+          displayTypes = state.productTypes;
+        } else {
+          // Show sample data on error or initial state
+          displayTypes = sampleProductTypes;
+        }
+
+        if (displayTypes.isEmpty) return const SizedBox.shrink();
+
+        return Container(
+          height: 90,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            itemCount: displayTypes.length,
+            itemBuilder: (context, index) {
+              final type = displayTypes[index];
+              final color = pastelColors[index % pastelColors.length];
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductTypeProductsPage(productType: type),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 55,
+                        width: 55,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Icon(Icons.category_outlined, color: Colors.black54, size: 24),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: 70,
+                        child: Text(
+                          type.productTypeName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold, 
+                            fontSize: 10,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
       },
     );
   }
