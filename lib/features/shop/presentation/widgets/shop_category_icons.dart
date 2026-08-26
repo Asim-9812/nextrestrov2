@@ -32,9 +32,10 @@ class ShopCategoryIcons extends StatelessWidget {
         List<ProductTypeEntity> displayTypes = [];
         if (state is ProductTypeLoaded) {
           displayTypes = state.productTypes;
-        } else {
-          // Show sample data on error or initial state
-          displayTypes = sampleProductTypes;
+        } else if (state is ProductTypeError) {
+          // Show sample data on error as fallback
+          // displayTypes = sampleProductTypes;
+          return Center(child: Text(state.message, style: const TextStyle(fontSize: 10, color: Colors.red)));
         }
 
         if (displayTypes.isEmpty) return const SizedBox.shrink();

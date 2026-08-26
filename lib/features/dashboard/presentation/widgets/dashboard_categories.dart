@@ -34,8 +34,9 @@ class DashboardCategories extends StatelessWidget {
         List<ProductTypeEntity> displayTypes = [];
         if (state is ProductTypeLoaded) {
           displayTypes = state.productTypes;
-        } else {
-          displayTypes = sampleProductTypes;
+        } else if (state is ProductTypeError) {
+          // displayTypes = sampleProductTypes;
+          return Center(child: Text(state.message, style: const TextStyle(fontSize: 10, color: Colors.red)));
         }
 
         if (displayTypes.isEmpty) return const SizedBox.shrink();

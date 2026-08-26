@@ -15,9 +15,12 @@ class BrandRemoteDataSourceImpl implements BrandRemoteDataSource {
   Future<List<BrandModel>> getAllBrands() async {
     try {
       final response = await _dioClient.get(ApiEndpoints.getAllBrands);
-      return (response.data as List)
-          .map((json) => BrandModel.fromJson(json))
-          .toList();
+      if (response.data != null && response.data['data'] != null) {
+        return (response.data['data'] as List)
+            .map((json) => BrandModel.fromJson(json))
+            .toList();
+      }
+      return [];
     } catch (e) {
       rethrow;
     }

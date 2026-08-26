@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../brand/presentation/pages/brand_list_page.dart';
+import '../../../brand/presentation/pages/brand_products_page.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/sample_data.dart';
 import '../../../brand/domain/entities/brand_entity.dart';
@@ -21,7 +23,12 @@ class ShopByBrandsSection extends StatelessWidget {
             children: [
               const Text('Shop By Brands', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const BrandListPage()),
+                  );
+                },
                 child: Row(
                   children: [
                     Text('See all', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 13)),
@@ -41,9 +48,11 @@ class ShopByBrandsSection extends StatelessWidget {
             
             List<BrandEntity> displayBrands = [];
             if (state is BrandLoaded) {
-              displayBrands = state.brands;
-            } else {
-              displayBrands = sampleBrands;
+              displayBrands = List<BrandEntity>.from(state.brands)..shuffle();
+              displayBrands = displayBrands.take(6).toList();
+            } else if (state is BrandError) {
+              // displayBrands = sampleBrands;
+              return Center(child: Text(state.message, style: const TextStyle(fontSize: 12, color: Colors.red)));
             }
 
             if (displayBrands.isEmpty) return const SizedBox.shrink();
@@ -53,7 +62,7 @@ class ShopByBrandsSection extends StatelessWidget {
               child: GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: displayBrands.length > 6 ? 6 : displayBrands.length,
+                itemCount: displayBrands.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   mainAxisSpacing: 12,
@@ -62,30 +71,40 @@ class ShopByBrandsSection extends StatelessWidget {
                 ),
                 itemBuilder: (context, index) {
                   final brand = displayBrands[index];
-                  return Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.grey.shade100),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.pets_outlined, color: AppColors.primary.withOpacity(0.4), size: 24),
-                        const SizedBox(height: 8),
-                        Text(
-                          brand.brandName,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BrandProductsPage(brand: brand),
                         ),
-                      ],
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.grey.shade100),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.pets_outlined, color: AppColors.primary.withOpacity(0.4), size: 24),
+                          const SizedBox(height: 8),
+                          Text(
+                            brand.brandName,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
-              ),
+              )
             );
           },
         ),

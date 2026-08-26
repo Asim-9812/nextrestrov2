@@ -60,8 +60,9 @@ class ShopByPets extends StatelessWidget {
         List<PetTypeEntity> displayTypes = [];
         if (state is PetTypeLoaded) {
           displayTypes = state.petTypes;
-        } else {
-          displayTypes = samplePetTypes;
+        } else if (state is PetTypeError) {
+          // displayTypes = samplePetTypes;
+          return Center(child: Text(state.message, style: const TextStyle(fontSize: 12, color: Colors.red)));
         }
 
         if (displayTypes.isEmpty) return const SizedBox.shrink();

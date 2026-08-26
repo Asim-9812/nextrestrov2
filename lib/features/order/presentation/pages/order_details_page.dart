@@ -7,6 +7,8 @@ import '../../../../core/constants/app_text_styles.dart';
 import '../../../order_tracking/presentation/widgets/tracking_status_card.dart';
 import '../../../order_tracking/presentation/widgets/billing_details_card.dart';
 import '../../../order_tracking/presentation/widgets/delivery_details_card.dart';
+import '../../../product/presentation/pages/product_details_page.dart';
+import '../../../product/domain/entities/product.dart';
 import '../bloc/order_bloc.dart';
 import '../bloc/order_event.dart';
 import '../bloc/order_state.dart';
@@ -358,6 +360,63 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                     'Qty: ${item.quantity}',
                     style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
                   ),
+                  // if (order.orderStatus == OrderStatus.delivered) ...[
+                    AppSizes.gapH4,
+                    InkWell(
+                      onTap: () {
+                        // Reconstruct a minimal Product object for navigation
+                        // Ideally, we should fetch the full product details first
+                        final product = Product(
+                          id: item.productId.toString(),
+                          productId: item.productId,
+                          name: item.productName,
+                          category: 'Product', // Default
+                          description: '',
+                          price: item.unitPrice,
+                          rating: 0,
+                          reviewCount: 0,
+                          images: [item.productImage ?? ''],
+                          sizes: const [],
+                          ratingSummary: const RatingSummary(
+                            averageRating: 0,
+                            starPercentages: {5: 0, 4: 0, 3: 0, 2: 0, 1: 0},
+                          ),
+                        );
+                        
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetailsPage(
+                              product: product,
+                              orderId: order.orderId,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.star_border, size: 12, color: AppColors.primary),
+                            SizedBox(width: 4),
+                            Text(
+                              'Write Review',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  // ],
                 ],
               ),
             ),

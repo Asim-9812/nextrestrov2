@@ -40,3 +40,11 @@ class FilterProductsByProductTypeEvent extends ProductEvent {
   @override
   List<Object?> get props => [productTypeId];
 }
+
+class FilterProductsByBrandEvent extends ProductEvent {
+  final int brandId;
+  const FilterProductsByBrandEvent(this.brandId);
+
+  @override
+  List<Object?> get props => [brandId];
+}

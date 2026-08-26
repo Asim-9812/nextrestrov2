@@ -48,10 +48,12 @@ class ApiEndpoints {
   // Company
   static const String company = "/api/Company";
   static String getCompanyById(int id) => "/api/Company/$id";
+  static String deleteCompany(int id) => "/api/Company/$id";
 
   // Fiscal Year
   static const String fiscalYear = "/api/FiscalYear";
   static String getFiscalYearById(int id) => "/api/FiscalYear/$id";
+  static String deleteFiscalYear(int id) => "/api/FiscalYear/$id";
   static String changeFiscalYearStatus(int id) => "/api/FiscalYear/ChangeStatus/$id";
   static String closeFiscalYearBook(int id) => "/api/FiscalYear/BookClose/$id";
 
@@ -88,6 +90,13 @@ class ApiEndpoints {
   static const String getAllProductBatches = "/api/ProductBatch/getall";
   static const String changeProductBatchStatus = "/api/ProductBatch/changestatus";
 
+  // Product Review
+  static const String createProductReview = "/api/ProductReview/create";
+  static const String getProductReviewByProduct = "/api/ProductReview/getbyproduct";
+  static const String getProductReviewSummary = "/api/ProductReview/summary";
+  static const String getAllProductReviews = "/api/ProductReview/getall";
+  static const String changeProductReviewStatus = "/api/ProductReview/changestatus";
+
   // Product Type
   static const String saveProductType = "/api/ProductType/save";
   static const String updateProductType = "/api/ProductType/update";
@@ -95,6 +104,13 @@ class ApiEndpoints {
   static const String getProductTypeById = "/api/ProductType/getbyid";
   static const String getAllProductTypes = "/api/ProductType/getall";
   static const String changeProductTypeStatus = "/api/ProductType/changestatus";
+
+  // Role
+  static const String createRole = "/api/Role/create";
+  static const String updateRole = "/api/Role/update";
+  static const String getRoleById = "/api/Role/getbyid";
+  static const String getAllRoles = "/api/Role/getall";
+  static const String changeRoleStatus = "/api/Role/changestatus";
 
   // Unit
   static const String saveUnit = "/api/Unit/save";
@@ -110,6 +126,7 @@ class ApiEndpoints {
   static const String changeOrderStatus = "/api/Order/changestatus";
   static const String cancelOrder = "/api/Order/cancel";
   static const String createCODOrder = "/api/Order/create-cod";
+  static const String getAdminOrderList = "/api/Order/admin-list";
 
   // Payment
   static const String createPayment = "/api/Payment/create";

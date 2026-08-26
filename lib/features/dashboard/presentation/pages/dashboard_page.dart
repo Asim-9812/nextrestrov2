@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../brand/presentation/pages/brand_list_page.dart';
 import '../widgets/best_sellers_grid.dart';
 import '../widgets/brands_grid.dart';
 import '../widgets/dashboard_categories.dart';
@@ -39,7 +40,16 @@ class DashboardPage extends StatelessWidget {
               const BestSellersGrid(),
               AppSizes.gapH24,
               const NewArrivalsBanner(),
-              SectionTitle(title: 'Shop By Brands', onSeeAll: () {}),
+              SectionTitle(
+                title: 'Shop By Brands', 
+                onSeeAll: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const BrandListPage()),
+
+                  );
+                },
+              ),
               const BrandsGrid(),
               AppSizes.gapH32,
             ],

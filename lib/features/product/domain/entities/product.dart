@@ -97,22 +97,47 @@ class ProductFAQ extends Equatable {
 }
 
 class ProductReview extends Equatable {
-  final String userName;
+  final int reviewId;
+  final int productId;
+  final int customerId;
+  final int? orderId;
   final double rating;
-  final String date;
-  final String comment;
-  final int helpfulCount;
+  final String? reviewTitle;
+  final String? reviewText;
+  final bool isActive;
+  final String createdDate;
+  final String? updatedDate;
+  final int? updatedBy;
+  final String? productName;
+  final String? customerName;
 
   const ProductReview({
-    required this.userName,
+    required this.reviewId,
+    required this.productId,
+    required this.customerId,
+    this.orderId,
     required this.rating,
-    required this.date,
-    required this.comment,
-    required this.helpfulCount,
+    this.reviewTitle,
+    this.reviewText,
+    this.isActive = true,
+    required this.createdDate,
+    this.updatedDate,
+    this.updatedBy,
+    this.productName,
+    this.customerName,
   });
 
   @override
-  List<Object?> get props => [userName, rating, date, comment, helpfulCount];
+  List<Object?> get props => [
+        reviewId,
+        productId,
+        customerId,
+        rating,
+        reviewTitle,
+        reviewText,
+        createdDate,
+        customerName
+      ];
 }
 
 class RatingSummary extends Equatable {

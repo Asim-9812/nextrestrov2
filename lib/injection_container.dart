@@ -32,6 +32,7 @@ import 'features/product/data/datasources/product_remote_data_source.dart';
 import 'features/product/data/repositories/product_repository_impl.dart';
 import 'features/product/domain/repositories/product_repository.dart';
 import 'features/product/presentation/bloc/product_bloc.dart';
+import 'features/product/presentation/bloc/review_cubit.dart';
 import 'features/cart/data/datasources/cart_remote_data_source.dart';
 import 'features/cart/data/repositories/cart_repository_impl.dart';
 import 'features/cart/domain/repositories/cart_repository.dart';
@@ -112,6 +113,7 @@ Future<void> init() async {
 
   // Features - Product
   sl.registerFactory(() => ProductBloc(productRepository: sl()));
+  sl.registerFactory(() => ReviewCubit(productRepository: sl()));
   sl.registerLazySingleton<ProductRepository>(
     () => ProductRepositoryImpl(remoteDataSource: sl()),
   );

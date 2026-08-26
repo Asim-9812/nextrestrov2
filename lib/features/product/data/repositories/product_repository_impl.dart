@@ -21,4 +21,43 @@ class ProductRepositoryImpl implements ProductRepository {
       return Left(GenericFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, List<ProductReview>>> getProductReviews(int productId) async {
+    try {
+      final reviews = await remoteDataSource.getProductReviews(productId);
+      return Right(reviews);
+    } on DioException catch (e) {
+      return Left(ServerFailure(e.message ?? 'Failed to fetch reviews'));
+    } catch (e) {
+      return Left(GenericFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> createProductReview({
+    required int productId,
+    required int customerId,
+    int? orderId,
+    required int rating,
+    String? reviewTitle,
+    String? reviewText,
+  }) async {
+    try {
+      final reviewData = {
+        'productId': productId,
+        'customerId': customerId,
+        'orderId': orderId,
+        'rating': rating,
+        'reviewTitle': reviewTitle,
+        'reviewText': reviewText,
+      };
+      await remoteDataSource.createProductReview(reviewData);
+      return const Right(null);
+    } on DioException catch (e) {
+      return Left(ServerFailure(e.message ?? 'Failed to create review'));
+    } catch (e) {
+      return Left(GenericFailure(e.toString()));
+    }
+  }
 }

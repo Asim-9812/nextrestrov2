@@ -14,6 +14,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<FilterProductsByPetTypeEvent>(_onFilterByPetType);
     on<FilterProductsByCategoryEvent>(_onFilterByCategory);
     on<FilterProductsByProductTypeEvent>(_onFilterByProductType);
+    on<FilterProductsByBrandEvent>(_onFilterByBrand);
   }
 
   Future<void> _onGetAllProducts(GetAllProductsEvent event, Emitter<ProductState> emit) async {
@@ -57,6 +58,13 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   void _onFilterByProductType(FilterProductsByProductTypeEvent event, Emitter<ProductState> emit) {
     if (state is ProductLoaded) {
       final filtered = _allProducts.where((p) => p.productTypeId == event.productTypeId).toList();
+      emit(ProductLoaded(products: _allProducts, filteredProducts: filtered));
+    }
+  }
+
+  void _onFilterByBrand(FilterProductsByBrandEvent event, Emitter<ProductState> emit) {
+    if (state is ProductLoaded) {
+      final filtered = _allProducts.where((p) => p.brandId == event.brandId).toList();
       emit(ProductLoaded(products: _allProducts, filteredProducts: filtered));
     }
   }
