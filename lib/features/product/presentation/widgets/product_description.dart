@@ -23,11 +23,18 @@ class _ProductDescriptionState extends State<ProductDescription> {
       children: [
         Text('Product Description', style: AppTextStyles.h3),
         AppSizes.gapH8,
-        Container(
-          constraints: isDescriptionExpanded ? null : const BoxConstraints(maxHeight: 100),
-          child: HtmlWidget(
-            widget.description,
-            textStyle: AppTextStyles.bodyMedium,
+        SizedBox(
+          height: isDescriptionExpanded ? null : 100,
+          child: ClipRect(
+            child: OverflowBox(
+              minHeight: 0,
+              maxHeight: double.infinity,
+              alignment: Alignment.topCenter,
+              child: HtmlWidget(
+                widget.description,
+                textStyle: AppTextStyles.bodyMedium,
+              ),
+            ),
           ),
         ),
         if (!isDescriptionExpanded && widget.description.length > 150)
