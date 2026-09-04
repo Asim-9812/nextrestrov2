@@ -140,4 +140,7 @@ class ApiEndpoints {
   static const String cancelPayment = "/api/Payment/cancel";
   static const String unresolvedPayment = "/api/Payment/unresolved";
   static const String esewaPaymentSuccess = "/api/Payment/esewa/success";
+
+  // AI Chat
+  static const String aiChat = "/api/AI/chat";
 }

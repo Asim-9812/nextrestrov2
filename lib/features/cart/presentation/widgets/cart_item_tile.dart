@@ -7,6 +7,7 @@ import '../../domain/entities/cart_item.dart';
 import '../bloc/cart_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
+import '../../../../core/widgets/app_product_image.dart';
 
 class CartItemTile extends StatelessWidget {
   final CartItem item;
@@ -51,7 +52,7 @@ class CartItemTile extends StatelessWidget {
               color: Colors.grey.shade50,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Image.asset(item.imageUrl ?? 'assets/images/dashboard_assets/sample_product.png', fit: BoxFit.contain),
+            child: AppProductImage(imageUrl: item.imageUrl, fit: BoxFit.contain),
           ),
           AppSizes.gapW12,
           Expanded(

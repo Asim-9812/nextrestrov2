@@ -38,6 +38,11 @@ import 'features/cart/data/repositories/cart_repository_impl.dart';
 import 'features/cart/domain/repositories/cart_repository.dart';
 import 'features/cart/presentation/bloc/cart_bloc.dart';
 import 'features/wishlist/presentation/bloc/wishlist_bloc.dart';
+import 'features/chatbot/data/datasources/chat_remote_data_source.dart';
+import 'features/chatbot/data/repositories/chat_repository_impl.dart';
+import 'features/chatbot/domain/repositories/chat_repository.dart';
+import 'features/chatbot/domain/usecases/send_chat_message.dart';
+import 'features/chatbot/presentation/bloc/chat_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -133,4 +138,13 @@ Future<void> init() async {
   // Features - Wishlist
   sl.registerFactory(() => WishlistBloc());
 
+  // Features - Chatbot
+  sl.registerFactory(() => ChatBloc(sendChatMessage: sl()));
+  sl.registerLazySingleton(() => SendChatMessage(sl()));
+  sl.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatRemoteDataSourceImpl(sl()),
+  );
 }

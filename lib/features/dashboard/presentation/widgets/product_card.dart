@@ -10,6 +10,7 @@ import 'package:divinepets/features/cart/domain/entities/cart_item.dart';
 
 import 'package:divinepets/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:divinepets/features/auth/presentation/bloc/auth_state.dart';
+import 'package:divinepets/core/widgets/app_product_image.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -67,8 +68,8 @@ class ProductCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
-                    child: Image.asset(
-                      product.images.first,
+                    child: AppProductImage(
+                      imageUrl: product.images.isNotEmpty ? product.images.first : null,
                       height: imageHeight * 0.75,
                       fit: BoxFit.contain,
                     ),

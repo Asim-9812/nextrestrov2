@@ -23,6 +23,7 @@ class ProductModel extends Product {
     super.productTypeId,
     super.categoryId,
     super.brandId,
+    super.brandName,
     super.petTypeId,
     super.productTypeName,
     super.categoryName,
@@ -47,6 +48,21 @@ class ProductModel extends Product {
     // Use salesPrice if available, otherwise constant 1200.0
     final displayPrice = apiSalesPrice ?? 1200.0;
     
+    // Handle image path
+    final String? productImage = json['productImage'];
+    final List<String> imagesList = [];
+    if (productImage != null && productImage.isNotEmpty) {
+      if (productImage.startsWith('http')) {
+        imagesList.add(productImage);
+      } else {
+        // Remove leading slash if present to avoid double slashes
+        final cleanPath = productImage.startsWith('/') ? productImage.substring(1) : productImage;
+        imagesList.add('https://pets.codeinfinitynepal.com/$cleanPath');
+      }
+    } else {
+      imagesList.add('assets/images/dashboard_assets/sample_product.png');
+    }
+
     return ProductModel(
       id: idInt.toString(),
       productId: idInt,
@@ -54,12 +70,10 @@ class ProductModel extends Product {
       category: json['categoryName'] ?? 'Uncategorized',
       description: json['description'] ?? 'No description available.',
       price: displayPrice,
-      oldPrice: apiMrp ?? (displayPrice * 1.2), // Use MRP as old price if available
+      oldPrice: apiMrp ?? (displayPrice * 1.2),
       rating: (json['rating'] as num? ?? 4.5).toDouble(),
       reviewCount: (json['reviewCount'] as num? ?? 120).toInt(),
-      images: [
-        'assets/images/dashboard_assets/sample_product.png',
-      ],
+      images: imagesList,
       sizes: const ['S', 'M', 'L'],
       ratingSummary: const RatingSummary(
         averageRating: 4.5,
@@ -71,6 +85,7 @@ class ProductModel extends Product {
       productTypeId: (json['productTypeId'] as num?)?.toInt(),
       categoryId: (json['categoryId'] as num?)?.toInt(),
       brandId: (json['brandId'] as num?)?.toInt(),
+      brandName: json['brandName'],
       petTypeId: (json['petTypeId'] as num?)?.toInt(),
       productTypeName: json['productTypeName'],
       categoryName: json['categoryName'],

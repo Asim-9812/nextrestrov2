@@ -10,6 +10,7 @@ import 'dashboard_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../wishlist/presentation/pages/wishlist_page.dart';
 import '../../../shop/presentation/pages/shop_page.dart';
+import '../../../chatbot/presentation/pages/chat_page.dart';
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
@@ -65,6 +66,16 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       ),
       extendBody: true,
       body: _pages[_selectedIndex],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ChatPage()),
+          );
+        },
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.smart_toy_rounded, color: Colors.white),
+      ),
       bottomNavigationBar: Container(
         height: 60 + bottomPadding,
         decoration: BoxDecoration(

@@ -8,6 +8,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../product/domain/entities/product.dart';
 import '../bloc/wishlist_bloc.dart';
+import '../../../../core/widgets/app_product_image.dart';
 
 class WishlistItemTile extends StatelessWidget {
   final Product product;
@@ -48,8 +49,8 @@ class WishlistItemTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Center(
-                  child: Image.asset(
-                    product.images.first,
+                  child: AppProductImage(
+                    imageUrl: product.images.isNotEmpty ? product.images.first : null,
                     height: 80,
                     fit: BoxFit.contain,
                   ),

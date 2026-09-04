@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/widgets/app_product_image.dart';
 
 class ProductImageGallery extends StatefulWidget {
   final List<String> images;
@@ -55,8 +56,8 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
               borderRadius: BorderRadius.circular(24),
             ),
             child: Center(
-              child: Image.asset(
-                widget.images.first,
+              child: AppProductImage(
+                imageUrl: widget.images.isNotEmpty ? widget.images.first : null,
                 height: 100,
                 fit: BoxFit.contain,
               ),
@@ -84,8 +85,8 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                       border: Border.all(color: AppColors.primaryLighter),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Image.asset(
-                      widget.images[index],
+                    child: AppProductImage(
+                      imageUrl: widget.images[index],
                       fit: BoxFit.contain,
                     ),
                   );
