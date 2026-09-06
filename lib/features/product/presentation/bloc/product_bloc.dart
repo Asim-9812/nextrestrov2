@@ -15,6 +15,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<FilterProductsByCategoryEvent>(_onFilterByCategory);
     on<FilterProductsByProductTypeEvent>(_onFilterByProductType);
     on<FilterProductsByBrandEvent>(_onFilterByBrand);
+    on<FilterProductsByMultipleCriteriaEvent>(_onFilterByMultipleCriteria);
   }
 
   Future<void> _onGetAllProducts(GetAllProductsEvent event, Emitter<ProductState> emit) async {
@@ -65,6 +66,17 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   void _onFilterByBrand(FilterProductsByBrandEvent event, Emitter<ProductState> emit) {
     if (state is ProductLoaded) {
       final filtered = _allProducts.where((p) => p.brandId == event.brandId).toList();
+      emit(ProductLoaded(products: _allProducts, filteredProducts: filtered));
+    }
+  }
+
+  void _onFilterByMultipleCriteria(FilterProductsByMultipleCriteriaEvent event, Emitter<ProductState> emit) {
+    if (state is ProductLoaded) {
+      final filtered = _allProducts.where((p) {
+        final matchesCategory = event.categoryIds.isEmpty || (p.categoryId != null && event.categoryIds.contains(p.categoryId));
+        final matchesPetType = event.petTypeIds.isEmpty || (p.petTypeId != null && event.petTypeIds.contains(p.petTypeId));
+        return matchesCategory && matchesPetType;
+      }).toList();
       emit(ProductLoaded(products: _allProducts, filteredProducts: filtered));
     }
   }

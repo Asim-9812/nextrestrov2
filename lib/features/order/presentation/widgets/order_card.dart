@@ -9,6 +9,8 @@ import '../bloc/order_bloc.dart';
 import '../../domain/entities/order_entity.dart';
 import '../pages/order_details_page.dart';
 
+import '../../../../core/widgets/app_product_image.dart';
+
 class OrderCard extends StatelessWidget {
   final OrderEntity order;
   final VoidCallback onTap;
@@ -132,9 +134,10 @@ class OrderCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.grey.shade100),
             ),
-            child: order.items[0].imageUrl != null
-                ? Image.network(order.items[0].imageUrl!, fit: BoxFit.contain)
-                : Image.asset('assets/images/dashboard_assets/sample_product.png', fit: BoxFit.contain),
+            child: AppProductImage(
+              imageUrl: order.items[0].imageUrl,
+              fit: BoxFit.contain,
+            ),
           ),
           if (order.items.length > 1)
             Positioned(

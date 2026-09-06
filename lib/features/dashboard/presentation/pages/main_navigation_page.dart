@@ -5,6 +5,14 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
+import '../../../brand/presentation/bloc/brand_bloc.dart';
+import '../../../brand/presentation/bloc/brand_event.dart';
+import '../../../category/presentation/bloc/category_bloc.dart';
+import '../../../category/presentation/bloc/category_event.dart';
+import '../../../product_type/presentation/bloc/product_type_bloc.dart';
+import '../../../product_type/presentation/bloc/product_type_event.dart';
+import '../../../product/presentation/bloc/product_bloc.dart';
+import '../../../product/presentation/bloc/product_event.dart';
 import '../widgets/app_drawer.dart';
 import 'dashboard_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
@@ -33,6 +41,12 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     final authState = context.read<AuthBloc>().state;
     if (authState is Authenticated) {
       context.read<CartBloc>().add(GetCartEvent(authState.user.userId));
+      
+      // Refresh essential dashboard data if they are in error state or empty
+      context.read<ProductTypeBloc>().add(GetAllProductTypesEvent());
+      context.read<CategoryBloc>().add(GetAllCategoriesEvent());
+      context.read<BrandBloc>().add(GetAllBrandsEvent());
+      context.read<ProductBloc>().add(GetAllProductsEvent());
     }
   }
 

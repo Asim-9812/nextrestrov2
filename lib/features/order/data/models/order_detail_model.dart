@@ -19,9 +19,9 @@ class OrderDetailModel extends OrderDetailEntity {
     return OrderDetailModel(
       orderId: (json['orderId'] as num?)?.toInt() ?? 0,
       customerId: (json['customerId'] as num?)?.toInt() ?? 0,
-      orderDate: DateTime.tryParse(json['orderDate'] ?? '') ?? DateTime.now(),
+      orderDate: DateTime.tryParse(json['orderDate'] ?? json['voucherDate'] ?? '') ?? DateTime.now(),
       orderStatus: _mapStatus(json['orderStatus']),
-      totalAmount: (json['totalAmount'] as num?)?.toDouble() ?? 0.0,
+      totalAmount: (json['totalAmount'] as num? ?? json['grandTotal'] as num?)?.toDouble() ?? 0.0,
       createdDate: DateTime.tryParse(json['createdDate'] ?? '') ?? DateTime.now(),
       createdBy: (json['createdBy'] as num?)?.toInt() ?? 0,
       updatedDate: json['updatedDate'] != null ? DateTime.tryParse(json['updatedDate']) : null,

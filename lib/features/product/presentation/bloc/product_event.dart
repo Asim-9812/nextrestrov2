@@ -48,3 +48,16 @@ class FilterProductsByBrandEvent extends ProductEvent {
   @override
   List<Object?> get props => [brandId];
 }
+
+class FilterProductsByMultipleCriteriaEvent extends ProductEvent {
+  final List<int> categoryIds;
+  final List<int> petTypeIds;
+
+  const FilterProductsByMultipleCriteriaEvent({
+    required this.categoryIds,
+    required this.petTypeIds,
+  });
+
+  @override
+  List<Object?> get props => [categoryIds, petTypeIds];
+}

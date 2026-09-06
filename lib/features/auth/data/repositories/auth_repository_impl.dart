@@ -59,6 +59,9 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, UserEntity?>> getCachedUser() async {
     try {
       final user = await localDataSource.getCachedUser();
+      if (user != null) {
+        sessionManager.updateSession(user);
+      }
       return Right(user);
     } catch (e) {
       return Left(CacheFailure(e.toString()));

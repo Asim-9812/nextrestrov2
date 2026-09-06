@@ -12,6 +12,7 @@ import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import '../../../../core/widgets/app_product_image.dart';
 import 'typewriter_text.dart';
+import '../../../product/presentation/pages/filtered_product_list_page.dart';
 
 class ChatBubble extends StatelessWidget {
   final ChatMessage message;
@@ -76,6 +77,8 @@ class ChatBubble extends StatelessWidget {
                         separatorBuilder: (context, index) => const SizedBox(height: 12),
                         itemBuilder: (context, index) => _buildProductItem(context, message.products![index]),
                       ),
+                      const SizedBox(height: 12),
+                      _buildSeeMoreButton(context),
                     ],
                   ],
                 ),
@@ -92,6 +95,49 @@ class ChatBubble extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSeeMoreButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          final categoryIds = message.products!
+              .map((p) => p.categoryId)
+              .where((id) => id != null)
+              .cast<int>()
+              .toSet()
+              .toList();
+          final petTypeIds = message.products!
+              .map((p) => p.petTypeId)
+              .where((id) => id != null)
+              .cast<int>()
+              .toSet()
+              .toList();
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FilteredProductListPage(
+                categoryIds: categoryIds,
+                petTypeIds: petTypeIds,
+                title: "Related Products",
+              ),
+            ),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: AppColors.primary,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: const BorderSide(color: AppColors.primary),
+          ),
+        ),
+        child: const Text("See More", style: TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }

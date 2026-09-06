@@ -16,16 +16,16 @@ class OrderModel extends OrderEntity {
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
       orderId: (json['orderId'] as num?)?.toInt() ?? 0,
-      orderNumber: json['orderNumber'] ?? '',
-      orderDate: DateTime.tryParse(json['orderDate'] ?? '') ?? DateTime.now(),
-      status: _mapStatus(json['status']),
-      totalAmount: (json['totalAmount'] as num?)?.toDouble() ?? 0.0,
+      orderNumber: json['orderNumber'] ?? json['voucherNo'] ?? '',
+      orderDate: DateTime.tryParse(json['orderDate'] ?? json['voucherDate'] ?? '') ?? DateTime.now(),
+      status: _mapStatus(json['status'] ?? json['orderStatus']),
+      totalAmount: (json['totalAmount'] as num? ?? json['grandTotal'] as num?)?.toDouble() ?? 0.0,
       paymentMethod: json['paymentMethod'],
       deliveryAddress: json['deliveryAddress'],
       deliveryDate: json['deliveryDate'] != null
           ? DateTime.tryParse(json['deliveryDate'])
           : null,
-      items: (json['items'] as List? ?? [])
+      items: (json['items'] as List? ?? json['details'] as List? ?? [])
           .map((item) => OrderItemModel.fromJson(item))
           .toList(),
     );
