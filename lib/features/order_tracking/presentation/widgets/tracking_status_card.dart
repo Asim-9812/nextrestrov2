@@ -18,10 +18,10 @@ class TrackingStatusCard extends StatelessWidget {
 
     if (order != null) {
       switch (order!.orderStatus) {
-        case OrderStatus.toPay:
+        case OrderStatus.pending:
           confirmedStatus = StepStatus.pending;
           break;
-        case OrderStatus.processing:
+        case OrderStatus.confirmed:
           confirmedStatus = StepStatus.completed;
           processingStatus = StepStatus.pending;
           break;
@@ -37,7 +37,7 @@ class TrackingStatusCard extends StatelessWidget {
           deliveredStatus = StepStatus.completed;
           break;
         case OrderStatus.cancelled:
-          // Just show them as they are or mark as inactive
+          // Optional: handle cancelled status UI if needed
           break;
       }
     } else {

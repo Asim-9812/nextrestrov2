@@ -35,15 +35,15 @@ class OrderDetailModel extends OrderDetailEntity {
   static OrderStatus _mapStatus(dynamic status) {
     if (status is int) {
       switch (status) {
-        case 0: return OrderStatus.toPay;
-        case 1: return OrderStatus.processing;
-        case 2: return OrderStatus.shipped;
-        case 3: return OrderStatus.delivered;
+        case 1: return OrderStatus.pending;
+        case 2: return OrderStatus.confirmed;
+        case 3: return OrderStatus.shipped;
         case 4: return OrderStatus.cancelled;
-        default: return OrderStatus.processing;
+        case 5: return OrderStatus.delivered;
+        default: return OrderStatus.pending;
       }
     }
-    return OrderStatus.processing;
+    return OrderStatus.pending;
   }
 }
 

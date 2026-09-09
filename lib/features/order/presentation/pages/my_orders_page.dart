@@ -24,11 +24,11 @@ class _MyOrdersPageState extends State<MyOrdersPage> with SingleTickerProviderSt
 
   final List<Map<String, dynamic>> _categories = [
     {'label': 'All', 'icon': Icons.grid_view_rounded},
-    {'label': 'To Pay', 'icon': Icons.account_balance_wallet_outlined},
-    {'label': 'Processing', 'icon': Icons.sync_rounded},
+    {'label': 'Pending', 'icon': Icons.hourglass_empty_rounded},
+    {'label': 'Confirmed', 'icon': Icons.check_circle_outline_rounded},
     {'label': 'Shipped', 'icon': Icons.local_shipping_outlined},
-    {'label': 'Delivered', 'icon': Icons.task_alt_rounded},
     {'label': 'Cancelled', 'icon': Icons.cancel_outlined},
+    {'label': 'Delivered', 'icon': Icons.task_alt_rounded},
   ];
 
   @override
@@ -120,11 +120,11 @@ class _MyOrdersPageState extends State<MyOrdersPage> with SingleTickerProviderSt
                     controller: _tabController,
                     children: [
                       _buildOrderList(state.orders), // All
-                      _buildOrderList(state.orders.where((o) => o.status == OrderStatus.toPay).toList()),
-                      _buildOrderList(state.orders.where((o) => o.status == OrderStatus.processing).toList()),
+                      _buildOrderList(state.orders.where((o) => o.status == OrderStatus.pending).toList()),
+                      _buildOrderList(state.orders.where((o) => o.status == OrderStatus.confirmed).toList()),
                       _buildOrderList(state.orders.where((o) => o.status == OrderStatus.shipped).toList()),
-                      _buildOrderList(state.orders.where((o) => o.status == OrderStatus.delivered).toList()),
                       _buildOrderList(state.orders.where((o) => o.status == OrderStatus.cancelled).toList()),
+                      _buildOrderList(state.orders.where((o) => o.status == OrderStatus.delivered).toList()),
                     ],
                   );
                 }

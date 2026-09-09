@@ -13,6 +13,8 @@ import '../../../product_type/presentation/bloc/product_type_bloc.dart';
 import '../../../product_type/presentation/bloc/product_type_event.dart';
 import '../../../product/presentation/bloc/product_bloc.dart';
 import '../../../product/presentation/bloc/product_event.dart';
+import '../../../order/presentation/bloc/order_bloc.dart';
+import '../../../order/presentation/bloc/order_event.dart';
 import '../widgets/app_drawer.dart';
 import 'dashboard_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
@@ -47,6 +49,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       context.read<CategoryBloc>().add(GetAllCategoriesEvent());
       context.read<BrandBloc>().add(GetAllBrandsEvent());
       context.read<ProductBloc>().add(GetAllProductsEvent());
+      context.read<OrderBloc>().add(FetchOrdersEvent(authState.user.userId));
     }
   }
 
@@ -88,7 +91,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           );
         },
         backgroundColor: AppColors.primary,
-        child: const Icon(Icons.smart_toy_rounded, color: Colors.white),
+        child: const Icon(Icons.auto_awesome, color: Colors.white),
       ),
       bottomNavigationBar: Container(
         height: 60 + bottomPadding,

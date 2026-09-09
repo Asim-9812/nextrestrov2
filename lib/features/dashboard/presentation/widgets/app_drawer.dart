@@ -13,6 +13,9 @@ import '../../../notification/presentation/pages/notification_page.dart';
 import '../../../order/presentation/pages/my_orders_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../pets/presentation/pages/my_pets_page.dart';
+import '../../../order/presentation/bloc/order_bloc.dart';
+import '../../../order/presentation/bloc/order_state.dart';
+import '../../../order/domain/entities/order_entity.dart';
 
 class AppDrawer extends StatelessWidget {
   final Function(int)? onNavigate;
@@ -158,53 +161,71 @@ class AppDrawer extends StatelessWidget {
   }
 
   Widget _buildOrdersSection(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF6F3FF),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocBuilder<OrderBloc, OrderState>(
+      builder: (context, state) {
+        int pendingCount = 0;
+        int confirmedCount = 0;
+        int shippedCount = 0;
+        int deliveredCount = 0;
+        int cancelledCount = 0;
+
+        if (state is OrderLoaded) {
+          pendingCount = state.orders.where((o) => o.status == OrderStatus.pending).length;
+          confirmedCount = state.orders.where((o) => o.status == OrderStatus.confirmed).length;
+          shippedCount = state.orders.where((o) => o.status == OrderStatus.shipped).length;
+          deliveredCount = state.orders.where((o) => o.status == OrderStatus.delivered).length;
+          cancelledCount = state.orders.where((o) => o.status == OrderStatus.cancelled).length;
+        }
+
+        return Container(
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF6F3FF),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
             children: [
-              Text(
-                'My Orders',
-                style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MyOrdersPage()),
-                  );
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      'See all',
-                      style: AppTextStyles.bodySmall.copyWith(color: Colors.grey.shade600, fontSize: 11),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'My Orders',
+                    style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MyOrdersPage()),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'See all',
+                          style: AppTextStyles.bodySmall.copyWith(color: Colors.grey.shade600, fontSize: 11),
+                        ),
+                        Icon(Icons.chevron_right, color: Colors.grey.shade600, size: 14),
+                      ],
                     ),
-                    Icon(Icons.chevron_right, color: Colors.grey.shade600, size: 14),
-                  ],
-                ),
+                  ),
+                ],
+              ),
+              AppSizes.gapH16,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildOrderStatusItem(context, Icons.hourglass_empty_rounded, 'Pending', pendingCount),
+                  _buildOrderStatusItem(context, Icons.check_circle_outline_rounded, 'Confirmed', confirmedCount),
+                  _buildOrderStatusItem(context, FontAwesomeIcons.truck, 'Shipped', shippedCount),
+                  _buildOrderStatusItem(context, FontAwesomeIcons.bagShopping, 'Delivered', deliveredCount),
+                ],
               ),
             ],
           ),
-          AppSizes.gapH16,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildOrderStatusItem(context, FontAwesomeIcons.truck, 'Shipped', 2),
-              _buildOrderStatusItem(context, FontAwesomeIcons.boxOpen, 'Pending', 2),
-              _buildOrderStatusItem(context, FontAwesomeIcons.bagShopping, 'Delivered', 2),
-              _buildOrderStatusItem(context, FontAwesomeIcons.box, 'Cancelled', 2),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 

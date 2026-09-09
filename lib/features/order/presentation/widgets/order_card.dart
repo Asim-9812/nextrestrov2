@@ -166,30 +166,30 @@ class OrderCard extends StatelessWidget {
     String label;
 
     switch (order.status) {
-      case OrderStatus.delivered:
-        color = AppColors.accentSuccess;
+      case OrderStatus.pending:
+        color = Colors.amber.shade700;
+        icon = Icons.hourglass_empty_rounded;
+        label = 'Pending';
+        break;
+      case OrderStatus.confirmed:
+        color = Colors.blue;
         icon = Icons.check_circle_outline;
-        label = 'Delivered';
+        label = 'Confirmed';
         break;
       case OrderStatus.shipped:
-        color = Colors.blue;
+        color = Colors.indigo;
         icon = Icons.local_shipping_outlined;
-        label = 'Shipped';
-        break;
-      case OrderStatus.processing:
-        color = Colors.orange;
-        icon = Icons.hourglass_empty_rounded;
-        label = 'Processing';
-        break;
-      case OrderStatus.toPay:
-        color = Colors.amber.shade700;
-        icon = Icons.payment_outlined;
-        label = 'To Pay';
+        label = 'Shipped / Out for Delivery';
         break;
       case OrderStatus.cancelled:
         color = AppColors.accentError;
         icon = Icons.cancel_outlined;
         label = 'Cancelled';
+        break;
+      case OrderStatus.delivered:
+        color = AppColors.accentSuccess;
+        icon = Icons.task_alt_rounded;
+        label = 'Delivered';
         break;
     }
 
@@ -216,20 +216,20 @@ class OrderCard extends StatelessWidget {
   Widget _buildDeliveryInfo() {
     String text = '';
     switch (order.status) {
-      case OrderStatus.delivered:
-        text = 'Delivered on ${DateFormat('MMM d, yyyy').format(order.deliveryDate ?? order.orderDate)}';
+      case OrderStatus.pending:
+        text = 'Awaiting confirmation';
+        break;
+      case OrderStatus.confirmed:
+        text = 'Order confirmed, preparing for shipment';
         break;
       case OrderStatus.shipped:
         text = 'Expected delivery: ${DateFormat('MMM d, yyyy').format(order.deliveryDate ?? order.orderDate.add(const Duration(days: 3)))}';
         break;
-      case OrderStatus.processing:
-        text = 'We are packing your order';
-        break;
-      case OrderStatus.toPay:
-        text = 'Payment pending';
-        break;
       case OrderStatus.cancelled:
-        text = 'Cancelled on ${DateFormat('MMM d, yyyy').format(order.deliveryDate ?? order.orderDate)}';
+        text = 'Order was cancelled';
+        break;
+      case OrderStatus.delivered:
+        text = 'Delivered on ${DateFormat('MMM d, yyyy').format(order.deliveryDate ?? order.orderDate)}';
         break;
     }
 

@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
 enum OrderStatus {
-  toPay,
-  processing,
-  shipped,
-  delivered,
-  cancelled,
+  pending,    // 1
+  confirmed,  // 2
+  shipped,    // 3
+  cancelled,  // 4
+  delivered,  // 5
 }
 
 class OrderEntity extends Equatable {
