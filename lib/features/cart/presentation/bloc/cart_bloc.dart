@@ -17,7 +17,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<RemoveFromCartEvent>(_onRemoveFromCart);
     on<RemoveSelectedFromCartEvent>(_onRemoveSelectedFromCart);
     on<ClearCartEvent>(_onClearCart);
-    on<CheckoutCartEvent>(_onCheckoutCart);
     on<ResetCartEvent>(_onResetCart);
   }
 
@@ -38,6 +37,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       productId: event.productId,
       quantity: event.quantity,
       unitPrice: event.unitPrice,
+      productVariantId: event.productVariantId,
+      productBatchId: event.productBatchId,
     );
     result.fold(
       (failure) => emit(CartError(failure.message)),
@@ -151,15 +152,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         add(GetCartEvent(event.customerId));
       },
       (_) => add(GetCartEvent(event.customerId, showLoading: false)),
-    );
-  }
-
-  Future<void> _onCheckoutCart(CheckoutCartEvent event, Emitter<CartState> emit) async {
-    emit(CartLoading());
-    final result = await cartRepository.checkout(event.customerId);
-    result.fold(
-      (failure) => emit(CartError(failure.message)),
-      (_) => emit(CartCheckoutSuccess()),
     );
   }
 

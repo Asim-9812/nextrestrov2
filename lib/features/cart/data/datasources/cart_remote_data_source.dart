@@ -10,6 +10,8 @@ abstract class CartRemoteDataSource {
     required int productId,
     required int quantity,
     required double unitPrice,
+    int? productVariantId,
+    int? productBatchId,
   });
   Future<void> updateCartQuantity({
     required int cartItemId,
@@ -17,7 +19,6 @@ abstract class CartRemoteDataSource {
   });
   Future<void> removeFromCart(int cartItemId);
   Future<void> clearCart(int customerId);
-  Future<void> checkout(int customerId);
 }
 
 class CartRemoteDataSourceImpl implements CartRemoteDataSource {
@@ -58,6 +59,8 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     required int productId,
     required int quantity,
     required double unitPrice,
+    int? productVariantId,
+    int? productBatchId,
   }) async {
     try {
       await _dioClient.post(
@@ -67,6 +70,8 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
           'productId': productId,
           'quantity': quantity,
           'unitPrice': unitPrice,
+          'productVariantId': productVariantId,
+          'productBatchId': productBatchId,
         },
       );
     } catch (e) {
@@ -111,18 +116,6 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     try {
       await _dioClient.delete(
         ApiEndpoints.clearCart,
-        queryParameters: {'customerId': customerId},
-      );
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> checkout(int customerId) async {
-    try {
-      await _dioClient.post(
-        ApiEndpoints.checkout,
         queryParameters: {'customerId': customerId},
       );
     } catch (e) {

@@ -147,61 +147,64 @@ class WishlistItemTile extends StatelessWidget {
                     Row(
                       children: [
                         Icon(
-                          Icons.eco_outlined,
-                          color: AppColors.accentSuccess,
+                          (product.availableQty ?? 0) > 0 ? Icons.eco_outlined : Icons.error_outline,
+                          color: (product.availableQty ?? 0) > 0 ? AppColors.accentSuccess : AppColors.accentError,
                           size: 14,
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'In Stock',
+                          (product.availableQty ?? 0) > 0 ? 'In Stock' : 'Out of Stock',
                           style: TextStyle(
-                            color: AppColors.accentSuccess,
+                            color: (product.availableQty ?? 0) > 0 ? AppColors.accentSuccess : AppColors.accentError,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        final authState = context.read<AuthBloc>().state;
-                        if (authState is Authenticated) {
-                          context.read<CartBloc>().add(
-                                AddToCartEvent(
-                                  customerId: authState.user.userId,
-                                  productId: product.productId ?? 0,
-                                  quantity: 1,
-                                  unitPrice: product.price,
-                                ),
-                              );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Added to cart!'),
-                              duration: Duration(seconds: 1),
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please login to add items to cart'),
-                              backgroundColor: Colors.orange,
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        }
-                      },
-                      icon: const Icon(Icons.shopping_cart_outlined, size: 14),
-                      label: const Text('Add to Cart', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                        minimumSize: const Size(0, 32),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    if ((product.availableQty ?? 0) > 0)
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          final authState = context.read<AuthBloc>().state;
+                          if (authState is Authenticated) {
+                            context.read<CartBloc>().add(
+                                  AddToCartEvent(
+                                    customerId: authState.user.userId,
+                                    productId: product.productId ?? 0,
+                                    quantity: 1,
+                                    unitPrice: product.price,
+                                    productVariantId: product.productVariantId,
+                                    productBatchId: product.productBatchId,
+                                  ),
+                                );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Added to cart!'),
+                                duration: Duration(seconds: 1),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please login to add items to cart'),
+                                backgroundColor: Colors.orange,
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          }
+                        },
+                        icon: const Icon(Icons.shopping_cart_outlined, size: 14),
+                        label: const Text('Add to Cart', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                          minimumSize: const Size(0, 32),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ],

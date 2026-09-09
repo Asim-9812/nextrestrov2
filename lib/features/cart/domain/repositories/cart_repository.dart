@@ -9,6 +9,8 @@ abstract class CartRepository {
     required int productId,
     required int quantity,
     required double unitPrice,
+    int? productVariantId,
+    int? productBatchId,
   });
   Future<Either<Failure, void>> updateCartQuantity({
     required int cartItemId,
@@ -16,5 +18,4 @@ abstract class CartRepository {
   });
   Future<Either<Failure, void>> removeFromCart(int cartItemId);
   Future<Either<Failure, void>> clearCart(int customerId);
-  Future<Either<Failure, void>> checkout(int customerId);
 }

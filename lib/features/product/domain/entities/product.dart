@@ -41,6 +41,8 @@ class Product extends Equatable {
   final double? purchasePriceNPR;
   final double? purchasePriceINR;
   final double? exchangeRate;
+  final double? availableQty;
+  final int? productVariantId;
 
   Product({
     required this.id,
@@ -79,10 +81,22 @@ class Product extends Equatable {
     this.purchasePriceNPR,
     this.purchasePriceINR,
     this.exchangeRate,
+    this.availableQty,
+    this.productVariantId,
   });
 
   @override
-  List<Object?> get props => [id, name, category, productId, productCode, categoryId, petTypeId];
+  List<Object?> get props => [
+        id,
+        name,
+        category,
+        productId,
+        productCode,
+        categoryId,
+        petTypeId,
+        availableQty,
+        productVariantId,
+      ];
 }
 
 class ProductFAQ extends Equatable {

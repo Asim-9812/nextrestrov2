@@ -35,7 +35,6 @@ class ApiEndpoints {
   static const String removeFromCart = "/api/Cart/removeitem";
   static const String getCart = "/api/Cart/get";
   static const String clearCart = "/api/Cart/clear";
-  static const String checkout = "/api/Cart/checkout";
 
   // Category
   static const String saveCategory = "/api/Category/save";

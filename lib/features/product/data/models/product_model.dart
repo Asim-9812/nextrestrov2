@@ -38,12 +38,16 @@ class ProductModel extends Product {
     super.purchasePriceNPR,
     super.purchasePriceINR,
     super.exchangeRate,
+    super.availableQty,
+    super.productVariantId,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     final idInt = (json['productId'] as num?)?.toInt() ?? 0;
     final apiSalesPrice = (json['salesPrice'] as num?)?.toDouble();
     final apiMrp = (json['mrp'] as num?)?.toDouble();
+    final apiAvailableQty = (json['availableQty'] as num?)?.toDouble();
+    final apiProductVariantId = (json['productVariantId'] as num?)?.toInt();
     
     // Use salesPrice if available, otherwise constant 1200.0
     final displayPrice = apiSalesPrice ?? 1200.0;
@@ -60,7 +64,7 @@ class ProductModel extends Product {
         imagesList.add('https://pets.codeinfinitynepal.com/$cleanPath');
       }
     } else {
-      imagesList.add('assets/images/dashboard_assets/sample_product.png');
+      imagesList.add('assets/images/no_image.webp');
     }
 
     return ProductModel(
@@ -100,6 +104,8 @@ class ProductModel extends Product {
       purchasePriceNPR: (json['purchasePriceNPR'] as num?)?.toDouble(),
       purchasePriceINR: (json['purchasePriceINR'] as num?)?.toDouble(),
       exchangeRate: (json['exchangeRate'] as num?)?.toDouble(),
+      availableQty: apiAvailableQty,
+      productVariantId: apiProductVariantId,
     );
   }
 

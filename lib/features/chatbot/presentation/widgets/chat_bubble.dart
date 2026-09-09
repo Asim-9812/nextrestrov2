@@ -238,19 +238,33 @@ class ChatBubble extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _addToCart(context, product),
-                    icon: const Icon(Icons.add_shopping_cart, size: 16),
-                    label: const Text("Cart", style: TextStyle(fontSize: 12)),
-                    style: OutlinedButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      foregroundColor: AppColors.primary,
-                      side: const BorderSide(color: AppColors.primary),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                if ((product.availableQty ?? 0) > 0)
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _addToCart(context, product),
+                      icon: const Icon(Icons.add_shopping_cart, size: 16),
+                      label: const Text("Cart", style: TextStyle(fontSize: 12)),
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        foregroundColor: AppColors.primary,
+                        side: const BorderSide(color: AppColors.primary),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+                  )
+                else
+                  const Expanded(
+                    child: Center(
+                      child: Text(
+                        "Out of stock",
+                        style: TextStyle(
+                          color: AppColors.accentError,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
                 const SizedBox(width: 8),
                 BlocBuilder<WishlistBloc, WishlistState>(
                   builder: (context, state) {
@@ -300,6 +314,8 @@ class ChatBubble extends StatelessWidget {
             productId: product.productId ?? 0,
             quantity: 1,
             unitPrice: product.price,
+            productVariantId: product.productVariantId,
+            productBatchId: product.productBatchId,
           ));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

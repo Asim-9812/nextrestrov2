@@ -45,6 +45,26 @@ class ProductInfoHeader extends StatelessWidget {
               '${product.rating} (${product.reviewCount})',
               style: AppTextStyles.bodySmall,
             ),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: (product.availableQty ?? 0) > 0
+                    ? AppColors.accentSuccess.withOpacity(0.1)
+                    : AppColors.accentError.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                (product.availableQty ?? 0) > 0 ? 'In stock' : 'Out of stock',
+                style: TextStyle(
+                  color: (product.availableQty ?? 0) > 0
+                      ? AppColors.accentSuccess
+                      : AppColors.accentError,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ],
         ),
         AppSizes.gapH8,

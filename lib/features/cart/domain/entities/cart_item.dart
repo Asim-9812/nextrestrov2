@@ -11,6 +11,8 @@ class CartItem extends Equatable {
   final double unitPrice;
   final double discountAmount;
   final double totalAmount;
+  final int? productVariantId;
+  final int? productBatchId;
 
   const CartItem({
     required this.cartItemId,
@@ -23,6 +25,8 @@ class CartItem extends Equatable {
     required this.unitPrice,
     this.discountAmount = 0,
     required this.totalAmount,
+    this.productVariantId,
+    this.productBatchId,
   });
 
   CartItem copyWith({
@@ -36,6 +40,8 @@ class CartItem extends Equatable {
     double? unitPrice,
     double? discountAmount,
     double? totalAmount,
+    int? productVariantId,
+    int? productBatchId,
   }) {
     return CartItem(
       cartItemId: cartItemId ?? this.cartItemId,
@@ -48,6 +54,8 @@ class CartItem extends Equatable {
       unitPrice: unitPrice ?? this.unitPrice,
       discountAmount: discountAmount ?? this.discountAmount,
       totalAmount: totalAmount ?? this.totalAmount,
+      productVariantId: productVariantId ?? this.productVariantId,
+      productBatchId: productBatchId ?? this.productBatchId,
     );
   }
 
@@ -63,5 +71,7 @@ class CartItem extends Equatable {
         unitPrice,
         discountAmount,
         totalAmount,
+        productVariantId,
+        productBatchId,
       ];
 }

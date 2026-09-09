@@ -54,7 +54,7 @@ class AppProductImage extends StatelessWidget {
 
   Widget _buildPlaceholder() {
     return Image.asset(
-      'assets/images/dashboard_assets/sample_product.png',
+      'assets/images/no_image.webp',
       height: height,
       width: width,
       fit: fit,

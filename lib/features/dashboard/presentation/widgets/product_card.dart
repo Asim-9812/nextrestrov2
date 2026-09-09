@@ -132,55 +132,57 @@ class ProductCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              final authState = context.read<AuthBloc>().state;
-                              if (authState is Authenticated) {
-                                context.read<CartBloc>().add(
-                                      AddToCartEvent(
-                                        customerId: authState.user.userId,
-                                        productId: product.productId ?? 0,
-                                        quantity: 1,
-                                        unitPrice: product.salesPrice ?? 100,
-                                      ),
-                                    );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                   SnackBar(
-                                    content: Text('${product.name} added to cart!'),
-                                    duration: const Duration(seconds: 1),
-                                    backgroundColor: AppColors.primary,
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Please login to add items to cart'),
-                                    backgroundColor: Colors.orange,
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
-                                );
-                              }
-                            },
-                            child: Container(
-                              height: 32,
-                              width: 32,
-                              decoration: BoxDecoration(
-                                color: AppColors.primary,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.primary.withOpacity(0.3),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
+                          if ((product.availableQty ?? 0) > 0)
+                            GestureDetector(
+                              onTap: () {
+                                final authState = context.read<AuthBloc>().state;
+                                if (authState is Authenticated) {
+                                  context.read<CartBloc>().add(
+                                        AddToCartEvent(
+                                          customerId: authState.user.userId,
+                                          productId: product.productId ?? 0,
+                                          quantity: 1,
+                                          unitPrice: product.salesPrice ?? 100,
+                                          productVariantId: product.productVariantId,
+                                          productBatchId: product.productBatchId,
+                                        ),
+                                      );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('${product.name} added to cart!'),
+                                      duration: const Duration(seconds: 1),
+                                      backgroundColor: AppColors.primary,
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Please login to add items to cart'),
+                                      backgroundColor: Colors.orange,
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Container(
+                                height: 32,
+                                width: 32,
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppColors.primary.withOpacity(0.3),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(Icons.add, color: Colors.white, size: 18),
                               ),
-                              child: const Icon(Icons.add,
-                                  color: Colors.white, size: 18),
                             ),
-                          ),
                         ],
                       ),
                     ],

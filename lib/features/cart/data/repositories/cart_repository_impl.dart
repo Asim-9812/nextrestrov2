@@ -28,6 +28,8 @@ class CartRepositoryImpl implements CartRepository {
     required int productId,
     required int quantity,
     required double unitPrice,
+    int? productVariantId,
+    int? productBatchId,
   }) async {
     try {
       await remoteDataSource.addToCart(
@@ -35,6 +37,8 @@ class CartRepositoryImpl implements CartRepository {
         productId: productId,
         quantity: quantity,
         unitPrice: unitPrice,
+        productVariantId: productVariantId,
+        productBatchId: productBatchId,
       );
       return const Right(null);
     } on DioException catch (e) {
@@ -81,18 +85,6 @@ class CartRepositoryImpl implements CartRepository {
       return const Right(null);
     } on DioException catch (e) {
       return Left(ServerFailure(e.message ?? 'Failed to clear cart'));
-    } catch (e) {
-      return Left(GenericFailure(e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> checkout(int customerId) async {
-    try {
-      await remoteDataSource.checkout(customerId);
-      return const Right(null);
-    } on DioException catch (e) {
-      return Left(ServerFailure(e.message ?? 'Checkout failed'));
     } catch (e) {
       return Left(GenericFailure(e.toString()));
     }

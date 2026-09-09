@@ -34,23 +34,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<CartBloc, CartState>(
-          listener: (context, state) {
-            if (state is CartCheckoutSuccess) {
-              _handleOrderCreation();
-            } else if (state is CartError) {
-              // Safety: Only pop if we are sure a dialog is showing. 
-              // Since CartBloc might emit error during navigation transition, 
-              // we prevent accidental page popping.
-              if (Navigator.canPop(context)) {
-                 Navigator.pop(context); // Close loading dialog if open
-              }
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message), backgroundColor: AppColors.accentError),
-              );
-            }
-          },
-        ),
         BlocListener<OrderBloc, OrderState>(
           listener: (context, state) {
             if (state is CODOrderSuccess) {
@@ -68,7 +51,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 );
               }
             } else if (state is OrderError) {
-              Navigator.pop(context); // Close loading dialog
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context); // Close loading dialog
+              }
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message), backgroundColor: AppColors.accentError),
               );
@@ -288,13 +273,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     _itemsToOrder = (cartState as CartLoaded).cart.items;
 
-    // Step 1: Hit Cart Checkout API
+    // Direct Order Creation
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
-    context.read<CartBloc>().add(CheckoutCartEvent(authState.user.userId));
+    _handleOrderCreation();
   }
 
   void _handleOrderCreation() {
@@ -305,6 +290,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
       final details = _itemsToOrder.map((item) {
         return {
           'productId': item.productId,
+          'productVariantId': item.productVariantId ?? 0,
+          'productBatchId': item.productBatchId ?? 0,
           'quantity': item.quantity,
           'unitPrice': item.unitPrice,
           'discountAmount': item.discountAmount,

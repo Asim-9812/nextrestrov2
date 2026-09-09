@@ -64,13 +64,21 @@ class OrderItemDetailModel extends OrderItemDetailEntity {
   });
 
   factory OrderItemDetailModel.fromJson(Map<String, dynamic> json) {
+    String? productImage = json['productImage'];
+    if (productImage != null && productImage.isNotEmpty) {
+      if (!productImage.startsWith('http')) {
+        final cleanPath = productImage.startsWith('/') ? productImage.substring(1) : productImage;
+        productImage = 'https://pets.codeinfinitynepal.com/$cleanPath';
+      }
+    }
+
     return OrderItemDetailModel(
       orderDetailId: (json['orderDetailId'] as num?)?.toInt() ?? 0,
       orderId: (json['orderId'] as num?)?.toInt() ?? 0,
       productId: (json['productId'] as num?)?.toInt() ?? 0,
       productName: json['productName'] ?? '',
       productCode: json['productCode'] ?? '',
-      productImage: json['productImage'],
+      productImage: productImage,
       quantity: (json['quantity'] as num?)?.toInt() ?? 0,
       unitPrice: (json['unitPrice'] as num?)?.toDouble() ?? 0.0,
       discountAmount: (json['discountAmount'] as num?)?.toDouble() ?? 0.0,

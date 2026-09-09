@@ -449,7 +449,7 @@ class _FeaturedDealsState extends State<FeaturedDeals> {
         color: const Color(0xFFFFF2E1),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Image.asset(image ?? 'assets/images/dashboard_assets/sample_product.png'),
+      child: Image.asset(image ?? 'assets/images/no_image.webp'),
     );
   }
 }
