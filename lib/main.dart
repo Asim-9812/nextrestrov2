@@ -1,11 +1,15 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'firebase_options.dart';
+import 'core/services/onesignal_service.dart';
 import 'core/constants/constants.dart';
 import 'core/network/session_manager.dart';
 import 'core/theme/app_theme.dart';
+import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/splash/presentation/pages/splash_page.dart';
 import 'features/cart/presentation/bloc/cart_bloc.dart';
@@ -30,6 +34,10 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  OneSignalService.init();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -37,7 +45,7 @@ void main() async {
   await di.init();
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode,
+      enabled: false,
       builder: (context) => MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => di.sl<AuthBloc>()..add(CheckAuthEvent())),
@@ -80,9 +88,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _handleSessionExpired() {
-    // Show snackbar using navigator context
     final context = navigatorKey.currentContext;
     if (context != null) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Login expired. Please login again.'),
@@ -92,13 +100,8 @@ class _MyAppState extends State<MyApp> {
         ),
       );
       
-      // Navigate to login and clear stack
-      navigatorKey.currentState?.pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-        (route) => false,
-      );
-      
-      // Reset AuthBloc state if needed
+      // Reset AuthBloc state. The navigation will be handled by the 
+      // global BlocListener when state changes to Unauthenticated.
       context.read<AuthBloc>().add(LogoutEvent());
     }
   }
@@ -110,11 +113,21 @@ class _MyAppState extends State<MyApp> {
       locale: DevicePreview.locale(context),
       builder: (context, child) {
         child = DevicePreview.appBuilder(context, child);
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.noScaling,
+        return BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is Unauthenticated) {
+              navigatorKey.currentState?.pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const LoginPage()),
+                (route) => false,
+              );
+            }
+          },
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.noScaling,
+            ),
+            child: child,
           ),
-          child: child,
         );
       },
       title: AppConstants.appName,

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "923851122658",
+    "project_id": "divinepets-5e73e",
+    "storage_bucket": "divinepets-5e73e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:923851122658:android:bfdffca23e2128c635bbbb",
+        "android_client_info": {
+          "package_name": "com.codeinfinity.divinepets"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFKrhiWSeFL-VtORE3et1hEvGF-1PdaR8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

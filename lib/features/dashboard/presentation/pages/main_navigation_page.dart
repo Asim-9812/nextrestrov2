@@ -64,18 +64,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   @override
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is Unauthenticated) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
-            (route) => false,
-          );
-        }
-      },
-      child: Scaffold(
-        key: _scaffoldKey,
+    return Scaffold(
+      key: _scaffoldKey,
       drawer: AppDrawer(
         onNavigate: (index) {
           setState(() => _selectedIndex = index);
@@ -117,7 +107,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           ],
         ),
       ),
-    ));
+    );
   }
 
   Widget _buildNavItem(int index, IconData icon) {

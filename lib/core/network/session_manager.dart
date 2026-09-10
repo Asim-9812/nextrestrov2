@@ -37,6 +37,8 @@ class SessionManager {
   }
 
   void triggerSessionExpired() {
+    if (_token == null) return; // Already triggered or logged out
+    _token = null; // Prevent re-triggering immediately
     _sessionExpiredController.add(true);
     logout();
   }

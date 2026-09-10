@@ -70,6 +70,10 @@ dependencies:
   confetti: ^0.8.0
   flutter_widget_from_html_core: ^0.15.1
 
+  firebase_core: ^4.14.0
+  firebase_auth: ^6.6.1
+  onesignal_flutter: 5.5.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
