@@ -16,7 +16,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F0FF),
+        color: const Color(0xFFF0F7FC),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(

@@ -193,7 +193,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
       margin: const EdgeInsets.symmetric(horizontal: 20),
       height: 65,
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F3FF),
+        color: const Color(0xFFF0F7FC),
         borderRadius: BorderRadius.circular(12),
       ),
       child: TabBar(

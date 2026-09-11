@@ -56,7 +56,7 @@ class ProfileSupportSection extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFFF7F8FA),
+              color: AppColors.primaryLightest,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: AppColors.primary, size: 18),

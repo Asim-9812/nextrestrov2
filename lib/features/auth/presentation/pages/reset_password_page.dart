@@ -124,7 +124,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF7F3FF),
+        backgroundColor: const Color(0xFFF0F7FC),
         body: Stack(
           children: [
             ..._buildBackgroundWaves(size),

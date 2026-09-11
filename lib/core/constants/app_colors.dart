@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Primaries
-  static const Color primary = Color(0xFF6C3FF5);
-  static const Color primaryVariant = Color(0xFF7C4DFF);
-  static const Color primaryBg = Color(0xFFE7EAF2);
-  static const Color primarySoft = Color(0xFFEEE7FF);
-  static const Color primaryLighter = Color(0xFFF7F3FF);
-  static const Color primaryLightest = Color(0xFFFBF9FF);
+  static const Color primary = Color(0xFF015C9A);
+  static const Color primaryVariant = Color(0xFF014B7D);
+  static const Color primaryBg = Color(0xFFE7EEF2);
+  static const Color primarySoft = Color(0xFFE6F0F9);
+  static const Color primaryLighter = Color(0xFFF0F7FC);
+  static const Color primaryLightest = Color(0xFFF8FBFE);
   static const Color white = Color(0xFFFFFFFF);
 
   // Secondaries
@@ -32,24 +32,24 @@ class AppColors {
 
   // Accents
   static const Color accentSuccess = Color(0xFF34C759);
-  static const Color accentInfo = Color(0xFF7C4DFF);
-  static const Color accentBg = Color(0xFFE7EAF2);
+  static const Color accentInfo = Color(0xFF015C9A);
+  static const Color accentBg = Color(0xFFE7EEF2);
   static const Color accentError = Color(0xFFFF4D7D);
   static const Color accentWarning = Color(0xFFFF5A5F);
   static const Color accentHighlight = Color(0xFFFFB800);
 
   // Categories
-  static const Color catGray = Color(0xFFE7EAF2);
+  static const Color catGray = Color(0xFFE7EEF2);
   static const Color catGreen = Color(0xFFE8FFF2);
   static const Color catBlue = Color(0xFFEAF4FF);
-  static const Color catPurple = Color(0xFFEFE7FF);
-  static const Color catIndigo = Color(0xFFF2EEFF);
+  static const Color catPurple = Color(0xFFE7EEFF);
+  static const Color catIndigo = Color(0xFFEEF2FF);
   static const Color catPink = Color(0xFFFFEAF2);
   static const Color catYellow = Color(0xFFFFF5D8);
 
   // Buttons
-  static const Color buttonDeep = Color(0xFF5A2EE6);
-  static const Color buttonPrimary = Color(0xFF6C3FF5);
-  static const Color buttonLight = Color(0xFF7C4DFF);
-  static const Color buttonBg = Color(0xFFE7EAF2);
+  static const Color buttonDeep = Color(0xFF003E70);
+  static const Color buttonPrimary = Color(0xFF015C9A);
+  static const Color buttonLight = Color(0xFF2A8BCA);
+  static const Color buttonBg = Color(0xFFE7EEF2);
 }

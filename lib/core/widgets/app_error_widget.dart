@@ -24,7 +24,7 @@ class AppErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F3FF), // Light purple background
+      backgroundColor: const Color(0xFFF0F7FC), // Light blue background
       body: Stack(
         children: [
           // Background Decorative Icons (Improved Grid-based Distribution)

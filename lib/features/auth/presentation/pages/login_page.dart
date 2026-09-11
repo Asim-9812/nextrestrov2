@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF7F3FF),
+        backgroundColor: const Color(0xFFF0F7FC),
         body: Stack(
           children: [
             // 1. Background Waves (Bottom Layer)

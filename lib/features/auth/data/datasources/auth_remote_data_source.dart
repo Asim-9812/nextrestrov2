@@ -106,8 +106,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> getProfile() async {
     try {
       final response = await _dioClient.get(ApiEndpoints.profile);
-      if (response.data != null && response.data['data'] != null) {
-        return UserModel.fromJson(response.data['data']);
+      if (response.data != null) {
+        // Handle both cases: data directly in root or inside 'data' key
+        final userData = response.data['data'] ?? response.data;
+        return UserModel.fromJson(userData);
       }
       throw Exception('Failed to load profile');
     } catch (e) {

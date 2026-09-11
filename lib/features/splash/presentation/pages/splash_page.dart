@@ -58,9 +58,9 @@ class _SplashPageState extends State<SplashPage> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0xFFF7F3FF),
+                  Color(0xFFF0F7FC),
                   AppColors.white,
-                  Color(0xFFF7F3FF),
+                  Color(0xFFF0F7FC),
                 ],
               ),
             ),
@@ -79,7 +79,7 @@ class _SplashPageState extends State<SplashPage> {
                   child: const Hero(
                     tag: 'appLogo',
                     child: AppLogo(
-                      size: 60,
+                      size: 180,
                       pawColor: AppColors.white,
                     ),
                   ),

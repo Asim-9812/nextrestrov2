@@ -112,7 +112,7 @@ class _SignUpPageState extends State<SignUpPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF7F3FF),
+        backgroundColor: const Color(0xFFF0F7FC),
         extendBodyBehindAppBar: true,
         body: Stack(
           children: [

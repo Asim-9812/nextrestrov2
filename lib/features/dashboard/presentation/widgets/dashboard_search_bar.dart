@@ -22,7 +22,7 @@ class DashboardSearchBar extends StatelessWidget {
           height: 55,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: const Color(0xFFF7F8FA),
+            color: AppColors.primaryLightest,
             borderRadius: BorderRadius.circular(15),
             border: Border.all(color: Colors.grey.shade200),
           ),

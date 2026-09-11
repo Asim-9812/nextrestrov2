@@ -40,7 +40,7 @@ class AppDrawer extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
             decoration: const BoxDecoration(
-              color: Color(0xFFF2EEFF), // Light purple background
+              color: Color(0xFFEEF2FF), // Light blue background
             ),
             child: const Align(
               alignment: Alignment.bottomCenter,
@@ -137,7 +137,7 @@ class AppDrawer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF6F3FF),
+        color: const Color(0xFFF0F7FC),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -317,7 +317,7 @@ class AppDrawer extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 10),
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
         decoration: BoxDecoration(
-          color: const Color(0xFFF2EEFF),
+          color: const Color(0xFFEEF2FF),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
