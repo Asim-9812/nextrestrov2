@@ -12,6 +12,10 @@ class OneSignalService {
   static const String _appId = "a320a637-fe26-4694-bbc2-43dc677ba436";
   static const String _dialogShownKey = "onesignal_verification_dialog_shown";
 
+  static int? _pendingOrderId;
+  static int? get pendingOrderId => _pendingOrderId;
+  static void clearPendingOrder() => _pendingOrderId = null;
+
   static void init() {
     debugPrint("OneSignal: Initializing...");
     
@@ -38,7 +42,12 @@ class OneSignalService {
         final rawOrderId = data['orderId'];
         final orderId = int.tryParse(rawOrderId.toString());
         if (orderId != null) {
-          _navigateToOrderDetails(orderId);
+          if (navigatorKey.currentState == null) {
+            debugPrint("OneSignal: Navigator not ready, storing pending orderId: $orderId");
+            _pendingOrderId = orderId;
+          } else {
+            _navigateToOrderDetails(orderId);
+          }
         }
       }
     });

@@ -24,6 +24,7 @@ class DioClient {
         },
         onError: (DioException e, handler) {
           if (e.response?.statusCode == 401) {
+            AppLogger.e('DioClient: 401 Unauthorized detected! Triggering session expiry.');
             _sessionManager.triggerSessionExpired();
           }
           final errorMessage = _getErrorMessage(e);

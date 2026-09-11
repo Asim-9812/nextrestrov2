@@ -37,6 +37,27 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   void initState() {
     super.initState();
     _loadInitialData();
+    _checkPendingNotifications();
+  }
+
+  void _checkPendingNotifications() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final pendingId = OneSignalService.pendingOrderId;
+      if (pendingId != null) {
+        debugPrint("MainNavigationPage: Found pending order notification for ID: $pendingId");
+        OneSignalService.clearPendingOrder();
+        
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => di.sl<OrderBloc>(),
+              child: OrderDetailsPage(orderId: pendingId),
+            ),
+          ),
+        );
+      }
+    });
   }
 
   void _loadInitialData() {

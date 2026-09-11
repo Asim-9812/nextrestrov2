@@ -90,6 +90,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _handleSessionExpired() {
+    debugPrint("MyApp: Handling Session Expired Event");
     final context = navigatorKey.currentContext;
     if (context != null) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -102,9 +103,16 @@ class _MyAppState extends State<MyApp> {
         ),
       );
       
-      // Reset AuthBloc state. The navigation will be handled by the 
-      // global BlocListener when state changes to Unauthenticated.
+      // Force immediate navigation to login and clear everything
+      navigatorKey.currentState?.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+        (route) => false,
+      );
+
+      // Also reset state
       context.read<AuthBloc>().add(LogoutEvent());
+    } else {
+      debugPrint("MyApp Error: Cannot handle session expiry, context is null");
     }
   }
 
@@ -117,6 +125,7 @@ class _MyAppState extends State<MyApp> {
         child = DevicePreview.appBuilder(context, child);
         return BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
+            debugPrint("MyApp: Global Auth State Changed to: $state");
             if (state is Authenticated) {
               OneSignalService.login(state.user.userId.toString());
               _isInitialAuthChecked = true;
@@ -126,6 +135,7 @@ class _MyAppState extends State<MyApp> {
               // Only navigate if we've already done the initial check 
               // (which is handled by SplashPage)
               if (_isInitialAuthChecked) {
+                debugPrint("MyApp: Redirecting to LoginPage (Manual Logout)");
                 navigatorKey.currentState?.pushAndRemoveUntil(
                   MaterialPageRoute(builder: (_) => const LoginPage()),
                   (route) => false,
