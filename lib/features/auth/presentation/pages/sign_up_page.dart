@@ -391,7 +391,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           }
                                         },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.primary,
+                                    backgroundColor: AppColors.primarySoft,
                                     padding: const EdgeInsets.symmetric(vertical: 16),
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                     elevation: 0,
@@ -404,7 +404,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         )
                                       : const Text(
                                           'Create Account',
-                                          style: TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.w600),
+                                          style: TextStyle(color: AppColors.primary, fontSize: 18, fontWeight: FontWeight.w600),
                                         ),
                                 );
                               },

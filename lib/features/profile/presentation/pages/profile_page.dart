@@ -237,7 +237,7 @@ class _ProfilePageState extends State<ProfilePage> {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: const Color(0xFFF2EEFF),
+            color: AppColors.primarySoft,
             borderRadius: BorderRadius.circular(8),
           ),
           child: const Icon(Icons.logout_rounded, color: AppColors.primary, size: 20),

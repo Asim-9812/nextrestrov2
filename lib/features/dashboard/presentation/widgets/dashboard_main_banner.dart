@@ -24,7 +24,7 @@ class DashboardMainBanner extends StatelessWidget {
               // Banner Purple Background
               Positioned.fill(
                 child: Container(
-                  color: const Color(0xFFE1D5FF).withOpacity(0.8),
+                  color: AppColors.primarySoft,
                 ),
               ),
               // Content - Increased left padding to center the group better

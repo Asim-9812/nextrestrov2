@@ -40,7 +40,7 @@ class AppDrawer extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
             decoration: const BoxDecoration(
-              color: Color(0xFFEEF2FF), // Light blue background
+              color: AppColors.primarySoft,// Light blue background
             ),
             child: const Align(
               alignment: Alignment.bottomCenter,
@@ -180,7 +180,7 @@ class AppDrawer extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
-            color: const Color(0xFFF6F3FF),
+            color: AppColors.primaryLighter,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(

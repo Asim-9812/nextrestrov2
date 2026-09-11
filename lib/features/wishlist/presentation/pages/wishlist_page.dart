@@ -215,7 +215,7 @@ class WishlistPage extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFF2EEFF),
+        color: AppColors.primarySoft,
         borderRadius: BorderRadius.circular(24),
       ),
       child: Row(

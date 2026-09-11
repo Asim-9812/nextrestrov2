@@ -24,6 +24,11 @@ class AppTheme {
     elevatedButtonTheme: AppButtonTheme.lightElevatedButtonTheme,
     outlinedButtonTheme: AppButtonTheme.lightOutlinedButtonTheme,
     inputDecorationTheme: AppInputTheme.lightInputDecorationTheme,
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: AppColors.primary,
+      selectionColor: AppColors.primarySoft,
+      selectionHandleColor: AppColors.primary,
+    ),
     appBarTheme: AppBarTheme(
       elevation: 0,
       centerTitle: false,
@@ -48,6 +53,10 @@ class AppTheme {
         if (states.contains(WidgetState.selected)) return AppColors.primary;
         return Colors.transparent;
       }),
+    ),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      color: AppColors.primary,
+      refreshBackgroundColor: Colors.white,
     ),
   );
 }

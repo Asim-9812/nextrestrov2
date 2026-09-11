@@ -76,7 +76,7 @@ class ProfilePetsSection extends StatelessWidget {
       child: Container(
         width: 120,
         decoration: BoxDecoration(
-          color: const Color(0xFFF2EEFF),
+          color: AppColors.primarySoft,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.primary.withOpacity(0.1)),
         ),
