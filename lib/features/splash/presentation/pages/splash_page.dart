@@ -140,8 +140,9 @@ class _SplashPageState extends State<SplashPage> {
           ),
         ],
       ),
-    ),);
+    );
   }
+
 
   List<Widget> _buildBackgroundPattern() {
     return [
