@@ -13,63 +13,65 @@ class OneSignalService {
   static const String _dialogShownKey = "onesignal_verification_dialog_shown";
 
   static void init() {
-    debugPrint("OneSignal: Initializing...");
-    
-    // 1. Set Debug Level
-    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-
-    // 2. Initialize FIRST to avoid "Must call initWithContext before use"
-    OneSignal.initialize(_appId);
-
-    // 3. Setup Listeners AFTER Initialize
-    
-    // Foreground Notification Listener
-    OneSignal.Notifications.addForegroundWillDisplayListener((event) {
-      debugPrint("OneSignal: !!! FOREGROUND NOTIFICATION RECEIVED !!!");
-      debugPrint("OneSignal:   Title: ${event.notification.title}");
-      debugPrint("OneSignal:   Additional Data: ${event.notification.additionalData}");
+    try {
+      debugPrint("OneSignal: Initializing...");
       
-      // Force display the notification banner
-      event.notification.display(); 
-    });
+      // 1. Set Debug Level
+      OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
 
-    // Notification Click Listener
-    OneSignal.Notifications.addClickListener((event) {
-      debugPrint("OneSignal: Notification clicked!");
-      final data = event.notification.additionalData;
-      debugPrint("OneSignal:   Additional Data: $data");
+      // 2. Initialize
+      OneSignal.initialize(_appId);
 
-      if (data != null && (data['type'] == 'order_status' || data['type'] == 'order_update')) {
-        // Handle both string and int for orderId
-        final rawOrderId = data['orderId'];
-        final orderId = int.tryParse(rawOrderId.toString());
-        if (orderId != null) {
-          _navigateToOrderDetails(orderId);
+      // 3. Setup Listeners
+      OneSignal.Notifications.addForegroundWillDisplayListener((event) {
+        debugPrint("OneSignal: !!! FOREGROUND NOTIFICATION RECEIVED !!!");
+        debugPrint("OneSignal:   Title: ${event.notification.title}");
+        debugPrint("OneSignal:   Additional Data: ${event.notification.additionalData}");
+        event.notification.display(); 
+      });
+
+      OneSignal.Notifications.addClickListener((event) {
+        debugPrint("OneSignal: Notification clicked!");
+        final data = event.notification.additionalData;
+        debugPrint("OneSignal:   Additional Data: $data");
+
+        if (data != null && (data['type'] == 'order_status' || data['type'] == 'order_update')) {
+          final rawOrderId = data['orderId'];
+          final orderId = int.tryParse(rawOrderId.toString());
+          if (orderId != null) {
+            _navigateToOrderDetails(orderId);
+          }
         }
+      });
+
+      OneSignal.User.pushSubscription.addObserver((state) {
+        debugPrint("OneSignal: Subscription ID changed: ${state.current.id}");
+        if (state.current.id != null) {
+          _checkAndShowVerificationDialog(state.current.id);
+        }
+      });
+
+      // 4. Automatically request push permission
+      OneSignal.Notifications.requestPermission(true).then((accepted) {
+        debugPrint("OneSignal: Permission request completed. Accepted: $accepted");
+      }).catchError((e) {
+        debugPrint("OneSignal Error (requestPermission): $e");
+      });
+
+      // 5. Force check permissions and registration
+      _forceCheckStatus();
+    } catch (e) {
+      debugPrint("OneSignal Error (init): $e");
+      // Retry initialization after a longer delay if it failed due to context
+      if (e.toString().contains('initWithContext')) {
+        Future.delayed(const Duration(seconds: 3), () => init());
       }
-    });
-
-    // Subscription Observer
-    OneSignal.User.pushSubscription.addObserver((state) {
-      debugPrint("OneSignal: Subscription ID changed: ${state.current.id}");
-      if (state.current.id != null) {
-        _checkAndShowVerificationDialog(state.current.id);
-      }
-    });
-
-    // 4. Automatically request push permission
-    OneSignal.Notifications.requestPermission(true).then((accepted) {
-      debugPrint("OneSignal: Permission request completed. Accepted: $accepted");
-    });
-
-    // 5. Force check permissions and registration
-    _forceCheckStatus();
+    }
   }
 
   static void _navigateToOrderDetails(int orderId) {
-    // In release mode, we might need a small delay to ensure the navigator is ready
-    // especially if launching from a cold start.
-    Future.delayed(const Duration(milliseconds: 500), () {
+    // Robust navigation with delay to ensure Navigator is ready
+    Future.delayed(const Duration(milliseconds: 800), () {
       final navState = navigatorKey.currentState;
       if (navState != null) {
         navState.push(
@@ -81,7 +83,9 @@ class OneSignalService {
           ),
         );
       } else {
-        debugPrint("OneSignal Error: Navigator state is null, cannot navigate to order $orderId");
+        debugPrint("OneSignal Error: Navigator state is null for order $orderId. Retrying...");
+        // One-time retry
+        Future.delayed(const Duration(seconds: 1), () => _navigateToOrderDetails(orderId));
       }
     });
   }
@@ -90,38 +94,42 @@ class OneSignalService {
     // Wait a bit for SDK to settle
     await Future.delayed(const Duration(seconds: 2));
     
-    final subId = OneSignal.User.pushSubscription.id;
-    final hasPermission = await OneSignal.Notifications.permission;
-    
-    debugPrint("OneSignal: Periodic Status Check:");
-    debugPrint("OneSignal:   Subscription ID: $subId");
-    debugPrint("OneSignal:   Has Permission: $hasPermission");
+    try {
+      final subId = OneSignal.User.pushSubscription.id;
+      final hasPermission = await OneSignal.Notifications.permission;
+      
+      debugPrint("OneSignal Status: ID=$subId, Permission=$hasPermission");
 
-    if (subId != null && !hasPermission) {
-      debugPrint("OneSignal: Permission not granted, triggering prompt...");
-      // For testing purposes, we can trigger the prompt here if not granted
-      // but following the ai-prompt guidelines, we use the dialog.
-      _checkAndShowVerificationDialog(subId);
+      if (subId != null && !hasPermission) {
+        _checkAndShowVerificationDialog(subId);
+      }
+    } catch (e) {
+      debugPrint("OneSignal Error (forceCheckStatus): $e");
     }
   }
 
   static Future<void> _checkAndShowVerificationDialog(String? subscriptionId) async {
     if (subscriptionId == null || subscriptionId.startsWith("local-")) return;
 
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool(_dialogShownKey) ?? false) return;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool(_dialogShownKey) ?? false) return;
 
-    // Show dialog via navigatorKey context
-    _waitForContextAndShowDialog();
+      _waitForContextAndShowDialog();
+    } catch (e) {
+      debugPrint("OneSignal Error (checkAndShowVerificationDialog): $e");
+    }
   }
 
   static Future<void> _waitForContextAndShowDialog() async {
-    while (navigatorKey.currentContext == null) {
+    int retries = 0;
+    while (navigatorKey.currentContext == null && retries < 10) {
       await Future.delayed(const Duration(milliseconds: 500));
+      retries++;
     }
 
-    final context = navigatorKey.currentContext!;
-    if (!context.mounted) return;
+    final context = navigatorKey.currentContext;
+    if (context == null || !context.mounted) return;
 
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getBool(_dialogShownKey) ?? false) return;
@@ -139,7 +147,6 @@ class OneSignalService {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                // Explicitly request permission here
                 OneSignal.Notifications.requestPermission(true);
               },
               child: const Text("Got it"),
@@ -152,19 +159,4 @@ class OneSignalService {
 
   static void login(String externalId) => OneSignal.login(externalId);
   static void logout() => OneSignal.logout();
-
-  static void _navigateToOrderDetails(int orderId) {
-    final context = navigatorKey.currentContext;
-    if (context != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) => di.sl<OrderBloc>(),
-            child: OrderDetailsPage(orderId: orderId),
-          ),
-        ),
-      );
-    }
-  }
 }
