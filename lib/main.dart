@@ -115,7 +115,10 @@ class _MyAppState extends State<MyApp> {
         child = DevicePreview.appBuilder(context, child);
         return BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
-            if (state is Unauthenticated) {
+            if (state is Authenticated) {
+              OneSignalService.login(state.user.userId.toString());
+            } else if (state is Unauthenticated) {
+              OneSignalService.logout();
               navigatorKey.currentState?.pushAndRemoveUntil(
                 MaterialPageRoute(builder: (_) => const LoginPage()),
                 (route) => false,

@@ -84,8 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                               const Hero(
                                 tag: 'appLogo',
                                 child: AppLogo(
-                                  size: 50,
-                                  pawColor: AppColors.white,
+                                  size: 180,
                                 ),
                               ),
                               AppSizes.gapH8,

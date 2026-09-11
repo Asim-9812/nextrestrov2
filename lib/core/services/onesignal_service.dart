@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../main.dart'; // To access navigatorKey
+
+import '../../features/order/presentation/pages/order_details_page.dart';
+import '../../features/order/presentation/bloc/order_bloc.dart';
+import '../../injection_container.dart' as di;
 
 class OneSignalService {
   static const String _appId = "a320a637-fe26-4694-bbc2-43dc677ba436";
@@ -18,8 +23,9 @@ class OneSignalService {
     // Foreground Notification Listener
     OneSignal.Notifications.addForegroundWillDisplayListener((event) {
       debugPrint("OneSignal: !!! FOREGROUND NOTIFICATION RECEIVED !!!");
-      debugPrint("OneSignal: Title: ${event.notification.title}");
-      debugPrint("OneSignal: Body: ${event.notification.body}");
+      debugPrint("OneSignal:   Title: ${event.notification.title}");
+      debugPrint("OneSignal:   Body: ${event.notification.body}");
+      debugPrint("OneSignal:   Additional Data: ${event.notification.additionalData}");
       
       // Force display the notification banner
       event.notification.display(); 
@@ -27,7 +33,16 @@ class OneSignalService {
 
     // Notification Click Listener
     OneSignal.Notifications.addClickListener((event) {
-      debugPrint("OneSignal: Notification clicked: ${event.notification.title}");
+      debugPrint("OneSignal: Notification clicked!");
+      final data = event.notification.additionalData;
+      debugPrint("OneSignal:   Additional Data: $data");
+
+      if (data != null && data.containsKey('orderId') && data['type'] == 'order_status') {
+        final orderId = int.tryParse(data['orderId'].toString());
+        if (orderId != null) {
+          _navigateToOrderDetails(orderId);
+        }
+      }
     });
 
     // Subscription Observer
@@ -117,4 +132,19 @@ class OneSignalService {
 
   static void login(String externalId) => OneSignal.login(externalId);
   static void logout() => OneSignal.logout();
+
+  static void _navigateToOrderDetails(int orderId) {
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => di.sl<OrderBloc>(),
+            child: OrderDetailsPage(orderId: orderId),
+          ),
+        ),
+      );
+    }
+  }
 }

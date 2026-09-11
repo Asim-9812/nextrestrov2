@@ -10,61 +10,17 @@ class AppLogo extends StatelessWidget {
 
   const AppLogo({
     super.key,
-    this.size = 40,
+    this.size = 150,
     this.color,
     this.pawColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    final logoColor = color ?? AppColors.primary;
-    
-    return Material(
-      color: Colors.transparent,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // The "D" Icon with Paw
-          Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              color: logoColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(size * 0.2),
-                bottomLeft: Radius.circular(size * 0.2),
-                topRight: Radius.circular(size * 0.5),
-                bottomRight: Radius.circular(size * 0.5),
-              ),
-            ),
-            child: Center(
-              child: Icon(
-                FontAwesomeIcons.paw,
-                color: pawColor ?? Colors.black,
-                size: size * 0.6,
-              ),
-            ),
-          ),
-          SizedBox(width: size * 0.1),
-          // The "ivine Pets" Text
-          Flexible(
-            fit: FlexFit.loose,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const NeverScrollableScrollPhysics(),
-              child: Text(
-                'ivine Pets',
-                style: AppTextStyles.h2.copyWith(
-                  color: logoColor,
-                  fontSize: size * 0.85,
-                  height: 1.1,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return Image.asset(
+      'assets/images/icons/banner_logo.png',
+      width: size,
+      fit: BoxFit.contain,
     );
   }
 }

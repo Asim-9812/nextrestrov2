@@ -44,7 +44,7 @@ class AppDrawer extends StatelessWidget {
             ),
             child: const Align(
               alignment: Alignment.bottomCenter,
-              child: AppLogo(size: 32, pawColor: Colors.white),
+              child: AppLogo(size: 150),
             ),
           ),
           
