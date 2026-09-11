@@ -22,17 +22,24 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+    _startSplash();
   }
 
-  void _handleNavigation(AuthState state) async {
-    await Future.delayed(const Duration(milliseconds: 3000));
+  void _startSplash() async {
+    // Always show splash for at least 3 seconds
+    await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
+    
+    final state = context.read<AuthBloc>().state;
+    _navigateToNext(state);
+  }
 
+  void _navigateToNext(AuthState state) {
     if (state is Authenticated) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const MainNavigationPage()),
       );
-    } else if (state is Unauthenticated || state is AuthError) {
+    } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const LoginPage()),
       );
@@ -41,13 +48,7 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is Authenticated || state is Unauthenticated || state is AuthError) {
-          _handleNavigation(state);
-        }
-      },
-      child: Scaffold(
+    return Scaffold(
       body: Stack(
         children: [
           // Background Gradient

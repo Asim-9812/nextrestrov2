@@ -73,6 +73,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool _isInitialAuthChecked = false;
+
   @override
   void initState() {
     super.initState();
@@ -117,12 +119,19 @@ class _MyAppState extends State<MyApp> {
           listener: (context, state) {
             if (state is Authenticated) {
               OneSignalService.login(state.user.userId.toString());
+              _isInitialAuthChecked = true;
             } else if (state is Unauthenticated) {
               OneSignalService.logout();
-              navigatorKey.currentState?.pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const LoginPage()),
-                (route) => false,
-              );
+              
+              // Only navigate if we've already done the initial check 
+              // (which is handled by SplashPage)
+              if (_isInitialAuthChecked) {
+                navigatorKey.currentState?.pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const LoginPage()),
+                  (route) => false,
+                );
+              }
+              _isInitialAuthChecked = true;
             }
           },
           child: MediaQuery(
