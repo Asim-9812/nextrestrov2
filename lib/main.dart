@@ -34,23 +34,15 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+  OneSignalService.init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  
   await di.init();
-  
-  // Initialize OneSignal with a slight delay to ensure native context is ready
-  Future.delayed(const Duration(seconds: 1), () {
-    OneSignalService.init();
-  });
-
   runApp(
     DevicePreview(
       enabled: false,

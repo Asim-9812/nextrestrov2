@@ -13,65 +13,54 @@ class OneSignalService {
   static const String _dialogShownKey = "onesignal_verification_dialog_shown";
 
   static void init() {
-    try {
-      debugPrint("OneSignal: Initializing...");
-      
-      // 1. Set Debug Level
-      OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+    debugPrint("OneSignal: Initializing...");
+    
+    // 1. Set Debug Level
+    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
 
-      // 2. Initialize
-      OneSignal.initialize(_appId);
+    // 2. Initialize
+    OneSignal.initialize(_appId);
 
-      // 3. Setup Listeners
-      OneSignal.Notifications.addForegroundWillDisplayListener((event) {
-        debugPrint("OneSignal: !!! FOREGROUND NOTIFICATION RECEIVED !!!");
-        debugPrint("OneSignal:   Title: ${event.notification.title}");
-        debugPrint("OneSignal:   Additional Data: ${event.notification.additionalData}");
-        event.notification.display(); 
-      });
+    // 3. Setup Listeners
+    OneSignal.Notifications.addForegroundWillDisplayListener((event) {
+      debugPrint("OneSignal: !!! FOREGROUND NOTIFICATION RECEIVED !!!");
+      debugPrint("OneSignal:   Title: ${event.notification.title}");
+      debugPrint("OneSignal:   Additional Data: ${event.notification.additionalData}");
+      event.notification.display(); 
+    });
 
-      OneSignal.Notifications.addClickListener((event) {
-        debugPrint("OneSignal: Notification clicked!");
-        final data = event.notification.additionalData;
-        debugPrint("OneSignal:   Additional Data: $data");
+    OneSignal.Notifications.addClickListener((event) {
+      debugPrint("OneSignal: Notification clicked!");
+      final data = event.notification.additionalData;
+      debugPrint("OneSignal:   Additional Data: $data");
 
-        if (data != null && (data['type'] == 'order_status' || data['type'] == 'order_update')) {
-          final rawOrderId = data['orderId'];
-          final orderId = int.tryParse(rawOrderId.toString());
-          if (orderId != null) {
-            _navigateToOrderDetails(orderId);
-          }
+      if (data != null && (data['type'] == 'order_status' || data['type'] == 'order_update')) {
+        final rawOrderId = data['orderId'];
+        final orderId = int.tryParse(rawOrderId.toString());
+        if (orderId != null) {
+          _navigateToOrderDetails(orderId);
         }
-      });
-
-      OneSignal.User.pushSubscription.addObserver((state) {
-        debugPrint("OneSignal: Subscription ID changed: ${state.current.id}");
-        if (state.current.id != null) {
-          _checkAndShowVerificationDialog(state.current.id);
-        }
-      });
-
-      // 4. Automatically request push permission
-      OneSignal.Notifications.requestPermission(true).then((accepted) {
-        debugPrint("OneSignal: Permission request completed. Accepted: $accepted");
-      }).catchError((e) {
-        debugPrint("OneSignal Error (requestPermission): $e");
-      });
-
-      // 5. Force check permissions and registration
-      _forceCheckStatus();
-    } catch (e) {
-      debugPrint("OneSignal Error (init): $e");
-      // Retry initialization after a longer delay if it failed due to context
-      if (e.toString().contains('initWithContext')) {
-        Future.delayed(const Duration(seconds: 3), () => init());
       }
-    }
+    });
+
+    OneSignal.User.pushSubscription.addObserver((state) {
+      debugPrint("OneSignal: Subscription ID changed: ${state.current.id}");
+      if (state.current.id != null) {
+        _checkAndShowVerificationDialog(state.current.id);
+      }
+    });
+
+    // 4. Automatically request push permission
+    OneSignal.Notifications.requestPermission(true).then((accepted) {
+      debugPrint("OneSignal: Permission request completed. Accepted: $accepted");
+    });
+
+    // 5. Force check permissions and registration
+    _forceCheckStatus();
   }
 
   static void _navigateToOrderDetails(int orderId) {
-    // Robust navigation with delay to ensure Navigator is ready
-    Future.delayed(const Duration(milliseconds: 800), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       final navState = navigatorKey.currentState;
       if (navState != null) {
         navState.push(
@@ -83,9 +72,7 @@ class OneSignalService {
           ),
         );
       } else {
-        debugPrint("OneSignal Error: Navigator state is null for order $orderId. Retrying...");
-        // One-time retry
-        Future.delayed(const Duration(seconds: 1), () => _navigateToOrderDetails(orderId));
+        debugPrint("OneSignal Error: Navigator state is null, cannot navigate to order $orderId");
       }
     });
   }
@@ -94,42 +81,32 @@ class OneSignalService {
     // Wait a bit for SDK to settle
     await Future.delayed(const Duration(seconds: 2));
     
-    try {
-      final subId = OneSignal.User.pushSubscription.id;
-      final hasPermission = await OneSignal.Notifications.permission;
-      
-      debugPrint("OneSignal Status: ID=$subId, Permission=$hasPermission");
+    final subId = OneSignal.User.pushSubscription.id;
+    final hasPermission = await OneSignal.Notifications.permission;
+    
+    debugPrint("OneSignal Status: ID=$subId, Permission=$hasPermission");
 
-      if (subId != null && !hasPermission) {
-        _checkAndShowVerificationDialog(subId);
-      }
-    } catch (e) {
-      debugPrint("OneSignal Error (forceCheckStatus): $e");
+    if (subId != null && !hasPermission) {
+      _checkAndShowVerificationDialog(subId);
     }
   }
 
   static Future<void> _checkAndShowVerificationDialog(String? subscriptionId) async {
     if (subscriptionId == null || subscriptionId.startsWith("local-")) return;
 
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      if (prefs.getBool(_dialogShownKey) ?? false) return;
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(_dialogShownKey) ?? false) return;
 
-      _waitForContextAndShowDialog();
-    } catch (e) {
-      debugPrint("OneSignal Error (checkAndShowVerificationDialog): $e");
-    }
+    _waitForContextAndShowDialog();
   }
 
   static Future<void> _waitForContextAndShowDialog() async {
-    int retries = 0;
-    while (navigatorKey.currentContext == null && retries < 10) {
+    while (navigatorKey.currentContext == null) {
       await Future.delayed(const Duration(milliseconds: 500));
-      retries++;
     }
 
-    final context = navigatorKey.currentContext;
-    if (context == null || !context.mounted) return;
+    final context = navigatorKey.currentContext!;
+    if (!context.mounted) return;
 
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getBool(_dialogShownKey) ?? false) return;
