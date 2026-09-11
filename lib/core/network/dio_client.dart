@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../utils/app_logger.dart';
 import 'api_endpoints.dart';
 import 'dio_interceptor.dart';
 import 'session_manager.dart';

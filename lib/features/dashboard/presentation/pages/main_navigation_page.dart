@@ -21,6 +21,9 @@ import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../wishlist/presentation/pages/wishlist_page.dart';
 import '../../../shop/presentation/pages/shop_page.dart';
 import '../../../chatbot/presentation/pages/chat_page.dart';
+import '../../../../core/services/onesignal_service.dart';
+import '../../../order/presentation/pages/order_details_page.dart';
+import '../../../../injection_container.dart' as di;
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
