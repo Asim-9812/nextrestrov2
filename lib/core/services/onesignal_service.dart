@@ -18,13 +18,15 @@ class OneSignalService {
     // 1. Set Debug Level
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
 
-    // 2. Setup Listeners BEFORE Initialize (recommended for some edge cases)
+    // 2. Initialize FIRST to avoid "Must call initWithContext before use"
+    OneSignal.initialize(_appId);
+
+    // 3. Setup Listeners AFTER Initialize
     
     // Foreground Notification Listener
     OneSignal.Notifications.addForegroundWillDisplayListener((event) {
       debugPrint("OneSignal: !!! FOREGROUND NOTIFICATION RECEIVED !!!");
       debugPrint("OneSignal:   Title: ${event.notification.title}");
-      debugPrint("OneSignal:   Body: ${event.notification.body}");
       debugPrint("OneSignal:   Additional Data: ${event.notification.additionalData}");
       
       // Force display the notification banner
@@ -37,8 +39,10 @@ class OneSignalService {
       final data = event.notification.additionalData;
       debugPrint("OneSignal:   Additional Data: $data");
 
-      if (data != null && data.containsKey('orderId') && data['type'] == 'order_status') {
-        final orderId = int.tryParse(data['orderId'].toString());
+      if (data != null && (data['type'] == 'order_status' || data['type'] == 'order_update')) {
+        // Handle both string and int for orderId
+        final rawOrderId = data['orderId'];
+        final orderId = int.tryParse(rawOrderId.toString());
         if (orderId != null) {
           _navigateToOrderDetails(orderId);
         }
@@ -48,22 +52,38 @@ class OneSignalService {
     // Subscription Observer
     OneSignal.User.pushSubscription.addObserver((state) {
       debugPrint("OneSignal: Subscription ID changed: ${state.current.id}");
-      debugPrint("OneSignal: Is Subscribed: ${state.current.optedIn}");
       if (state.current.id != null) {
         _checkAndShowVerificationDialog(state.current.id);
       }
     });
 
-    // 3. Initialize
-    OneSignal.initialize(_appId);
-
-    // 4. Automatically request push permission during initialization
+    // 4. Automatically request push permission
     OneSignal.Notifications.requestPermission(true).then((accepted) {
       debugPrint("OneSignal: Permission request completed. Accepted: $accepted");
     });
 
     // 5. Force check permissions and registration
     _forceCheckStatus();
+  }
+
+  static void _navigateToOrderDetails(int orderId) {
+    // In release mode, we might need a small delay to ensure the navigator is ready
+    // especially if launching from a cold start.
+    Future.delayed(const Duration(milliseconds: 500), () {
+      final navState = navigatorKey.currentState;
+      if (navState != null) {
+        navState.push(
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => di.sl<OrderBloc>(),
+              child: OrderDetailsPage(orderId: orderId),
+            ),
+          ),
+        );
+      } else {
+        debugPrint("OneSignal Error: Navigator state is null, cannot navigate to order $orderId");
+      }
+    });
   }
 
   static Future<void> _forceCheckStatus() async {
