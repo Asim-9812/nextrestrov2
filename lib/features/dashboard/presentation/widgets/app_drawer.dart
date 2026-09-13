@@ -73,17 +73,17 @@ class AppDrawer extends StatelessWidget {
                 AppSizes.gapH24,
                 
                 // Main Menu
-                _buildDrawerItem(
-                  FontAwesomeIcons.paw, 
-                  'Your Pets', 
-                  onTap: () {
-                    Navigator.pop(context); // Close drawer
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const MyPetsPage()),
-                    );
-                  },
-                ),
+                // _buildDrawerItem(
+                //   FontAwesomeIcons.paw,
+                //   'Your Pets',
+                //   onTap: () {
+                //     Navigator.pop(context); // Close drawer
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(builder: (context) => const MyPetsPage()),
+                //     );
+                //   },
+                // ),
                 _buildDrawerItem(
                   Icons.grid_view_rounded, 
                   'Categories', 
@@ -96,7 +96,7 @@ class AppDrawer extends StatelessWidget {
                   },
                 ),
                 _buildDrawerItem(FontAwesomeIcons.tag, 'Brands', onTap: () {}),
-                _buildDrawerItem(FontAwesomeIcons.percent, 'Deals & Offers', onTap: () {}),
+                // _buildDrawerItem(FontAwesomeIcons.percent, 'Deals & Offers', onTap: () {}),
                 
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -132,21 +132,21 @@ class AppDrawer extends StatelessWidget {
                     );
                   },
                 ),
-                _buildDrawerItem(Icons.headset_mic_rounded, 'Help & Support', onTap: () {}),
-                _buildDrawerItem(FontAwesomeIcons.circleQuestion, 'FAQs', onTap: () {}),
-                _buildDrawerItem(Icons.info_rounded, 'About Us', onTap: () {}),
-                _buildDrawerItem(
-                  Icons.error_outline_rounded, 
-                  'Error Page', 
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const AppErrorWidget()),
-                    );
-                  },
-                ),
-                
+                // _buildDrawerItem(Icons.headset_mic_rounded, 'Help & Support', onTap: () {}),
+                // _buildDrawerItem(FontAwesomeIcons.circleQuestion, 'FAQs', onTap: () {}),
+                // _buildDrawerItem(Icons.info_rounded, 'About Us', onTap: () {}),
+                // _buildDrawerItem(
+                //   Icons.error_outline_rounded,
+                //   'Error Page',
+                //   onTap: () {
+                //     Navigator.pop(context);
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(builder: (context) => const AppErrorWidget()),
+                //     );
+                //   },
+                // ),
+                //
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   child: Divider(color: Color(0xFFEEEEEE)),

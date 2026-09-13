@@ -87,7 +87,7 @@ class ShopByPets extends StatelessWidget {
                   },
                   child: PetCategoryCard(
                     title: '${petType.petTypeName} Items',
-                    subtitle: '150+ items',
+                    subtitle: ' ',
                     icon: _getPetIcon(petType.petTypeName),
                     color: _getPetColor(index),
                   ),
