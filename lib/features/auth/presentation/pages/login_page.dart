@@ -277,6 +277,8 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ),
 
+                                  // Social Logins (Temporarily Hidden)
+                                  /*
                                   AppSizes.gapH24,
 
                                 // OR Divider
@@ -321,8 +323,9 @@ class _LoginPageState extends State<LoginPage> {
                                     ],
                                   ),
                                 ),
+                                */
 
-                                AppSizes.gapH32,
+                                  AppSizes.gapH32,
 
                                 // Sign Up Footer
                                 FadeInUp(
