@@ -3,15 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
-import '../../../../core/utils/sample_products.dart';
-import '../../../cart/domain/entities/cart_item.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../product/domain/entities/product.dart';
 import '../../../product/presentation/pages/product_details_page.dart';
+import '../../../product/presentation/bloc/product_bloc.dart';
+import '../../../product/presentation/bloc/product_state.dart';
+import '../../../../core/widgets/app_product_image.dart';
 import 'package:divinepets/features/wishlist/presentation/bloc/wishlist_bloc.dart';
-
 
 class FeaturedDeals extends StatefulWidget {
   const FeaturedDeals({super.key});
@@ -23,16 +23,14 @@ class FeaturedDeals extends StatefulWidget {
 class _FeaturedDealsState extends State<FeaturedDeals> {
   int _selectedDealIndex = 0;
   final ScrollController _dealScrollController = ScrollController();
-
-  final List<Product> _deals = sampleProducts.sublist(0, 5);
+  List<Product>? _shuffledDeals;
 
   void _onDealTap(int index) {
+    if (_shuffledDeals == null) return;
     setState(() {
       _selectedDealIndex = index;
     });
     // Smoothly scroll to the selected item
-    // Each small card is 150 + 16 margin = 166. 
-    // Large card is 320 + 16 margin = 336.
     double offset = index * 166.0;
     _dealScrollController.animateTo(
       offset,
@@ -49,147 +47,157 @@ class _FeaturedDealsState extends State<FeaturedDeals> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 20),
-      color: AppColors.white,
-      child: Stack(
-        children: [
+    return BlocBuilder<ProductBloc, ProductState>(
+      builder: (context, state) {
+        if (state is ProductLoading && _shuffledDeals == null) {
+          return const SizedBox(
+            height: 200,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-          Container(
-            color: AppColors.accentInfo,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 32),
-                // Header Row
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Today\'s Featured Deals',
-                        style: AppTextStyles.h3.copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      Column(
+        if (state is ProductLoaded) {
+          _shuffledDeals ??= (List<Product>.from(state.products)..shuffle()).take(8).toList();
+        }
+
+        if (_shuffledDeals == null || _shuffledDeals!.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        final deals = _shuffledDeals!;
+
+        return Container(
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(vertical: 20),
+          color: AppColors.white,
+          child: Stack(
+            children: [
+              Container(
+                color: AppColors.accentInfo,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 32),
+                    // Header Row
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('Expires in', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 9)),
-                          AppSizes.gapH4,
-                          Row(
+                          Text(
+                            'Today\'s Featured Deals',
+                            style: AppTextStyles.h3.copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              _buildTimerBox('00'),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 2),
-                                child: Text(':', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10)),
+                              Text('Expires in', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 9)),
+                              AppSizes.gapH4,
+                              Row(
+                                children: [
+                                  _buildTimerBox('00'),
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 2),
+                                    child: Text(':', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10)),
+                                  ),
+                                  _buildTimerBox('00'),
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 2),
+                                    child: Text(':', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10)),
+                                  ),
+                                  _buildTimerBox('00'),
+                                ],
                               ),
-                              _buildTimerBox('00'),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 2),
-                                child: Text(':', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10)),
-                              ),
-                              _buildTimerBox('00'),
                             ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-                AppSizes.gapH16,
-                // Horizontal Scrolling Cards with selection UX
-                SizedBox(
-                  height: 140, // Confirmed height 150
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      ListView.builder(
-                        controller: _dealScrollController,
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.only(left: 16, right: 16),
-                        itemCount: _deals.length,
-                        itemBuilder: (context, index) {
-                          final isSelected = index == _selectedDealIndex;
-                          return GestureDetector(
-                            onTap: () => _onDealTap(index),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 400),
-                              curve: Curves.easeInOut,
-                              width: isSelected ? 280 : 100, // Reduced width for expanded card
-                              margin: const EdgeInsets.only(right: 12),
-                              child: isSelected ? _buildLargeDealCard(_deals[index]) : _buildSmallDealCard(_deals[index]),
-                            ),
-                          );
-                        },
-                      ),
-                      // Left Arrow with circle bg
-                      Positioned(
-                        left: 8,
-                        child: GestureDetector(
-                          onTap: () {
-                            if (_selectedDealIndex > 0) _onDealTap(_selectedDealIndex - 1);
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: AppColors.accentInfo.withOpacity(0.9), // Same color as banner
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white.withOpacity(0.5)),
-                            ),
-                            child: const Icon(Icons.chevron_left, color: Colors.white, size: 24),
+                    ),
+                    AppSizes.gapH16,
+                    // Horizontal Scrolling Cards with selection UX
+                    SizedBox(
+                      height: 140, 
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          ListView.builder(
+                            controller: _dealScrollController,
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.only(left: 16, right: 16),
+                            itemCount: deals.length,
+                            itemBuilder: (context, index) {
+                              final isSelected = index == _selectedDealIndex;
+                              return GestureDetector(
+                                onTap: () => _onDealTap(index),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 400),
+                                  curve: Curves.easeInOut,
+                                  width: isSelected ? 280 : 100, 
+                                  margin: const EdgeInsets.only(right: 12),
+                                  child: isSelected ? _buildLargeDealCard(deals[index]) : _buildSmallDealCard(deals[index]),
+                                ),
+                              );
+                            },
                           ),
-                        ),
-                      ),
-                      // Right Arrow with circle bg
-                      Positioned(
-                        right: 8,
-                        child: GestureDetector(
-                          onTap: () {
-                            if (_selectedDealIndex < _deals.length - 1) _onDealTap(_selectedDealIndex + 1);
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: AppColors.accentInfo.withOpacity(0.9), // Same color as banner
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white.withOpacity(0.5)),
+                          // Arrows
+                          if (_selectedDealIndex > 0)
+                            Positioned(
+                              left: 8,
+                              child: _buildArrowButton(Icons.chevron_left, () => _onDealTap(_selectedDealIndex - 1)),
                             ),
-                            child: const Icon(Icons.chevron_right, color: Colors.white, size: 24),
-                          ),
-                        ),
+                          if (_selectedDealIndex < deals.length - 1)
+                            Positioned(
+                              right: 8,
+                              child: _buildArrowButton(Icons.chevron_right, () => _onDealTap(_selectedDealIndex + 1)),
+                            ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 32),
+                  ],
                 ),
-                const SizedBox(height: 32),
-              ],
-            ),
+              ),
+              // Top Wave
+              Positioned(
+                top: -1,
+                left: 0,
+                right: 0,
+                child: Image.asset(
+                  'assets/images/dashboard_assets/wv1.png',
+                  fit: BoxFit.fitWidth,
+                  color: Colors.white,
+                ),
+              ),
+              // Bottom Wave
+              Positioned(
+                bottom: -1,
+                left: 0,
+                right: 0,
+                child: Image.asset(
+                  'assets/images/dashboard_assets/wv2.png',
+                  fit: BoxFit.fitWidth,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
-          // Top Wave
-          Positioned(
-            top: -1,
-            left: 0,
-            right: 0,
-            child: Image.asset(
-              'assets/images/dashboard_assets/wv1.png',
-              fit: BoxFit.fitWidth,
-              color: Colors.white,
-            ),
-          ),
-          // Bottom Wave
-          Positioned(
-            bottom: -1,
-            left: 0,
-            right: 0,
-            child: Image.asset(
-              'assets/images/dashboard_assets/wv2.png',
-              fit: BoxFit.fitWidth,
-              color: Colors.white,
-            ),
-          ),
-        ],
+        );
+      },
+    );
+  }
+
+  Widget _buildArrowButton(IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: AppColors.accentInfo.withOpacity(0.9),
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white.withOpacity(0.5)),
+        ),
+        child: Icon(icon, color: Colors.white, size: 24),
       ),
     );
   }
@@ -197,7 +205,6 @@ class _FeaturedDealsState extends State<FeaturedDeals> {
   Widget _buildLargeDealCard(Product product) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // High threshold to ensure it only renders when the container is nearly fully expanded (target 280)
         final isVisible = constraints.maxWidth > 275;
 
         return Container(
@@ -221,12 +228,17 @@ class _FeaturedDealsState extends State<FeaturedDeals> {
                           flex: 1,
                           child: Container(
                             height: 70,
-                            padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey.shade100),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Image.asset(product.images.first, fit: BoxFit.contain),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: AppProductImage(
+                                imageUrl: product.images.isNotEmpty ? product.images.first : null,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
                           ),
                         ),
                         AppSizes.gapW8,
@@ -290,8 +302,6 @@ class _FeaturedDealsState extends State<FeaturedDeals> {
                         ),
                       ],
                     ),
-                    // AppSizes.gapH8,
-                    // Bottom Actions
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -300,8 +310,8 @@ class _FeaturedDealsState extends State<FeaturedDeals> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _buildSmallProductThumb(image: product.images[0]),
-                              _buildSmallProductThumb(image: product.images.length > 1 ? product.images[1] : product.images[0]),
+                              _buildSmallProductThumb(image: product.images.isNotEmpty ? product.images[0] : null),
+                              _buildSmallProductThumb(image: product.images.length > 1 ? product.images[1] : (product.images.isNotEmpty ? product.images[0] : null)),
                             ],
                           ),
                         ),
@@ -321,6 +331,8 @@ class _FeaturedDealsState extends State<FeaturedDeals> {
                                               productId: product.productId ?? 0,
                                               quantity: 1,
                                               unitPrice: product.price,
+                                              productVariantId: product.productVariantId,
+                                              productBatchId: product.productBatchId,
                                             ),
                                           );
                                       ScaffoldMessenger.of(context).showSnackBar(
@@ -396,7 +408,13 @@ class _FeaturedDealsState extends State<FeaturedDeals> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(product.images.first, fit: BoxFit.contain, height: 75,),
+          SizedBox(
+            height: 75,
+            child: AppProductImage(
+              imageUrl: product.images.isNotEmpty ? product.images.first : null,
+              fit: BoxFit.contain,
+            ),
+          ),
           const Spacer(),
           Text(
             product.name, 
@@ -449,7 +467,7 @@ class _FeaturedDealsState extends State<FeaturedDeals> {
         color: const Color(0xFFFFF2E1),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Image.asset(image ?? 'assets/images/no_image.webp'),
+      child: AppProductImage(imageUrl: image, fit: BoxFit.contain),
     );
   }
 }
