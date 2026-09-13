@@ -6,6 +6,8 @@ import '../../../category/presentation/bloc/category_bloc.dart';
 import '../../../category/presentation/bloc/category_state.dart';
 import '../../../category/presentation/pages/category_products_page.dart';
 
+import '../../../category/presentation/pages/category_list_page.dart';
+
 class ShopCategoryIcons extends StatelessWidget {
   const ShopCategoryIcons({super.key});
 
@@ -31,6 +33,7 @@ class ShopCategoryIcons extends StatelessWidget {
 
         // Limit to 10 for the quick bar
         final displayCategories = categories.length > 10 ? categories.take(10).toList() : categories;
+        final hasMore = categories.length > 10;
 
         return Container(
           height: 40,
@@ -38,8 +41,44 @@ class ShopCategoryIcons extends StatelessWidget {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            itemCount: displayCategories.length,
+            itemCount: displayCategories.length + (hasMore ? 1 : 0),
             itemBuilder: (context, index) {
+              if (index == displayCategories.length) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CategoryListPage()),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Text(
+                            'See all',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                          SizedBox(width: 4),
+                          Icon(Icons.arrow_forward, color: Colors.white, size: 14),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+
               final category = displayCategories[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5),

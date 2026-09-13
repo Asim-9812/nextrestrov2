@@ -34,79 +34,85 @@ class DashboardCategories extends StatelessWidget {
         if (categories.isEmpty) return const SizedBox.shrink();
 
         final displayCategories = categories.length > 10 ? categories.take(10).toList() : categories;
+        final hasMore = categories.length > 10;
 
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Categories', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  if (categories.length > 10)
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const CategoryListPage()),
-                        );
-                      },
+        return Container(
+          height: 40,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            itemCount: displayCategories.length + (hasMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == displayCategories.length) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CategoryListPage()),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                       child: Row(
-                        children: [
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
                           Text(
                             'See all',
-                            style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
                           ),
-                          Icon(Icons.chevron_right, color: AppColors.primary, size: 16),
+                          SizedBox(width: 4),
+                          Icon(Icons.arrow_forward, color: Colors.white, size: 14),
                         ],
                       ),
                     ),
-                ],
-              ),
-            ),
-            AppSizes.gapH12,
-            SizedBox(
-              height: 40,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                itemCount: displayCategories.length,
-                itemBuilder: (context, index) {
-                  final category = displayCategories[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CategoryProductsPage(category: category),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryLightest,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: AppColors.primarySoft),
-                        ),
-                        child: Center(
-                          child: Text(
-                            category.categoryName,
-                            style: AppTextStyles.bodySmall.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primary,
-                            ),
-                          ),
+                  ),
+                );
+              }
+
+              final category = displayCategories[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CategoryProductsPage(category: category),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryLightest,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.primarySoft),
+                    ),
+                    child: Center(
+                      child: Text(
+                        category.categoryName,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
-          ],
+                  ),
+                ),
+              );
+            },
+          ),
         );
       },
     );

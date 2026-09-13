@@ -9,8 +9,7 @@ import '../../../brand/presentation/bloc/brand_bloc.dart';
 import '../../../brand/presentation/bloc/brand_event.dart';
 import '../../../category/presentation/bloc/category_bloc.dart';
 import '../../../category/presentation/bloc/category_event.dart';
-import '../../../product_type/presentation/bloc/product_type_bloc.dart';
-import '../../../product_type/presentation/bloc/product_type_event.dart';
+
 import '../../../product/presentation/bloc/product_bloc.dart';
 import '../../../product/presentation/bloc/product_event.dart';
 import '../../../order/presentation/bloc/order_bloc.dart';
