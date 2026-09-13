@@ -127,6 +127,9 @@ class ApiEndpoints {
   static const String createCODOrder = "/api/Order/create-cod";
   static const String getAdminOrderList = "/api/Order/admin-list";
 
+  // Notification
+  static const String notification = "/api/Notification";
+
   // Payment
   static const String createPayment = "/api/Payment/create";
   static String getPaymentById(int id) => "/api/Payment/$id";

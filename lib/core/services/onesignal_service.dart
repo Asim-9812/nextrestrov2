@@ -4,6 +4,8 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../main.dart'; // To access navigatorKey
 
+import '../../features/notification/presentation/bloc/notification_bloc.dart';
+import '../../features/notification/presentation/bloc/notification_event.dart';
 import '../../features/order/presentation/pages/order_details_page.dart';
 import '../../features/order/presentation/bloc/order_bloc.dart';
 import '../../injection_container.dart' as di;
@@ -30,6 +32,13 @@ class OneSignalService {
       debugPrint("OneSignal: !!! FOREGROUND NOTIFICATION RECEIVED !!!");
       debugPrint("OneSignal:   Title: ${event.notification.title}");
       debugPrint("OneSignal:   Additional Data: ${event.notification.additionalData}");
+      
+      // Refresh unread count in BLoC
+      final context = navigatorKey.currentContext;
+      if (context != null) {
+        context.read<NotificationBloc>().add(GetUnreadCountEvent());
+      }
+      
       event.notification.display(); 
     });
 

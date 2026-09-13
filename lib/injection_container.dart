@@ -43,6 +43,14 @@ import 'features/chatbot/data/repositories/chat_repository_impl.dart';
 import 'features/chatbot/domain/repositories/chat_repository.dart';
 import 'features/chatbot/domain/usecases/send_chat_message.dart';
 import 'features/chatbot/presentation/bloc/chat_bloc.dart';
+import 'features/notification/data/datasources/notification_remote_data_source.dart';
+import 'features/notification/data/repositories/notification_repository_impl.dart';
+import 'features/notification/domain/repositories/notification_repository.dart';
+import 'features/notification/domain/usecases/get_notifications.dart';
+import 'features/notification/domain/usecases/get_unread_count.dart';
+import 'features/notification/domain/usecases/mark_all_read.dart';
+import 'features/notification/domain/usecases/mark_as_read.dart';
+import 'features/notification/presentation/bloc/notification_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -146,5 +154,25 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<ChatRemoteDataSource>(
     () => ChatRemoteDataSourceImpl(sl()),
+  );
+
+  // Features - Notification
+  sl.registerFactory(
+    () => NotificationBloc(
+      getNotifications: sl(),
+      getUnreadCount: sl(),
+      markAsRead: sl(),
+      markAllAsRead: sl(),
+    ),
+  );
+  sl.registerLazySingleton(() => GetNotifications(sl()));
+  sl.registerLazySingleton(() => GetUnreadCount(sl()));
+  sl.registerLazySingleton(() => MarkAsRead(sl()));
+  sl.registerLazySingleton(() => MarkAllRead(sl()));
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<NotificationRemoteDataSource>(
+    () => NotificationRemoteDataSourceImpl(sl()),
   );
 }

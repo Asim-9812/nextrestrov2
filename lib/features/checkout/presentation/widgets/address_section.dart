@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 
 class AddressItem {
   final TextEditingController titleController;
@@ -65,8 +68,19 @@ class _AddressSectionState extends State<AddressSection> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: 'Asim Shrestha');
-    _phoneController = TextEditingController(text: '+977 9818327838');
+    final authState = context.read<AuthBloc>().state;
+    String name = '';
+    String phone = '';
+    if (authState is Authenticated) {
+      name = authState.user.fullName;
+      phone = authState.user.phone;
+    } else if (authState is ProfileLoaded) {
+      name = authState.user.fullName;
+      phone = authState.user.phone;
+    }
+
+    _nameController = TextEditingController(text: name);
+    _phoneController = TextEditingController(text: phone);
     
     _formAddress = AddressItem(
       title: 'Delivery',

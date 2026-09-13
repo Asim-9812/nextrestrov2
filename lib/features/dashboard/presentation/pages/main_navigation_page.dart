@@ -15,6 +15,8 @@ import '../../../product/presentation/bloc/product_bloc.dart';
 import '../../../product/presentation/bloc/product_event.dart';
 import '../../../order/presentation/bloc/order_bloc.dart';
 import '../../../order/presentation/bloc/order_event.dart';
+import '../../../notification/presentation/bloc/notification_bloc.dart';
+import '../../../notification/presentation/bloc/notification_event.dart';
 import '../widgets/app_drawer.dart';
 import 'dashboard_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
@@ -74,6 +76,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       context.read<BrandBloc>().add(GetAllBrandsEvent());
       context.read<ProductBloc>().add(GetAllProductsEvent());
       context.read<OrderBloc>().add(FetchOrdersEvent(authState.user.userId));
+      context.read<NotificationBloc>().add(GetUnreadCountEvent());
     }
   }
 

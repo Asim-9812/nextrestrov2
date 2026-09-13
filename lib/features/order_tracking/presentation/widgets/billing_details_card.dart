@@ -53,7 +53,7 @@ class BillingDetailsCard extends StatelessWidget {
                 children: [
                   const Text('Billing Name', style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.w500)),
                   Text(
-                    order != null ? 'Customer #${order!.customerId}' : 'Asim Shrestha',
+                    order != null ? 'Customer #${order!.customerId}' : 'Customer',
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   ),
                 ],
@@ -81,12 +81,12 @@ class BillingDetailsCard extends StatelessWidget {
                 children: [
                   const Text('Billing Address', style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.w500)),
                   Text(
-                    order != null ? 'Kathmandu, Nepal' : 'Asan, Kathmandu - 27',
+                    order != null ? 'Kathmandu, Nepal' : 'Address',
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    order != null ? 'Bagmati Province\nNepal' : 'Kathmandu, Bagmati Province\nNepal',
+                    order != null ? 'Bagmati Province\nNepal' : 'Nepal',
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 11, height: 1.4),
                   ),
                 ],

@@ -7,6 +7,8 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../notification/presentation/pages/notification_page.dart';
+import '../../../notification/presentation/bloc/notification_bloc.dart';
+import '../../../notification/presentation/bloc/notification_state.dart';
 import '../../../order/presentation/pages/my_orders_page.dart';
 import '../../../pets/presentation/pages/my_pets_page.dart';
 import '../../../pets/presentation/widgets/profile_pets_section.dart';
@@ -191,30 +193,39 @@ class _ProfilePageState extends State<ProfilePage> {
                 MaterialPageRoute(builder: (context) => const NotificationPage()),
               );
             },
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                const Icon(Icons.notifications_none_rounded, size: 28, color: Colors.black),
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    constraints: const BoxConstraints(minWidth: 14, minHeight: 14),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFF782C),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 1.5),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        '3',
-                        style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold, height: 1),
+            child: BlocBuilder<NotificationBloc, NotificationState>(
+              builder: (context, state) {
+                int count = 0;
+                if (state is NotificationLoaded) {
+                  count = state.unreadCount;
+                }
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    const Icon(Icons.notifications_none_rounded, size: 28, color: Colors.black),
+                    if (count > 0)
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          constraints: const BoxConstraints(minWidth: 14, minHeight: 14),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFF782C),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 1.5),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '$count',
+                              style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold, height: 1),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              ],
+                  ],
+                );
+              },
             ),
           ),
         ],

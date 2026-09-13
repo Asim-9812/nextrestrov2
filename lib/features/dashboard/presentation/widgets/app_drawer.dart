@@ -13,6 +13,8 @@ import '../../../notification/presentation/pages/notification_page.dart';
 import '../../../order/presentation/pages/my_orders_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../pets/presentation/pages/my_pets_page.dart';
+import '../../../notification/presentation/bloc/notification_bloc.dart';
+import '../../../notification/presentation/bloc/notification_state.dart';
 import '../../../order/presentation/bloc/order_bloc.dart';
 import '../../../order/presentation/bloc/order_state.dart';
 import '../../../order/domain/entities/order_entity.dart';
@@ -90,15 +92,23 @@ class AppDrawer extends StatelessWidget {
                 ),
                 
                 // Secondary Menu
-                _buildDrawerItem(
-                  Icons.notifications_rounded, 
-                  'Notifications', 
-                  badgeCount: 2, 
-                  onTap: () {
-                    Navigator.pop(context); // Close drawer
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const NotificationPage()),
+                BlocBuilder<NotificationBloc, NotificationState>(
+                  builder: (context, state) {
+                    int unreadCount = 0;
+                    if (state is NotificationLoaded) {
+                      unreadCount = state.unreadCount;
+                    }
+                    return _buildDrawerItem(
+                      Icons.notifications_rounded, 
+                      'Notifications', 
+                      badgeCount: unreadCount > 0 ? unreadCount : null, 
+                      onTap: () {
+                        Navigator.pop(context); // Close drawer
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const NotificationPage()),
+                        );
+                      },
                     );
                   },
                 ),
@@ -134,29 +144,39 @@ class AppDrawer extends StatelessWidget {
   }
 
   Widget _buildProfileSection() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF0F7FC),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            radius: 25,
-            backgroundColor: AppColors.primary,
-            foregroundImage: AssetImage('assets/images/profile.jpg'),
-            child: Icon(Icons.person, color: Colors.white, size: 25),
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        String name = 'Guest';
+        if (state is Authenticated) {
+          name = state.user.username;
+        } else if (state is ProfileLoaded) {
+          name = state.user.username;
+        }
+        return Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0F7FC),
+            borderRadius: BorderRadius.circular(12),
           ),
-          AppSizes.gapW12,
-          Text(
-            'Hi, Asim',
-            style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+          child: Row(
+            children: [
+              const CircleAvatar(
+                radius: 25,
+                backgroundColor: AppColors.primary,
+                foregroundImage: AssetImage('assets/images/profile.jpg'),
+                child: Icon(Icons.person, color: Colors.white, size: 25),
+              ),
+              AppSizes.gapW12,
+              Text(
+                'Hi, $name',
+                style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const Spacer(),
+              const Icon(Icons.chevron_right, color: Colors.black, size: 24),
+            ],
           ),
-          const Spacer(),
-          const Icon(Icons.chevron_right, color: Colors.black, size: 24),
-        ],
-      ),
+        );
+      },
     );
   }
 

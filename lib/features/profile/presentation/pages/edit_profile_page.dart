@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/address_data.dart';
 import '../../../pets/domain/entities/pet_model.dart';
@@ -18,10 +20,34 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
   
   // Personal Info
-  final _nameController = TextEditingController(text: 'Asim Shrestha');
-  final _phoneController = TextEditingController(text: '+977 9859598745');
-  final _emailController = TextEditingController(text: 'asim981201@gmail.com');
-  final _dobController = TextEditingController(text: 'May 15, 1998');
+  late TextEditingController _nameController;
+  late TextEditingController _phoneController;
+  late TextEditingController _emailController;
+  late TextEditingController _dobController;
+
+  @override
+  void initState() {
+    super.initState();
+    final authState = context.read<AuthBloc>().state;
+    String name = '';
+    String phone = '';
+    String email = '';
+    
+    if (authState is Authenticated) {
+      name = authState.user.fullName;
+      phone = authState.user.phone;
+      email = authState.user.email;
+    } else if (authState is ProfileLoaded) {
+      name = authState.user.fullName;
+      phone = authState.user.phone;
+      email = authState.user.email;
+    }
+
+    _nameController = TextEditingController(text: name);
+    _phoneController = TextEditingController(text: phone);
+    _emailController = TextEditingController(text: email);
+    _dobController = TextEditingController(text: 'May 15, 1998');
+  }
 
   // Address Lists
   final List<AddressData> _billingAddresses = [

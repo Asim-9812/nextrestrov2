@@ -28,6 +28,8 @@ import 'features/order/presentation/bloc/order_bloc.dart';
 import 'features/product/presentation/bloc/product_bloc.dart';
 import 'features/product/presentation/bloc/product_event.dart';
 import 'features/chatbot/presentation/bloc/chat_bloc.dart';
+import 'features/notification/presentation/bloc/notification_bloc.dart';
+import 'features/notification/presentation/bloc/notification_event.dart';
 import 'injection_container.dart' as di;
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -58,6 +60,7 @@ void main() async {
           BlocProvider(create: (_) => di.sl<ProductBloc>()..add(GetAllProductsEvent())),
           BlocProvider(create: (_) => di.sl<OrderBloc>()),
           BlocProvider(create: (_) => di.sl<ChatBloc>()),
+          BlocProvider(create: (_) => di.sl<NotificationBloc>()..add(GetUnreadCountEvent())),
         ],
         child: const MyApp(),
       ),

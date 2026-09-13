@@ -7,6 +7,21 @@ import '../../../profile/presentation/pages/settings_page.dart';
 import '../../domain/notification_model.dart';
 import '../widgets/notification_tile.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/constants/app_text_styles.dart';
+import '../../../order/presentation/pages/order_details_page.dart';
+import '../../../order/presentation/bloc/order_bloc.dart';
+import '../../../profile/presentation/pages/settings_page.dart';
+import '../bloc/notification_bloc.dart';
+import '../bloc/notification_event.dart';
+import '../bloc/notification_state.dart';
+import '../widgets/notification_tile.dart';
+import '../../domain/entities/notification_entity.dart';
+import 'package:intl/intl.dart';
+import '../../../../injection_container.dart' as di;
+
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
 
@@ -14,102 +29,41 @@ class NotificationPage extends StatefulWidget {
   State<NotificationPage> createState() => _NotificationPageState();
 }
 
-class _NotificationPageState extends State<NotificationPage> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  int _selectedIndex = 0;
-
-  final List<Map<String, dynamic>> _categories = [
-    {'label': 'All', 'icon': Icons.grid_view},
-    {'label': 'Orders', 'icon': Icons.inventory_2_outlined},
-    {'label': 'Offers', 'icon': Icons.local_offer_outlined},
-    {'label': 'Updates', 'icon': Icons.notifications_none_outlined},
-    {'label': 'Community', 'icon': Icons.groups_outlined},
-  ];
-
-  late List<NotificationModel> _allNotifications;
+class _NotificationPageState extends State<NotificationPage> {
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _categories.length, vsync: this);
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging) return;
-      setState(() {
-        _selectedIndex = _tabController.index;
-      });
-    });
-
-    _allNotifications = [
-      NotificationModel(
-        id: '1',
-        title: 'Your order is on the way!',
-        description: 'Good news! Your order #DA89823HNND has been shipped and is on the way.',
-        time: '10:32 AM',
-        type: NotificationType.order,
-        actionText: 'Track order >>',
-        onAction: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MyOrdersPage()),
-          );
-        },
-      ),
-      NotificationModel(
-        id: '2',
-        title: 'Extra 15% off storewide',
-        description: 'Don\'t miss out on the special offer on all the pet products till May 31.',
-        time: '10:32 AM',
-        type: NotificationType.offer,
-      ),
-      NotificationModel(
-        id: '3',
-        title: 'Your review was helpful',
-        description: 'Somebody thought your review of the product was helpful. Keep helping others by reviewing your other products.',
-        time: '10:32 AM',
-        type: NotificationType.community,
-      ),
-      NotificationModel(
-        id: '4',
-        title: 'Order delivered successfully!',
-        description: 'Your order #D21637DGASGD has been delivered. We hope your pet loves it.',
-        time: '10:32 AM',
-        type: NotificationType.order,
-      ),
-      NotificationModel(
-        id: '5',
-        title: 'System Update',
-        description: 'We have updated our terms of service to better serve you and your pets.',
-        time: 'Yesterday',
-        type: NotificationType.update,
-      ),
-    ];
+    context.read<NotificationBloc>().add(GetNotificationsEvent());
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+  Map<String, List<NotificationEntity>> _groupNotifications(List<NotificationEntity> notifications) {
+    final Map<String, List<NotificationEntity>> groups = {};
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
 
-  List<NotificationModel> _getFilteredNotifications() {
-    if (_selectedIndex == 0) return _allNotifications;
-    
-    NotificationType targetType;
-    switch (_selectedIndex) {
-      case 1: targetType = NotificationType.order; break;
-      case 2: targetType = NotificationType.offer; break;
-      case 3: targetType = NotificationType.update; break;
-      case 4: targetType = NotificationType.community; break;
-      default: return _allNotifications;
+    for (var notification in notifications) {
+      final date = DateTime(notification.createdDate.year, notification.createdDate.month, notification.createdDate.day);
+      String key;
+      if (date == today) {
+        key = 'Today';
+      } else if (date == yesterday) {
+        key = 'Yesterday';
+      } else {
+        key = DateFormat('MMM dd, yyyy').format(date);
+      }
+
+      if (!groups.containsKey(key)) {
+        groups[key] = [];
+      }
+      groups[key]!.add(notification);
     }
-    
-    return _allNotifications.where((n) => n.type == targetType).toList();
+    return groups;
   }
 
   @override
   Widget build(BuildContext context) {
-    final filtered = _getFilteredNotifications();
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -129,107 +83,106 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
         ),
         centerTitle: false,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined, color: AppColors.primary, size: 28),
+          TextButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsPage()),
-              );
+              context.read<NotificationBloc>().add(MarkAllReadEvent());
             },
+            child: const Text(
+              'Mark all as read',
+              style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold),
+            ),
           ),
+          const SizedBox(width: 8),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'Stay updated with your app',
-              style: TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.w500),
-            ),
-          ),
-          AppSizes.gapH24,
-          _buildCustomTabBar(),
-          AppSizes.gapH12,
-          Expanded(
-            child: Container(
-              color: Colors.white,
-              child: filtered.isEmpty 
-                ? _buildEmptyState()
-                : ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: BlocBuilder<NotificationBloc, NotificationState>(
+        builder: (context, state) {
+          if (state is NotificationLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is NotificationLoaded) {
+            if (state.notifications.isEmpty) {
+              return _buildEmptyState();
+            }
+
+            final grouped = _groupNotifications(state.notifications);
+            final keys = grouped.keys.toList();
+
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<NotificationBloc>().add(GetNotificationsEvent());
+              },
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                itemCount: keys.length,
+                itemBuilder: (context, index) {
+                  final groupKey = keys[index];
+                  final groupNotifications = grouped[groupKey]!;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (filtered.any((n) => n.time != 'Yesterday')) ...[
-                        const Text(
-                          'Today',
-                          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, bottom: 10),
+                        child: Text(
+                          groupKey,
+                          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
                         ),
-                        const SizedBox(height: 20),
-                        ...filtered.where((n) => n.time != 'Yesterday').map((n) => NotificationTile(notification: n)),
-                      ],
-                      if (filtered.any((n) => n.time == 'Yesterday')) ...[
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Yesterday',
-                          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
-                        ),
-                        const SizedBox(height: 20),
-                        ...filtered.where((n) => n.time == 'Yesterday').map((n) => NotificationTile(notification: n)),
-                      ],
-                      const SizedBox(height: 30),
+                      ),
+                      ...groupNotifications.map((n) => NotificationTile(
+                        notification: n,
+                        onTap: () {
+                          if (!n.isRead) {
+                            context.read<NotificationBloc>().add(MarkAsReadEvent(n.notificationId));
+                          }
+                          
+                          if (n.referenceId != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                  create: (context) => di.sl<OrderBloc>(),
+                                  child: OrderDetailsPage(orderId: n.referenceId!),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      )),
                     ],
-                  ),
-            ),
-          ),
-        ],
+                  );
+                },
+              ),
+            );
+          }
+
+          if (state is NotificationError) {
+            return Center(child: Text(state.message));
+          }
+
+          return const SizedBox.shrink();
+        },
       ),
     );
   }
 
-  Widget _buildCustomTabBar() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      height: 65,
-      decoration: BoxDecoration(
-        color: const Color(0xFFF0F7FC),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: TabBar(
-        controller: _tabController,
-        indicatorSize: TabBarIndicatorSize.tab,
-        indicator: const UnderlineTabIndicator(
-          borderSide: BorderSide(width: 4.0, color: AppColors.primary),
-          insets: EdgeInsets.zero,
-        ),
-        dividerColor: Colors.transparent,
-        labelColor: Colors.black,
-        unselectedLabelColor: Colors.grey.shade600,
-        labelPadding: EdgeInsets.zero,
-        tabs: _categories.map((cat) {
-          final index = _categories.indexOf(cat);
-          final isSelected = _selectedIndex == index;
-          return Tab(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(cat['icon'], size: 24),
-                const SizedBox(height: 4),
-                Text(
-                  cat['label'],
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.notifications_off_outlined, size: 80, color: Colors.grey.shade300),
+          AppSizes.gapH16,
+          Text(
+            'No notifications yet',
+            style: TextStyle(color: Colors.grey.shade400, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }
+}
 
   Widget _buildEmptyState() {
     return Center(
