@@ -22,12 +22,23 @@ class NotificationPage extends StatefulWidget {
   State<NotificationPage> createState() => _NotificationPageState();
 }
 
-class _NotificationPageState extends State<NotificationPage> {
+class _NotificationPageState extends State<NotificationPage> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {});
+    });
     _refreshNotifications();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   void _refreshNotifications() {
@@ -110,82 +121,123 @@ class _NotificationPageState extends State<NotificationPage> {
           const SizedBox(width: 8),
         ],
       ),
-      body: BlocBuilder<NotificationBloc, NotificationState>(
-        builder: (context, state) {
-          if (state is NotificationLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: Column(
+        children: [
+          _buildCustomTabBar(),
+          Expanded(
+            child: BlocBuilder<NotificationBloc, NotificationState>(
+              builder: (context, state) {
+                if (state is NotificationLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          if (state is NotificationLoaded) {
-            if (state.notifications.isEmpty) {
-              return _buildEmptyState();
-            }
+                if (state is NotificationLoaded) {
+                  var notifications = state.notifications;
+                  
+                  // Filter based on selected tab
+                  if (_tabController.index == 1) {
+                    notifications = notifications.where((n) => !n.isRead).toList();
+                  }
 
-            final grouped = _groupNotifications(state.notifications);
-            final keys = grouped.keys.toList();
+                  if (notifications.isEmpty) {
+                    return _buildEmptyState();
+                  }
 
-            return RefreshIndicator(
-              onRefresh: () async {
-                _refreshNotifications();
-              },
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: keys.length,
-                itemBuilder: (context, index) {
-                  final groupKey = keys[index];
-                  final groupNotifications = grouped[groupKey]!;
+                  final grouped = _groupNotifications(notifications);
+                  final keys = grouped.keys.toList();
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                          groupKey,
-                          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
-                        ),
-                      ),
-                      ...groupNotifications.map((n) => NotificationTile(
-                        notification: n,
-                        onTap: () {
-                          final authState = context.read<AuthBloc>().state;
-                          int? userId;
-                          if (authState is Authenticated) userId = authState.user.userId;
-                          if (authState is ProfileLoaded) userId = authState.user.userId;
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      _refreshNotifications();
+                    },
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: keys.length,
+                      itemBuilder: (context, index) {
+                        final groupKey = keys[index];
+                        final groupNotifications = grouped[groupKey]!;
 
-                          if (!n.isRead && userId != null) {
-                            context.read<NotificationBloc>().add(MarkAsReadEvent(
-                              userId: userId,
-                              notificationId: n.notificationId,
-                            ));
-                          }
-                          
-                          if (n.referenceId != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BlocProvider(
-                                  create: (context) => di.sl<OrderBloc>(),
-                                  child: OrderDetailsPage(orderId: n.referenceId!),
-                                ),
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20, bottom: 10),
+                              child: Text(
+                                groupKey,
+                                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
                               ),
-                            );
-                          }
-                        },
-                      )),
-                    ],
+                            ),
+                            ...groupNotifications.map((n) => NotificationTile(
+                              notification: n,
+                              onTap: () {
+                                final authState = context.read<AuthBloc>().state;
+                                int? userId;
+                                if (authState is Authenticated) userId = authState.user.userId;
+                                if (authState is ProfileLoaded) userId = authState.user.userId;
+
+                                if (!n.isRead && userId != null) {
+                                  context.read<NotificationBloc>().add(MarkAsReadEvent(
+                                    userId: userId,
+                                    notificationId: n.notificationId,
+                                  ));
+                                }
+                                
+                                if (n.referenceId != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BlocProvider(
+                                        create: (context) => di.sl<OrderBloc>(),
+                                        child: OrderDetailsPage(orderId: n.referenceId!),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                            )),
+                          ],
+                        );
+                      },
+                    ),
                   );
-                },
-              ),
-            );
-          }
+                }
 
-          if (state is NotificationError) {
-            return Center(child: Text(state.message));
-          }
+                if (state is NotificationError) {
+                  return Center(child: Text(state.message));
+                }
 
-          return const SizedBox.shrink();
-        },
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCustomTabBar() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      height: 45,
+      decoration: BoxDecoration(
+        color: AppColors.primaryLightest,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: TabBar(
+        controller: _tabController,
+        indicator: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: AppColors.primary,
+        ),
+        dividerColor: Colors.transparent,
+        labelColor: Colors.white,
+        unselectedLabelColor: AppColors.primary,
+        labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+        tabs: const [
+          Tab(text: 'All'),
+          Tab(text: 'Unread'),
+        ],
       ),
     );
   }
