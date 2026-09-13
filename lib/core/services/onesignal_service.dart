@@ -4,6 +4,8 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../main.dart'; // To access navigatorKey
 
+import '../../features/auth/presentation/bloc/auth_bloc.dart';
+import '../../features/auth/presentation/bloc/auth_state.dart';
 import '../../features/notification/presentation/bloc/notification_bloc.dart';
 import '../../features/notification/presentation/bloc/notification_event.dart';
 import '../../features/order/presentation/pages/order_details_page.dart';
@@ -33,10 +35,17 @@ class OneSignalService {
       debugPrint("OneSignal:   Title: ${event.notification.title}");
       debugPrint("OneSignal:   Additional Data: ${event.notification.additionalData}");
       
-      // Refresh unread count in BLoC
+      // Refresh unread count in BLoC if user is logged in
       final context = navigatorKey.currentContext;
       if (context != null) {
-        context.read<NotificationBloc>().add(GetUnreadCountEvent());
+        final authState = context.read<AuthBloc>().state;
+        int? userId;
+        if (authState is Authenticated) userId = authState.user.userId;
+        if (authState is ProfileLoaded) userId = authState.user.userId;
+        
+        if (userId != null) {
+          context.read<NotificationBloc>().add(GetUnreadCountEvent(userId));
+        }
       }
       
       event.notification.display(); 
@@ -99,13 +108,17 @@ class OneSignalService {
     // Wait a bit for SDK to settle
     await Future.delayed(const Duration(seconds: 2));
     
-    final subId = OneSignal.User.pushSubscription.id;
-    final hasPermission = await OneSignal.Notifications.permission;
-    
-    debugPrint("OneSignal Status: ID=$subId, Permission=$hasPermission");
+    try {
+      final subId = OneSignal.User.pushSubscription.id;
+      final hasPermission = await OneSignal.Notifications.permission;
+      
+      debugPrint("OneSignal Status: ID=$subId, Permission=$hasPermission");
 
-    if (subId != null && !hasPermission) {
-      _checkAndShowVerificationDialog(subId);
+      if (subId != null && !hasPermission) {
+        _checkAndShowVerificationDialog(subId);
+      }
+    } catch (e) {
+      debugPrint("OneSignal Error (forceCheckStatus): $e");
     }
   }
 

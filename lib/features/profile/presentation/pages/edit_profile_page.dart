@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
@@ -240,37 +241,41 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _buildProfilePicSection() {
-    return Center(
-      child: Stack(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primary.withOpacity(0.2), width: 2),
-            ),
-            child: const CircleAvatar(
-              radius: 50,
-              backgroundColor: AppColors.primary,
-              foregroundImage: AssetImage('assets/images/profile.jpg'),
-              child: Icon(Icons.person, color: Colors.white, size: 50),
-            ),
-          ),
-          Positioned(
-            bottom: 2,
-            right: 2,
-            child: Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)],
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        return Center(
+          child: Stack(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.primary.withOpacity(0.2), width: 2),
+                ),
+                child: const CircleAvatar(
+                  radius: 50,
+                  backgroundColor: AppColors.primary,
+                  foregroundImage: AssetImage('assets/images/profile.jpg'),
+                  child: Icon(Icons.person, color: Colors.white, size: 50),
+                ),
               ),
-              child: const Icon(Icons.camera_alt, color: AppColors.primary, size: 14),
-            ),
+              Positioned(
+                bottom: 2,
+                right: 2,
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)],
+                  ),
+                  child: const Icon(Icons.camera_alt, color: AppColors.primary, size: 14),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

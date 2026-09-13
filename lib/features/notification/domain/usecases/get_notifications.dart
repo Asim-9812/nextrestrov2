@@ -8,7 +8,7 @@ class GetNotifications {
 
   GetNotifications(this.repository);
 
-  Future<Either<Failure, List<NotificationEntity>>> call() {
-    return repository.getNotifications();
+  Future<Either<Failure, List<NotificationEntity>>> call(int userId) {
+    return repository.getNotifications(userId);
   }
 }

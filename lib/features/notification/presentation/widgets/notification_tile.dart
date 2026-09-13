@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_sizes.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../domain/entities/notification_entity.dart';
-import 'package:intl/intl.dart';
 
 class NotificationTile extends StatelessWidget {
   final NotificationEntity notification;

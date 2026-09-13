@@ -26,10 +26,10 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
   Future<void> _onGetNotifications(GetNotificationsEvent event, Emitter<NotificationState> emit) async {
     emit(NotificationLoading());
-    final result = await getNotifications();
+    final result = await getNotifications(event.userId);
     
     // Also get unread count to keep it in sync
-    final countResult = await getUnreadCount();
+    final countResult = await getUnreadCount(event.userId);
     final unreadCount = countResult.fold((_) => 0, (count) => count);
 
     result.fold(
@@ -42,7 +42,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   }
 
   Future<void> _onGetUnreadCount(GetUnreadCountEvent event, Emitter<NotificationState> emit) async {
-    final result = await getUnreadCount();
+    final result = await getUnreadCount(event.userId);
     
     final currentState = state;
     if (currentState is NotificationLoaded) {
@@ -64,29 +64,16 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     result.fold(
       (failure) => null, // Silently fail for now or emit error if crucial
       (_) {
-        final currentState = state;
-        if (currentState is NotificationLoaded) {
-          final updatedNotifications = currentState.notifications.map((n) {
-            if (n.notificationId == event.notificationId) {
-              // We need to return a new object to trigger UI update
-              // but NotificationEntity is immutable.
-              // Let's just refetch for simplicity and accuracy
-              return n; 
-            }
-            return n;
-          }).toList();
-          
-          add(GetNotificationsEvent());
-        }
+        add(GetNotificationsEvent(event.userId));
       },
     );
   }
 
   Future<void> _onMarkAllRead(MarkAllReadEvent event, Emitter<NotificationState> emit) async {
-    final result = await markAllRead();
+    final result = await markAllRead(event.userId);
     result.fold(
       (failure) => null,
-      (_) => add(GetNotificationsEvent()),
+      (_) => add(GetNotificationsEvent(event.userId)),
     );
   }
 }

@@ -7,7 +7,7 @@ class MarkAllRead {
 
   MarkAllRead(this.repository);
 
-  Future<Either<Failure, void>> call() {
-    return repository.markAllAsRead();
+  Future<Either<Failure, void>> call(int userId) {
+    return repository.markAllAsRead(userId);
   }
 }

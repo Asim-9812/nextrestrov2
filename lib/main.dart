@@ -60,7 +60,14 @@ void main() async {
           BlocProvider(create: (_) => di.sl<ProductBloc>()..add(GetAllProductsEvent())),
           BlocProvider(create: (_) => di.sl<OrderBloc>()),
           BlocProvider(create: (_) => di.sl<ChatBloc>()),
-          BlocProvider(create: (_) => di.sl<NotificationBloc>()..add(GetUnreadCountEvent())),
+          BlocProvider(create: (context) {
+            final authState = context.read<AuthBloc>().state;
+            final bloc = di.sl<NotificationBloc>();
+            if (authState is Authenticated) {
+              bloc.add(GetUnreadCountEvent(authState.user.userId));
+            }
+            return bloc;
+          }),
         ],
         child: const MyApp(),
       ),

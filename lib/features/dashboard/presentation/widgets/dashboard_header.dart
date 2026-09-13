@@ -49,45 +49,53 @@ class DashboardHeader extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const NotificationPage()),
               );
             },
-            child: BlocBuilder<NotificationBloc, NotificationState>(
-              builder: (context, state) {
-                int count = 0;
-                if (state is NotificationLoaded) {
-                  count = state.unreadCount;
-                }
-                return Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    const Icon(Icons.notifications_outlined, size: 26),
-                    if (count > 0)
-                      Positioned(
-                        right: -4,
-                        top: -4,
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          constraints: const BoxConstraints(
-                            minWidth: 16,
-                            minHeight: 16,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFF782C),
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 1.5),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '$count',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                height: 1,
+            child: BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, authState) {
+                int? userId;
+                if (authState is Authenticated) userId = authState.user.userId;
+                if (authState is ProfileLoaded) userId = authState.user.userId;
+
+                return BlocBuilder<NotificationBloc, NotificationState>(
+                  builder: (context, state) {
+                    int count = 0;
+                    if (state is NotificationLoaded) {
+                      count = state.unreadCount;
+                    }
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        const Icon(Icons.notifications_outlined, size: 26),
+                        if (count > 0)
+                          Positioned(
+                            right: -4,
+                            top: -4,
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              constraints: const BoxConstraints(
+                                minWidth: 16,
+                                minHeight: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFF782C),
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 1.5),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '$count',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                  ],
+                      ],
+                    );
+                  },
                 );
               },
             ),

@@ -76,7 +76,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       context.read<BrandBloc>().add(GetAllBrandsEvent());
       context.read<ProductBloc>().add(GetAllProductsEvent());
       context.read<OrderBloc>().add(FetchOrdersEvent(authState.user.userId));
-      context.read<NotificationBloc>().add(GetUnreadCountEvent());
+      context.read<NotificationBloc>().add(GetUnreadCountEvent(authState.user.userId));
     }
   }
 

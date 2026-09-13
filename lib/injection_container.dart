@@ -162,7 +162,7 @@ Future<void> init() async {
       getNotifications: sl(),
       getUnreadCount: sl(),
       markAsRead: sl(),
-      markAllAsRead: sl(),
+      markAllRead: sl(),
     ),
   );
   sl.registerLazySingleton(() => GetNotifications(sl()));

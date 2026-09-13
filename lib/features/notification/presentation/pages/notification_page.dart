@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/constants/app_text_styles.dart';
-import '../../../order/presentation/pages/my_orders_page.dart';
-import '../../../profile/presentation/pages/settings_page.dart';
-import '../../domain/notification_model.dart';
-import '../widgets/notification_tile.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../order/presentation/pages/order_details_page.dart';
 import '../../../order/presentation/bloc/order_bloc.dart';
-import '../../../profile/presentation/pages/settings_page.dart';
 import '../bloc/notification_bloc.dart';
 import '../bloc/notification_event.dart';
 import '../bloc/notification_state.dart';
 import '../widgets/notification_tile.dart';
 import '../../domain/entities/notification_entity.dart';
-import 'package:intl/intl.dart';
 import '../../../../injection_container.dart' as di;
 
 class NotificationPage extends StatefulWidget {
@@ -34,7 +27,21 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   void initState() {
     super.initState();
-    context.read<NotificationBloc>().add(GetNotificationsEvent());
+    _refreshNotifications();
+  }
+
+  void _refreshNotifications() {
+    final authState = context.read<AuthBloc>().state;
+    int? userId;
+    if (authState is Authenticated) {
+      userId = authState.user.userId;
+    } else if (authState is ProfileLoaded) {
+      userId = authState.user.userId;
+    }
+
+    if (userId != null) {
+      context.read<NotificationBloc>().add(GetNotificationsEvent(userId));
+    }
   }
 
   Map<String, List<NotificationEntity>> _groupNotifications(List<NotificationEntity> notifications) {
@@ -83,14 +90,22 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         centerTitle: false,
         actions: [
-          TextButton(
-            onPressed: () {
-              context.read<NotificationBloc>().add(MarkAllReadEvent());
+          BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, authState) {
+              int? userId;
+              if (authState is Authenticated) userId = authState.user.userId;
+              if (authState is ProfileLoaded) userId = authState.user.userId;
+
+              return TextButton(
+                onPressed: userId == null ? null : () {
+                  context.read<NotificationBloc>().add(MarkAllReadEvent(userId!));
+                },
+                child: const Text(
+                  'Mark all as read',
+                  style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+              );
             },
-            child: const Text(
-              'Mark all as read',
-              style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold),
-            ),
           ),
           const SizedBox(width: 8),
         ],
@@ -111,7 +126,7 @@ class _NotificationPageState extends State<NotificationPage> {
 
             return RefreshIndicator(
               onRefresh: () async {
-                context.read<NotificationBloc>().add(GetNotificationsEvent());
+                _refreshNotifications();
               },
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -133,8 +148,16 @@ class _NotificationPageState extends State<NotificationPage> {
                       ...groupNotifications.map((n) => NotificationTile(
                         notification: n,
                         onTap: () {
-                          if (!n.isRead) {
-                            context.read<NotificationBloc>().add(MarkAsReadEvent(n.notificationId));
+                          final authState = context.read<AuthBloc>().state;
+                          int? userId;
+                          if (authState is Authenticated) userId = authState.user.userId;
+                          if (authState is ProfileLoaded) userId = authState.user.userId;
+
+                          if (!n.isRead && userId != null) {
+                            context.read<NotificationBloc>().add(MarkAsReadEvent(
+                              userId: userId,
+                              notificationId: n.notificationId,
+                            ));
                           }
                           
                           if (n.referenceId != null) {
@@ -174,26 +197,9 @@ class _NotificationPageState extends State<NotificationPage> {
         children: [
           Icon(Icons.notifications_off_outlined, size: 80, color: Colors.grey.shade300),
           AppSizes.gapH16,
-          Text(
+          const Text(
             'No notifications yet',
-            style: TextStyle(color: Colors.grey.shade400, fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.notifications_off_outlined, size: 80, color: Colors.grey.shade300),
-          AppSizes.gapH16,
-          Text(
-            'No notifications yet',
-            style: TextStyle(color: Colors.grey.shade400, fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ],
       ),

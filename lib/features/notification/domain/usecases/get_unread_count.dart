@@ -7,7 +7,7 @@ class GetUnreadCount {
 
   GetUnreadCount(this.repository);
 
-  Future<Either<Failure, int>> call() {
-    return repository.getUnreadCount();
+  Future<Either<Failure, int>> call(int userId) {
+    return repository.getUnreadCount(userId);
   }
 }

@@ -3,10 +3,10 @@ import '../../../../core/network/api_endpoints.dart';
 import '../models/notification_model.dart';
 
 abstract class NotificationRemoteDataSource {
-  Future<List<NotificationModel>> getNotifications();
-  Future<int> getUnreadCount();
+  Future<List<NotificationModel>> getNotifications(int userId);
+  Future<int> getUnreadCount(int userId);
   Future<void> markAsRead(int notificationId);
-  Future<void> markAllAsRead();
+  Future<void> markAllAsRead(int userId);
 }
 
 class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
@@ -15,9 +15,12 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   NotificationRemoteDataSourceImpl(this._dioClient);
 
   @override
-  Future<List<NotificationModel>> getNotifications() async {
+  Future<List<NotificationModel>> getNotifications(int userId) async {
     try {
-      final response = await _dioClient.get(ApiEndpoints.notification);
+      final response = await _dioClient.get(
+        ApiEndpoints.notification,
+        queryParameters: {'userId': userId},
+      );
       if (response.data != null) {
         final List<dynamic> data = response.data;
         return data.map((json) => NotificationModel.fromJson(json)).toList();
@@ -29,9 +32,12 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   }
 
   @override
-  Future<int> getUnreadCount() async {
+  Future<int> getUnreadCount(int userId) async {
     try {
-      final response = await _dioClient.get('${ApiEndpoints.notification}/unread-count');
+      final response = await _dioClient.get(
+        '${ApiEndpoints.notification}/unread-count',
+        queryParameters: {'userId': userId},
+      );
       if (response.data != null) {
         return response.data['unreadCount'] ?? 0;
       }
@@ -51,9 +57,12 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   }
 
   @override
-  Future<void> markAllAsRead() async {
+  Future<void> markAllAsRead(int userId) async {
     try {
-      await _dioClient.post('${ApiEndpoints.notification}/mark-all-read');
+      await _dioClient.post(
+        '${ApiEndpoints.notification}/mark-all-read',
+        queryParameters: {'userId': userId},
+      );
     } catch (e) {
       rethrow;
     }

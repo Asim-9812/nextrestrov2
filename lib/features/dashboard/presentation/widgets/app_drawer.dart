@@ -8,6 +8,7 @@ import '../../../../core/widgets/app_logo.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import '../../../notification/presentation/pages/notification_page.dart';
 import '../../../order/presentation/pages/my_orders_page.dart';
@@ -92,21 +93,29 @@ class AppDrawer extends StatelessWidget {
                 ),
                 
                 // Secondary Menu
-                BlocBuilder<NotificationBloc, NotificationState>(
-                  builder: (context, state) {
-                    int unreadCount = 0;
-                    if (state is NotificationLoaded) {
-                      unreadCount = state.unreadCount;
-                    }
-                    return _buildDrawerItem(
-                      Icons.notifications_rounded, 
-                      'Notifications', 
-                      badgeCount: unreadCount > 0 ? unreadCount : null, 
-                      onTap: () {
-                        Navigator.pop(context); // Close drawer
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const NotificationPage()),
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, authState) {
+                    int? userId;
+                    if (authState is Authenticated) userId = authState.user.userId;
+                    if (authState is ProfileLoaded) userId = authState.user.userId;
+
+                    return BlocBuilder<NotificationBloc, NotificationState>(
+                      builder: (context, state) {
+                        int unreadCount = 0;
+                        if (state is NotificationLoaded) {
+                          unreadCount = state.unreadCount;
+                        }
+                        return _buildDrawerItem(
+                          Icons.notifications_rounded, 
+                          'Notifications', 
+                          badgeCount: unreadCount > 0 ? unreadCount : null, 
+                          onTap: () {
+                            Navigator.pop(context); // Close drawer
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const NotificationPage()),
+                            );
+                          },
                         );
                       },
                     );

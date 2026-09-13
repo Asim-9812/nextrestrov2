@@ -11,9 +11,9 @@ class NotificationRepositoryImpl implements NotificationRepository {
   NotificationRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, List<NotificationEntity>>> getNotifications() async {
+  Future<Either<Failure, List<NotificationEntity>>> getNotifications(int userId) async {
     try {
-      final notifications = await remoteDataSource.getNotifications();
+      final notifications = await remoteDataSource.getNotifications(userId);
       return Right(notifications);
     } on DioException catch (e) {
       return Left(ServerFailure(e.message ?? 'Failed to fetch notifications'));
@@ -23,9 +23,9 @@ class NotificationRepositoryImpl implements NotificationRepository {
   }
 
   @override
-  Future<Either<Failure, int>> getUnreadCount() async {
+  Future<Either<Failure, int>> getUnreadCount(int userId) async {
     try {
-      final count = await remoteDataSource.getUnreadCount();
+      final count = await remoteDataSource.getUnreadCount(userId);
       return Right(count);
     } on DioException catch (e) {
       return Left(ServerFailure(e.message ?? 'Failed to fetch unread count'));
@@ -47,9 +47,9 @@ class NotificationRepositoryImpl implements NotificationRepository {
   }
 
   @override
-  Future<Either<Failure, void>> markAllAsRead() async {
+  Future<Either<Failure, void>> markAllAsRead(int userId) async {
     try {
-      await remoteDataSource.markAllAsRead();
+      await remoteDataSource.markAllAsRead(userId);
       return const Right(null);
     } on DioException catch (e) {
       return Left(ServerFailure(e.message ?? 'Failed to mark all notifications as read'));
