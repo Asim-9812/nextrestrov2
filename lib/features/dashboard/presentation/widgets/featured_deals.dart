@@ -258,11 +258,6 @@ class _FeaturedDealsState extends State<FeaturedDeals> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                                    decoration: BoxDecoration(color: const Color(0xFFFFEAF2), borderRadius: BorderRadius.circular(6)),
-                                    child: const Text('23%', style: TextStyle(color: Color(0xFFFF4D7D), fontSize: 7, fontWeight: FontWeight.bold)),
-                                  ),
                                 ],
                               ),
                               AppSizes.gapH4,

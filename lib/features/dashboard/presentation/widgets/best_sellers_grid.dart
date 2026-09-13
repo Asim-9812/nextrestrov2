@@ -32,7 +32,6 @@ class BestSellersGrid extends StatelessWidget {
                     return ProductCard(
                       product: product,
                       width: itemWidth,
-                      showBadge: true,
                     );
                   }).toList(),
                 );
