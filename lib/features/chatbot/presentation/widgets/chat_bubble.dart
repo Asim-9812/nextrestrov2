@@ -73,12 +73,14 @@ class ChatBubble extends StatelessWidget {
                       ListView.separated(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: message.products!.length,
+                        itemCount: message.products!.length > 3 ? 3 : message.products!.length,
                         separatorBuilder: (context, index) => const SizedBox(height: 12),
                         itemBuilder: (context, index) => _buildProductItem(context, message.products![index]),
                       ),
-                      const SizedBox(height: 12),
-                      _buildSeeMoreButton(context),
+                      if (message.products!.length > 3) ...[
+                        const SizedBox(height: 12),
+                        _buildSeeMoreButton(context),
+                      ],
                     ],
                   ],
                 ),
@@ -104,26 +106,12 @@ class ChatBubble extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          final categoryIds = message.products!
-              .map((p) => p.categoryId)
-              .where((id) => id != null)
-              .cast<int>()
-              .toSet()
-              .toList();
-          final petTypeIds = message.products!
-              .map((p) => p.petTypeId)
-              .where((id) => id != null)
-              .cast<int>()
-              .toSet()
-              .toList();
-
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => FilteredProductListPage(
-                categoryIds: categoryIds,
-                petTypeIds: petTypeIds,
-                title: "Related Products",
+                products: message.products,
+                title: "Recommended Products",
               ),
             ),
           );

@@ -7,15 +7,19 @@ import '../bloc/product_bloc.dart';
 import '../bloc/product_event.dart';
 import '../bloc/product_state.dart';
 
+import '../../../product/domain/entities/product.dart';
+
 class FilteredProductListPage extends StatefulWidget {
-  final List<int> categoryIds;
-  final List<int> petTypeIds;
+  final List<int>? categoryIds;
+  final List<int>? petTypeIds;
+  final List<Product>? products;
   final String title;
 
   const FilteredProductListPage({
     super.key,
-    required this.categoryIds,
-    required this.petTypeIds,
+    this.categoryIds,
+    this.petTypeIds,
+    this.products,
     this.title = 'Products',
   });
 
@@ -27,10 +31,12 @@ class _FilteredProductListPageState extends State<FilteredProductListPage> {
   @override
   void initState() {
     super.initState();
-    context.read<ProductBloc>().add(FilterProductsByMultipleCriteriaEvent(
-          categoryIds: widget.categoryIds,
-          petTypeIds: widget.petTypeIds,
-        ));
+    if (widget.products == null) {
+      context.read<ProductBloc>().add(FilterProductsByMultipleCriteriaEvent(
+            categoryIds: widget.categoryIds ?? [],
+            petTypeIds: widget.petTypeIds ?? [],
+          ));
+    }
   }
 
   @override
@@ -43,7 +49,9 @@ class _FilteredProductListPageState extends State<FilteredProductListPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary, size: 28),
           onPressed: () {
-            context.read<ProductBloc>().add(GetAllProductsEvent());
+            if (widget.products == null) {
+              context.read<ProductBloc>().add(GetAllProductsEvent());
+            }
             Navigator.pop(context);
           },
         ),
@@ -57,33 +65,39 @@ class _FilteredProductListPageState extends State<FilteredProductListPage> {
         ),
         centerTitle: false,
       ),
-      body: BlocBuilder<ProductBloc, ProductState>(
-        builder: (context, state) {
-          if (state is ProductLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: widget.products != null 
+        ? _buildProductGrid(widget.products!)
+        : BlocBuilder<ProductBloc, ProductState>(
+            builder: (context, state) {
+              if (state is ProductLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          if (state is ProductLoaded) {
-            return state.filteredProducts.isEmpty
-                ? _buildEmptyState()
-                : GridView.builder(
-                    padding: const EdgeInsets.all(20),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.65,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                    ),
-                    itemCount: state.filteredProducts.length,
-                    itemBuilder: (context, index) {
-                      return ProductCard(product: state.filteredProducts[index]);
-                    },
-                  );
-          }
+              if (state is ProductLoaded) {
+                return _buildProductGrid(state.filteredProducts);
+              }
 
-          return const SizedBox.shrink();
-        },
+              return const SizedBox.shrink();
+            },
+          ),
+    );
+  }
+
+  Widget _buildProductGrid(List<Product> products) {
+    if (products.isEmpty) return _buildEmptyState();
+    
+    return GridView.builder(
+      padding: const EdgeInsets.all(20),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.65,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
       ),
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        return ProductCard(product: products[index]);
+      },
     );
   }
 
