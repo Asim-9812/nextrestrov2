@@ -71,7 +71,6 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       context.read<CartBloc>().add(GetCartEvent(authState.user.userId));
       
       // Refresh essential dashboard data if they are in error state or empty
-      context.read<ProductTypeBloc>().add(GetAllProductTypesEvent());
       context.read<CategoryBloc>().add(GetAllCategoriesEvent());
       context.read<BrandBloc>().add(GetAllBrandsEvent());
       context.read<ProductBloc>().add(GetAllProductsEvent());

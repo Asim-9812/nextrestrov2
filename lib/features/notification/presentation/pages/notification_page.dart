@@ -231,6 +231,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
         ),
         dividerColor: Colors.transparent,
         labelColor: Colors.white,
+        indicatorSize: TabBarIndicatorSize.tab,
         unselectedLabelColor: AppColors.primary,
         labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),

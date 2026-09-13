@@ -20,8 +20,6 @@ import 'features/brand/presentation/bloc/brand_bloc.dart';
 import 'features/brand/presentation/bloc/brand_event.dart';
 import 'features/category/presentation/bloc/category_bloc.dart';
 import 'features/category/presentation/bloc/category_event.dart';
-import 'features/product_type/presentation/bloc/product_type_bloc.dart';
-import 'features/product_type/presentation/bloc/product_type_event.dart';
 import 'features/pet_type/presentation/bloc/pet_type_bloc.dart';
 import 'features/pet_type/presentation/bloc/pet_type_event.dart';
 import 'features/order/presentation/bloc/order_bloc.dart';
@@ -55,7 +53,6 @@ void main() async {
           BlocProvider(create: (_) => di.sl<WishlistBloc>()),
           BlocProvider(create: (_) => di.sl<BrandBloc>()..add(GetAllBrandsEvent())),
           BlocProvider(create: (_) => di.sl<CategoryBloc>()..add(GetAllCategoriesEvent())),
-          BlocProvider(create: (_) => di.sl<ProductTypeBloc>()..add(GetAllProductTypesEvent())),
           BlocProvider(create: (_) => di.sl<PetTypeBloc>()..add(GetAllPetTypesEvent())),
           BlocProvider(create: (_) => di.sl<ProductBloc>()..add(GetAllProductsEvent())),
           BlocProvider(create: (_) => di.sl<OrderBloc>()),

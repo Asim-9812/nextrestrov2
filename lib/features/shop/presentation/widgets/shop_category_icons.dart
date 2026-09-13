@@ -1,102 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/utils/sample_data.dart';
-import '../../../product_type/domain/entities/product_type_entity.dart';
-import '../../../product_type/presentation/bloc/product_type_bloc.dart';
-import '../../../product_type/presentation/bloc/product_type_state.dart';
-import '../../../product_type/presentation/pages/product_type_products_page.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../category/domain/entities/category_entity.dart';
+import '../../../category/presentation/bloc/category_bloc.dart';
+import '../../../category/presentation/bloc/category_state.dart';
+import '../../../category/presentation/pages/category_products_page.dart';
 
 class ShopCategoryIcons extends StatelessWidget {
   const ShopCategoryIcons({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final List<Color> pastelColors = [
-      const Color(0xFFFFE5D9),
-      const Color(0xFFF2EEFF),
-      const Color(0xFFE8F9F1),
-      const Color(0xFFE0F2FE),
-      const Color(0xFFFFECEB),
-      const Color(0xFFF7F8FA),
-    ];
-
-    return BlocBuilder<ProductTypeBloc, ProductTypeState>(
+    return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
-        if (state is ProductTypeLoading) {
+        if (state is CategoryLoading) {
           return const SizedBox(
-            height: 80,
+            height: 40,
             child: Center(child: CircularProgressIndicator()),
           );
         }
         
-        List<ProductTypeEntity> displayTypes = [];
-        if (state is ProductTypeLoaded) {
-          displayTypes = state.productTypes;
-        } else if (state is ProductTypeError) {
-          // Show sample data on error as fallback
-          // displayTypes = sampleProductTypes;
+        List<CategoryEntity> categories = [];
+        if (state is CategoryLoaded) {
+          categories = state.categories;
+        } else if (state is CategoryError) {
           return Center(child: Text(state.message, style: const TextStyle(fontSize: 10, color: Colors.red)));
         }
 
-        if (displayTypes.isEmpty) return const SizedBox.shrink();
+        if (categories.isEmpty) return const SizedBox.shrink();
+
+        // Limit to 10 for the quick bar
+        final displayCategories = categories.length > 10 ? categories.take(10).toList() : categories;
 
         return Container(
-          height: 90,
+          height: 40,
           margin: const EdgeInsets.symmetric(vertical: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            itemCount: displayTypes.length,
+            itemCount: displayCategories.length,
             itemBuilder: (context, index) {
-              final type = displayTypes[index];
-              final color = pastelColors[index % pastelColors.length];
+              final category = displayCategories[index];
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProductTypeProductsPage(productType: type),
+                        builder: (context) => CategoryProductsPage(category: category),
                       ),
                     );
                   },
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 55,
-                        width: 55,
-                        decoration: BoxDecoration(
-                          color: color,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.category_outlined, color: Colors.black54, size: 24),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryLightest,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.primarySoft),
+                    ),
+                    child: Center(
+                      child: Text(
+                        category.categoryName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold, 
+                          fontSize: 12,
+                          color: AppColors.primary,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      SizedBox(
-                        width: 70,
-                        child: Text(
-                          type.productTypeName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold, 
-                            fontSize: 10,
-                          ),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               );

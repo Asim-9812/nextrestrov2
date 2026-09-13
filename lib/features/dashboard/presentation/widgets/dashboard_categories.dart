@@ -1,101 +1,112 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
-import '../../../../core/utils/sample_data.dart';
-import '../../../product_type/domain/entities/product_type_entity.dart';
-import '../../../product_type/presentation/bloc/product_type_bloc.dart';
-import '../../../product_type/presentation/bloc/product_type_state.dart';
-import '../../../product_type/presentation/pages/product_type_products_page.dart';
+import '../../../category/domain/entities/category_entity.dart';
+import '../../../category/presentation/bloc/category_bloc.dart';
+import '../../../category/presentation/bloc/category_event.dart';
+import '../../../category/presentation/bloc/category_state.dart';
+import '../../../category/presentation/pages/category_products_page.dart';
+import '../../../category/presentation/pages/category_list_page.dart';
 
 class DashboardCategories extends StatelessWidget {
   const DashboardCategories({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final List<Color> pastelColors = [
-      const Color(0xFFFFF2E1),
-      const Color(0xFFFFEBF6),
-      const Color(0xFFFFF8E1),
-      const Color(0xFFE1FFF2),
-      const Color(0xFFE1F5FF),
-      const Color(0xFFF2EEFF),
-    ];
-
-    return BlocBuilder<ProductTypeBloc, ProductTypeState>(
+    return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
-        if (state is ProductTypeLoading) {
+        if (state is CategoryLoading) {
           return const SizedBox(
-            height: 100,
+            height: 50,
             child: Center(child: CircularProgressIndicator()),
           );
         }
         
-        List<ProductTypeEntity> displayTypes = [];
-        if (state is ProductTypeLoaded) {
-          displayTypes = state.productTypes;
-        } else if (state is ProductTypeError) {
-          // displayTypes = sampleProductTypes;
+        List<CategoryEntity> categories = [];
+        if (state is CategoryLoaded) {
+          categories = state.categories;
+        } else if (state is CategoryError) {
           return Center(child: Text(state.message, style: const TextStyle(fontSize: 10, color: Colors.red)));
         }
 
-        if (displayTypes.isEmpty) return const SizedBox.shrink();
+        if (categories.isEmpty) return const SizedBox.shrink();
 
-        return Container(
-          height: 100,
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            itemCount: displayTypes.length,
-            itemBuilder: (context, index) {
-              final type = displayTypes[index];
-              final color = pastelColors[index % pastelColors.length];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProductTypeProductsPage(productType: type),
-                      ),
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: color,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.pets, color: Colors.black54, size: 24),
-                        ),
-                      ),
-                      AppSizes.gapH8,
-                      SizedBox(
-                        width: 80,
-                        child: Text(
-                          type.productTypeName,
-                          style: AppTextStyles.bodySmall.copyWith(
-                            fontWeight: FontWeight.w600, 
-                            color: Colors.black,
-                            fontSize: 10,
+        final displayCategories = categories.length > 10 ? categories.take(10).toList() : categories;
+
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Categories', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  if (categories.length > 10)
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const CategoryListPage()),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            'See all',
+                            style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold),
                           ),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          Icon(Icons.chevron_right, color: AppColors.primary, size: 16),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            AppSizes.gapH12,
+            SizedBox(
+              height: 40,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                itemCount: displayCategories.length,
+                itemBuilder: (context, index) {
+                  final category = displayCategories[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CategoryProductsPage(category: category),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryLightest,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: AppColors.primarySoft),
+                        ),
+                        child: Center(
+                          child: Text(
+                            category.categoryName,
+                            style: AppTextStyles.bodySmall.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary,
+                            ),
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         );
       },
     );

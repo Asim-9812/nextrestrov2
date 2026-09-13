@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../category/presentation/bloc/category_bloc.dart';
+import '../../../category/presentation/bloc/category_state.dart';
 
 class ShopFilterBottomSheet extends StatefulWidget {
   const ShopFilterBottomSheet({super.key});
@@ -23,7 +25,8 @@ class _ShopFilterBottomSheetState extends State<ShopFilterBottomSheet> {
   RangeValues _priceRange = const RangeValues(0, 10000);
   String _selectedPetType = 'All';
   String _selectedBreed = 'All';
-  String _selectedProductType = 'All';
+  String _selectedCategory = 'All';
+  bool _isCategoryExpanded = false;
   String _selectedLifeStage = 'All';
   String _selectedDiet = 'All';
   String _selectedRating = 'All';
@@ -38,7 +41,8 @@ class _ShopFilterBottomSheetState extends State<ShopFilterBottomSheet> {
       _priceRange = const RangeValues(0, 10000);
       _selectedPetType = 'All';
       _selectedBreed = 'All';
-      _selectedProductType = 'All';
+      _selectedCategory = 'All';
+      _isCategoryExpanded = false;
       _selectedLifeStage = 'All';
       _selectedDiet = 'All';
       _selectedRating = 'All';
@@ -74,7 +78,7 @@ class _ShopFilterBottomSheetState extends State<ShopFilterBottomSheet> {
                   AppSizes.gapH24,
                   _buildBreedType(),
                   AppSizes.gapH24,
-                  _buildProductType(),
+                  _buildCategories(),
                   AppSizes.gapH24,
                   _buildBrands(),
                   AppSizes.gapH24,
@@ -194,12 +198,55 @@ class _ShopFilterBottomSheetState extends State<ShopFilterBottomSheet> {
     );
   }
 
-  Widget _buildProductType() {
-    return _buildSelectionSection(
-      'Product Type',
-      ['All', 'Food', 'Treats', 'Toys', 'Grooming', 'Health', 'Accessories', 'Furniture'],
-      _selectedProductType,
-      (val) => setState(() => _selectedProductType = val),
+  Widget _buildCategories() {
+    return BlocBuilder<CategoryBloc, CategoryState>(
+      builder: (context, state) {
+        if (state is CategoryLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        List<String> options = ['All'];
+        if (state is CategoryLoaded) {
+          options.addAll(state.categories.map((c) => c.categoryName));
+        }
+
+        final displayOptions = _isCategoryExpanded ? options : options.take(11).toList(); // 'All' + 10
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Categories', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: displayOptions.map((opt) => _buildSelectionItem(opt, _selectedCategory, (val) {
+                setState(() => _selectedCategory = val);
+              })).toList(),
+            ),
+            if (options.length > 11)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: InkWell(
+                  onTap: () => setState(() => _isCategoryExpanded = !_isCategoryExpanded),
+                  child: Row(
+                    children: [
+                      Text(
+                        _isCategoryExpanded ? 'See less' : 'See more',
+                        style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
+                      Icon(
+                        _isCategoryExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                        color: AppColors.primary,
+                        size: 18,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 

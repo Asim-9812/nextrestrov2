@@ -16,10 +16,6 @@ import 'features/category/data/datasources/category_remote_data_source.dart';
 import 'features/category/data/repositories/category_repository_impl.dart';
 import 'features/category/domain/repositories/category_repository.dart';
 import 'features/category/presentation/bloc/category_bloc.dart';
-import 'features/product_type/data/datasources/product_type_remote_data_source.dart';
-import 'features/product_type/data/repositories/product_type_repository_impl.dart';
-import 'features/product_type/domain/repositories/product_type_repository.dart';
-import 'features/product_type/presentation/bloc/product_type_bloc.dart';
 import 'features/order/data/datasources/order_remote_data_source.dart';
 import 'features/order/data/repositories/order_repository_impl.dart';
 import 'features/order/domain/repositories/order_repository.dart';
@@ -95,15 +91,6 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<CategoryRemoteDataSource>(
     () => CategoryRemoteDataSourceImpl(sl()),
-  );
-
-  // Features - ProductType
-  sl.registerFactory(() => ProductTypeBloc(productTypeRepository: sl()));
-  sl.registerLazySingleton<ProductTypeRepository>(
-    () => ProductTypeRepositoryImpl(remoteDataSource: sl()),
-  );
-  sl.registerLazySingleton<ProductTypeRemoteDataSource>(
-    () => ProductTypeRemoteDataSourceImpl(sl()),
   );
 
   // Features - PetType

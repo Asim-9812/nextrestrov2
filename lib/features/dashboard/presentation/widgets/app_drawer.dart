@@ -16,6 +16,7 @@ import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../pets/presentation/pages/my_pets_page.dart';
 import '../../../notification/presentation/bloc/notification_bloc.dart';
 import '../../../notification/presentation/bloc/notification_state.dart';
+import '../../../category/presentation/pages/category_list_page.dart';
 import '../../../order/presentation/bloc/order_bloc.dart';
 import '../../../order/presentation/bloc/order_state.dart';
 import '../../../order/domain/entities/order_entity.dart';
@@ -83,7 +84,17 @@ class AppDrawer extends StatelessWidget {
                     );
                   },
                 ),
-                _buildDrawerItem(Icons.grid_view_rounded, 'Categories', onTap: () {}),
+                _buildDrawerItem(
+                  Icons.grid_view_rounded, 
+                  'Categories', 
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CategoryListPage()),
+                    );
+                  },
+                ),
                 _buildDrawerItem(FontAwesomeIcons.tag, 'Brands', onTap: () {}),
                 _buildDrawerItem(FontAwesomeIcons.percent, 'Deals & Offers', onTap: () {}),
                 
