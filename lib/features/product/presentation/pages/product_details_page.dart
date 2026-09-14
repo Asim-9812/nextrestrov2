@@ -5,6 +5,8 @@ import 'package:divinepets/core/constants/app_colors.dart';
 import 'package:divinepets/core/constants/app_sizes.dart';
 import 'package:divinepets/features/product/domain/entities/product.dart';
 import 'package:divinepets/features/wishlist/presentation/bloc/wishlist_bloc.dart';
+import '../../../cart/presentation/bloc/cart_bloc.dart';
+import '../../../cart/presentation/pages/cart_page.dart';
 import '../bloc/review_cubit.dart';
 import '../bloc/review_state.dart';
 import '../widgets/product_image_gallery.dart';
@@ -50,10 +52,54 @@ class ProductDetailsPage extends StatelessWidget {
                 );
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.share_outlined, color: AppColors.primary),
-              onPressed: () {},
+            const SizedBox(width: 12,),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CartPage()),
+                );
+              },
+              child: BlocBuilder<CartBloc, CartState>(
+                builder: (context, state) {
+                  return Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      const Icon(Icons.shopping_cart_outlined, size: 26),
+                      if (state.totalItems > 0)
+                        Positioned(
+                          right: -4,
+                          top: -4,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            constraints: const BoxConstraints(
+                              minWidth: 16,
+                              minHeight: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFF782C),
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 1.5),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${state.totalItems}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  height: 1,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
             ),
+            const SizedBox(width: 12,)
           ],
         ),
         body: SingleChildScrollView(

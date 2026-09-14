@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/network/api_endpoints.dart';
 import '../models/user_model.dart';
@@ -32,9 +34,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           "role": "string"
         },
       );
-      // Login response returns the user object directly at the root
+      // Login response returns the user object directly at the root or inside 'data'
       if (response.data != null) {
-        return UserModel.fromJson(response.data);
+        debugPrint('AuthRemoteDataSource: Login Raw Response: ${response.data}');
+        final userData = response.data['data'] ?? response.data;
+        return UserModel.fromJson(userData);
       }
       throw Exception('Invalid login response');
     } catch (e) {

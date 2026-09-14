@@ -92,14 +92,6 @@ class _AddressSectionState extends State<AddressSection> {
       deliveryNotes: ''
     );
 
-    // Listen to changes and report back
-    _formAddress.addressController.addListener(_notifyParent);
-    _formAddress.cityController.addListener(_notifyParent);
-    _formAddress.stateController.addListener(_notifyParent);
-    _formAddress.postalCodeController.addListener(_notifyParent);
-    _formAddress.landmarkController.addListener(_notifyParent);
-    _formAddress.deliveryNotesController.addListener(_notifyParent);
-
     // Initial notification to parent
     WidgetsBinding.instance.addPostFrameCallback((_) => _notifyParent());
   }
@@ -118,94 +110,106 @@ class _AddressSectionState extends State<AddressSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade100),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(widget.icon, color: AppColors.primary, size: 20),
-              AppSizes.gapW8,
-              Text(
-                widget.title,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.primary),
-              ),
-            ],
-          ),
-          AppSizes.gapH16,
-          
-          _buildFieldLabel('Full Name'),
-          _buildSmallTextField(_nameController, 'Enter your name'),
-          AppSizes.gapH12,
-          
-          _buildFieldLabel('Phone Number'),
-          _buildSmallTextField(_phoneController, 'Enter phone number', keyboardType: TextInputType.phone),
-          AppSizes.gapH12,
-
-          _buildFieldLabel('Street Address'),
-          _buildSmallTextField(_formAddress.addressController, 'e.g. Asan, Kathmandu-27'),
-          AppSizes.gapH12,
-
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildFieldLabel('City'),
-                    _buildSmallTextField(_formAddress.cityController, 'e.g. Kathmandu'),
-                  ],
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is Authenticated) {
+          if (_nameController.text.isEmpty && state.user.fullName.isNotEmpty) {
+            _nameController.text = state.user.fullName;
+          }
+          if (_phoneController.text.isEmpty && state.user.phone.isNotEmpty) {
+            _phoneController.text = state.user.phone;
+          }
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey.shade100),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(widget.icon, color: AppColors.primary, size: 20),
+                AppSizes.gapW8,
+                Text(
+                  widget.title,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.primary),
                 ),
-              ),
-              AppSizes.gapW12,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildFieldLabel('State/Province'),
-                    _buildSmallTextField(_formAddress.stateController, 'e.g. Bagmati'),
-                  ],
+              ],
+            ),
+            AppSizes.gapH16,
+            
+            _buildFieldLabel('Full Name'),
+            _buildSmallTextField(_nameController, 'Enter your name', enabled: true),
+            AppSizes.gapH12,
+            
+            _buildFieldLabel('Phone Number'),
+            _buildSmallTextField(_phoneController, 'Enter phone number', keyboardType: TextInputType.phone, enabled: true),
+            AppSizes.gapH12,
+  
+            _buildFieldLabel('Street Address'),
+            _buildSmallTextField(_formAddress.addressController, 'e.g. Asan, Kathmandu-27', onChanged: (_) => _notifyParent()),
+            AppSizes.gapH12,
+  
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('City'),
+                      _buildSmallTextField(_formAddress.cityController, 'e.g. Kathmandu', onChanged: (_) => _notifyParent()),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          AppSizes.gapH12,
-
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildFieldLabel('Postal Code'),
-                    _buildSmallTextField(_formAddress.postalCodeController, 'e.g. 44600', keyboardType: TextInputType.number),
-                  ],
+                AppSizes.gapW12,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('State/Province'),
+                      _buildSmallTextField(_formAddress.stateController, 'e.g. Bagmati', onChanged: (_) => _notifyParent()),
+                    ],
+                  ),
                 ),
-              ),
-              AppSizes.gapW12,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildFieldLabel('Landmark'),
-                    _buildSmallTextField(_formAddress.landmarkController, 'e.g. Near Annapurna Mandir'),
-                  ],
+              ],
+            ),
+            AppSizes.gapH12,
+  
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('Postal Code'),
+                      _buildSmallTextField(_formAddress.postalCodeController, 'e.g. 44600', keyboardType: TextInputType.number, onChanged: (_) => _notifyParent()),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          AppSizes.gapH12,
-
-          _buildFieldLabel('Delivery Notes (Optional)'),
-          _buildSmallTextField(_formAddress.deliveryNotesController, 'e.g. Leave at the front gate'),
-        ],
+                AppSizes.gapW12,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('Landmark'),
+                      _buildSmallTextField(_formAddress.landmarkController, 'e.g. Near Annapurna Mandir', onChanged: (_) => _notifyParent()),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            AppSizes.gapH12,
+  
+            _buildFieldLabel('Delivery Notes (Optional)'),
+            _buildSmallTextField(_formAddress.deliveryNotesController, 'e.g. Leave at the front gate', onChanged: (_) => _notifyParent()),
+          ],
+        ),
       ),
     );
   }
@@ -220,20 +224,26 @@ class _AddressSectionState extends State<AddressSection> {
     );
   }
 
-  Widget _buildSmallTextField(TextEditingController controller, String hint, {TextInputType? keyboardType}) {
+  Widget _buildSmallTextField(TextEditingController controller, String hint, {TextInputType? keyboardType, bool enabled = true, Function(String)? onChanged}) {
     return TextField(
       controller: controller,
-      style: const TextStyle(fontSize: 13),
+      onChanged: onChanged,
+      style: TextStyle(fontSize: 13, color: enabled ? Colors.black87 : Colors.grey.shade600),
       keyboardType: keyboardType,
+      enabled: enabled,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 12),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         filled: true,
-        fillColor: const Color(0xFFF7F8FA),
+        fillColor: enabled ? const Color(0xFFF7F8FA) : Colors.grey.shade50,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(color: Colors.grey.shade100),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.grey.shade200),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),

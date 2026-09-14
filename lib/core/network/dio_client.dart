@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import '../utils/app_logger.dart';
 import 'api_endpoints.dart';
 import 'dio_interceptor.dart';
@@ -18,20 +19,25 @@ class DioClient {
       ..interceptors.add(InterceptorsWrapper(
         onRequest: (options, handler) {
           final token = _sessionManager.token;
-          if (token != null) {
-            options.headers['Authorization'] = 'Bearer $token';
+          if (token != null && token.isNotEmpty) {
+            final authHeader = token.startsWith('Bearer ') ? token : 'Bearer $token';
+            options.headers['Authorization'] = authHeader;
+            debugPrint('DioClient: Request to ${options.path} with Authorization: ${authHeader.substring(0, authHeader.length > 20 ? 20 : authHeader.length)}...');
+          } else {
+            debugPrint('DioClient: Request to ${options.path} without Authorization token');
           }
           return handler.next(options);
         },
         onError: (DioException e, handler) {
           if (e.response?.statusCode == 401) {
-            AppLogger.e('DioClient: 401 Unauthorized detected! Triggering session expiry.');
+            AppLogger.e('DioClient: 401 Unauthorized detected! PATH: ${e.requestOptions.path}');
             _sessionManager.triggerSessionExpired();
           }
           final errorMessage = _getErrorMessage(e);
           return handler.next(e.copyWith(message: errorMessage));
         },
       ));
+
   }
 
   String _getErrorMessage(DioException error) {

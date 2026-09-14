@@ -53,6 +53,7 @@ class _PaymentMethodSectionState extends State<PaymentMethodSection> {
             icon: Icons.payments,
             iconColor: AppColors.accentSuccess,
           ),
+          /*
           _buildPaymentTile(
             index: 1,
             title: 'eSewa',
@@ -82,6 +83,7 @@ class _PaymentMethodSectionState extends State<PaymentMethodSection> {
               ),
             ),
           ),
+          */
         ],
       ),
     );

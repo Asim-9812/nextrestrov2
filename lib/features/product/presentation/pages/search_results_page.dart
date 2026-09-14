@@ -10,8 +10,13 @@ import '../../../shop/presentation/widgets/shop_filter_bottom_sheet.dart';
 
 class SearchResultsPage extends StatefulWidget {
   final String initialQuery;
+  final String title;
 
-  const SearchResultsPage({super.key, this.initialQuery = ''});
+  const SearchResultsPage({
+    super.key, 
+    this.initialQuery = '',
+    this.title = 'Search Results',
+  });
 
   @override
   State<SearchResultsPage> createState() => _SearchResultsPageState();
@@ -54,7 +59,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
           },
         ),
         title: Text(
-          'Search Results',
+          widget.title,
           style: AppTextStyles.h2.copyWith(
             color: AppColors.primary,
             fontWeight: FontWeight.w900,
@@ -128,7 +133,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
           ),
           const SizedBox(width: 12),
           GestureDetector(
-            onTap: () => ShopFilterBottomSheet.show(context),
+            onTap: () => ShopFilterBottomSheet.show(context, navigateToResults: false),
             child: Container(
               height: 50,
               width: 50,

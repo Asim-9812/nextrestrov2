@@ -9,26 +9,26 @@ import 'core/services/onesignal_service.dart';
 import 'core/constants/constants.dart';
 import 'core/network/session_manager.dart';
 import 'core/theme/app_theme.dart';
-import 'features/auth/presentation/bloc/auth_state.dart';
-import 'features/auth/presentation/pages/login_page.dart';
-import 'features/splash/presentation/pages/splash_page.dart';
-import 'features/cart/presentation/bloc/cart_bloc.dart';
-import 'features/wishlist/presentation/bloc/wishlist_bloc.dart';
-import 'features/auth/presentation/bloc/auth_bloc.dart';
-import 'features/auth/presentation/bloc/auth_event.dart';
-import 'features/brand/presentation/bloc/brand_bloc.dart';
-import 'features/brand/presentation/bloc/brand_event.dart';
-import 'features/category/presentation/bloc/category_bloc.dart';
-import 'features/category/presentation/bloc/category_event.dart';
-import 'features/pet_type/presentation/bloc/pet_type_bloc.dart';
-import 'features/pet_type/presentation/bloc/pet_type_event.dart';
-import 'features/order/presentation/bloc/order_bloc.dart';
-import 'features/product/presentation/bloc/product_bloc.dart';
-import 'features/product/presentation/bloc/product_event.dart';
-import 'features/chatbot/presentation/bloc/chat_bloc.dart';
-import 'features/notification/presentation/bloc/notification_bloc.dart';
-import 'features/notification/presentation/bloc/notification_event.dart';
-import 'injection_container.dart' as di;
+import 'package:divinepets/features/auth/presentation/bloc/auth_state.dart';
+import 'package:divinepets/features/auth/presentation/pages/login_page.dart';
+import 'package:divinepets/features/splash/presentation/pages/splash_page.dart';
+import 'package:divinepets/features/cart/presentation/bloc/cart_bloc.dart';
+import 'package:divinepets/features/wishlist/presentation/bloc/wishlist_bloc.dart';
+import 'package:divinepets/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:divinepets/features/auth/presentation/bloc/auth_event.dart';
+import 'package:divinepets/features/brand/presentation/bloc/brand_bloc.dart';
+import 'package:divinepets/features/brand/presentation/bloc/brand_event.dart';
+import 'package:divinepets/features/category/presentation/bloc/category_bloc.dart';
+import 'package:divinepets/features/category/presentation/bloc/category_event.dart';
+import 'package:divinepets/features/pet_type/presentation/bloc/pet_type_bloc.dart';
+import 'package:divinepets/features/pet_type/presentation/bloc/pet_type_event.dart';
+import 'package:divinepets/features/order/presentation/bloc/order_bloc.dart';
+import 'package:divinepets/features/product/presentation/bloc/product_bloc.dart';
+import 'package:divinepets/features/product/presentation/bloc/product_event.dart';
+import 'package:divinepets/features/chatbot/presentation/bloc/chat_bloc.dart';
+import 'package:divinepets/features/notification/presentation/bloc/notification_bloc.dart';
+import 'package:divinepets/features/notification/presentation/bloc/notification_event.dart';
+import 'package:divinepets/injection_container.dart' as di;
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -45,7 +45,7 @@ void main() async {
   await di.init();
   runApp(
     DevicePreview(
-      enabled: false,
+      enabled: true,
       builder: (context) => MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => di.sl<AuthBloc>()..add(CheckAuthEvent())),
@@ -97,7 +97,25 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _handleSessionExpired() {
-    debugPrint("MyApp: Handling Session Expired Event");
+    debugPrint("MyApp: [SESSION EXPIRED] Handling event");
+    
+    // 1. Reset Auth state via Bloc
+    di.sl<AuthBloc>().add(LogoutEvent());
+    di.sl<CartBloc>().add(ResetCartEvent());
+
+    // 2. Immediate Forceful Navigation
+    // We do it here directly to ensure it happens regardless of Bloc state timing
+    if (navigatorKey.currentState != null) {
+      debugPrint("MyApp: [SESSION EXPIRED] Pushing LoginPage");
+      navigatorKey.currentState!.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+        (route) => false,
+      );
+    } else {
+      debugPrint("MyApp: [SESSION EXPIRED] Navigator state is null!");
+    }
+
+    // 3. Show Feedback
     final context = navigatorKey.currentContext;
     if (context != null) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -109,17 +127,6 @@ class _MyAppState extends State<MyApp> {
           duration: Duration(seconds: 4),
         ),
       );
-      
-      // Force immediate navigation to login and clear everything
-      navigatorKey.currentState?.pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-        (route) => false,
-      );
-
-      // Also reset state
-      context.read<AuthBloc>().add(LogoutEvent());
-    } else {
-      debugPrint("MyApp Error: Cannot handle session expiry, context is null");
     }
   }
 
@@ -134,13 +141,16 @@ class _MyAppState extends State<MyApp> {
           listener: (context, state) {
             debugPrint("MyApp: Global Auth State Changed to: $state");
             if (state is Authenticated) {
-              OneSignalService.login(state.user.userId.toString());
+              final user = state.user;
+              OneSignalService.login(user.userId.toString());
+              context.read<CartBloc>().add(GetCartEvent(user.userId));
               _isInitialAuthChecked = true;
             } else if (state is Unauthenticated) {
               OneSignalService.logout();
+              context.read<CartBloc>().add(ResetCartEvent());
               
               // Only navigate if we've already done the initial check 
-              // (which is handled by SplashPage)
+              // AND we're not currently handling a session expiry (which does its own navigation)
               if (_isInitialAuthChecked) {
                 debugPrint("MyApp: Redirecting to LoginPage (Manual Logout)");
                 navigatorKey.currentState?.pushAndRemoveUntil(

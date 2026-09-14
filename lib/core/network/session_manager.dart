@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../../features/auth/data/models/user_model.dart';
 
@@ -25,6 +26,7 @@ class SessionManager {
   }
 
   void updateSession(UserModel user) {
+    debugPrint('SessionManager: Updating session for ${user.username}. Token present: ${user.token != null}');
     _currentUser = user;
     _token = user.token;
   }
@@ -36,11 +38,17 @@ class SessionManager {
     await box.delete(_userKey);
   }
 
+  bool _isExpiring = false;
+
   void triggerSessionExpired() {
-    if (_token == null) return; // Already triggered or logged out
-    _token = null; // Prevent re-triggering immediately
+    if (_isExpiring) return;
+    _isExpiring = true;
+    
     _sessionExpiredController.add(true);
-    logout();
+    logout().then((_) {
+      // Reset after a delay to allow re-login
+      Future.delayed(const Duration(seconds: 5), () => _isExpiring = false);
+    });
   }
 
   void dispose() {

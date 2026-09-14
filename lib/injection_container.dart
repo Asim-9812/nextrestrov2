@@ -60,7 +60,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DioClient(sl(), sl()));
 
   // Features - Auth
-  sl.registerFactory(() => AuthBloc(authRepository: sl()));
+  sl.registerLazySingleton(() => AuthBloc(authRepository: sl()));
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       remoteDataSource: sl(),

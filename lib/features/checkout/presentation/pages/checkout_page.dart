@@ -5,6 +5,7 @@ import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/widgets/app_confirmation_dialog.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_event.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../order/presentation/bloc/order_bloc.dart';
@@ -29,6 +30,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
   int _selectedPaymentMethod = 0; // 0: COD, 1: eSewa, 2: Khalti
   DeliveryEntity? _deliveryAddress;
   List<CartItem> _itemsToOrder = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Ensure we have the latest profile data for pre-filling
+    // context.read<AuthBloc>().add(FetchProfileEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,10 +119,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
               },
             ),
               
-              AppSizes.gapH16,
+              // AppSizes.gapH16,
               
               // Delivery Details Section
-              const DeliveryDetailsSection(),
+              // const DeliveryDetailsSection(),
               
               AppSizes.gapH16,
               
@@ -125,10 +133,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 },
               ),
               
-              AppSizes.gapH16,
+              // AppSizes.gapH16,
               
               // Coupon Section
-              _buildCouponSection(),
+              // _buildCouponSection(),
               
               AppSizes.gapH16,
               

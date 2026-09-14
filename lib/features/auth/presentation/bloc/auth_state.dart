@@ -44,10 +44,6 @@ class ResetPasswordSuccess extends AuthState {}
 
 class RegisterSuccess extends AuthState {}
 
-class ProfileLoaded extends AuthState {
-  final UserEntity user;
-  const ProfileLoaded(this.user);
-
-  @override
-  List<Object?> get props => [user];
+class ProfileLoaded extends Authenticated {
+  const ProfileLoaded(super.user);
 }

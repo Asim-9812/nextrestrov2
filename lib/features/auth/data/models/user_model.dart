@@ -35,7 +35,7 @@ class UserModel extends UserEntity {
       companyName: json['companyName'],
       branchId: (json['branchID'] as num? ?? json['branchId'] as num?)?.toInt(),
       branchName: json['branchName'],
-      token: json['token'],
+      token: json['token'] ?? json['Token'],
     );
   }
 

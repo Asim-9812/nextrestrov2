@@ -2,18 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../brand/presentation/bloc/brand_bloc.dart';
 import '../../../category/presentation/bloc/category_bloc.dart';
 import '../../../category/presentation/bloc/category_state.dart';
+import '../../../pet_type/presentation/bloc/pet_type_bloc.dart';
+import '../../../pet_type/presentation/bloc/pet_type_state.dart';
+import '../../../brand/presentation/bloc/brand_state.dart';
+import '../../../product/presentation/bloc/product_bloc.dart';
+import '../../../product/presentation/bloc/product_event.dart';
+import '../../../product/presentation/bloc/product_state.dart';
+import '../../../product/presentation/pages/search_results_page.dart';
 
 class ShopFilterBottomSheet extends StatefulWidget {
-  const ShopFilterBottomSheet({super.key});
+  final bool navigateToResults;
+  const ShopFilterBottomSheet({super.key, this.navigateToResults = true});
 
-  static void show(BuildContext context) {
+  static void show(BuildContext context, {bool navigateToResults = true}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const ShopFilterBottomSheet(),
+      builder: (innerContext) => ShopFilterBottomSheet(navigateToResults: navigateToResults),
     );
   }
 
@@ -22,34 +31,67 @@ class ShopFilterBottomSheet extends StatefulWidget {
 }
 
 class _ShopFilterBottomSheetState extends State<ShopFilterBottomSheet> {
-  String _selectedSort = 'Popularity';
-  RangeValues _priceRange = const RangeValues(0, 10000);
-  String _selectedPetType = 'All';
-  String _selectedBreed = 'All';
-  String _selectedCategory = 'All';
-  bool _isCategoryExpanded = false;
-  String _selectedLifeStage = 'All';
-  String _selectedDiet = 'All';
-  String _selectedRating = 'All';
-  bool _availability = true;
-  bool _discount = true;
+  late String _selectedSort;
+  late RangeValues _priceRange;
+  late String _selectedPetType;
+  late String _selectedBreed;
+  late String _selectedCategory;
+  late bool _isCategoryExpanded;
+  late bool _isBrandExpanded;
+  late String _selectedLifeStage;
+  late String _selectedDiet;
+  late String _selectedRating;
+  late bool _availability;
+  late bool _discount;
+  late Set<String> _selectedBrands;
 
-  Set<String> _selectedBrands = {'Royal Cain', 'Pedigree'};
-
-  void _clearAll() {
-    setState(() {
-      _selectedSort = 'Popularity';
-      _priceRange = const RangeValues(0, 10000);
-      _selectedPetType = 'All';
+  @override
+  void initState() {
+    super.initState();
+    final productState = context.read<ProductBloc>().state;
+    
+    if (productState is ProductLoaded) {
+      _selectedSort = productState.selectedSort ?? 'Popularity';
+      _priceRange = productState.selectedPriceRange ?? const RangeValues(0, 10000);
+      _selectedPetType = productState.selectedPetTypes?.isNotEmpty == true 
+          ? productState.selectedPetTypes!.first 
+          : 'All';
+      _selectedBrands = Set.from(productState.selectedBrands ?? {});
+      _selectedRating = productState.selectedRating ?? 'All';
+      _availability = productState.availability ?? false;
+      
+      // Defaults for others
       _selectedBreed = 'All';
       _selectedCategory = 'All';
       _isCategoryExpanded = false;
+      _isBrandExpanded = false;
       _selectedLifeStage = 'All';
       _selectedDiet = 'All';
-      _selectedRating = 'All';
-      _availability = true;
       _discount = true;
-      _selectedBrands = {};
+    } else {
+      _setDefaultValues();
+    }
+  }
+
+  void _setDefaultValues() {
+    _selectedSort = 'Popularity';
+    _priceRange = const RangeValues(0, 10000);
+    _selectedPetType = 'All';
+    _selectedBreed = 'All';
+    _selectedCategory = 'All';
+    _isCategoryExpanded = false;
+    _isBrandExpanded = false;
+    _selectedLifeStage = 'All';
+    _selectedDiet = 'All';
+    _selectedRating = 'All';
+    _availability = false;
+    _discount = true;
+    _selectedBrands = {};
+  }
+
+  void _clearAll() {
+    setState(() {
+      _setDefaultValues();
     });
   }
 
@@ -77,16 +119,16 @@ class _ShopFilterBottomSheetState extends State<ShopFilterBottomSheet> {
                   AppSizes.gapH24,
                   _buildPetType(),
                   AppSizes.gapH24,
-                  _buildBreedType(),
-                  AppSizes.gapH24,
-                  _buildCategories(),
-                  AppSizes.gapH24,
+                  // _buildBreedType(),
+                  // AppSizes.gapH24,
+                  // _buildCategories(),
+                  // AppSizes.gapH24,
                   _buildBrands(),
                   AppSizes.gapH24,
-                  _buildLifeStage(),
-                  AppSizes.gapH24,
-                  _buildDietPreferences(),
-                  AppSizes.gapH24,
+                  // _buildLifeStage(),
+                  // AppSizes.gapH24,
+                  // _buildDietPreferences(),
+                  // AppSizes.gapH24,
                   _buildRatings(),
                   AppSizes.gapH24,
                   _buildToggles(),
@@ -181,11 +223,19 @@ class _ShopFilterBottomSheetState extends State<ShopFilterBottomSheet> {
   }
 
   Widget _buildPetType() {
-    return _buildSelectionSection(
-      'Pet Type',
-      ['All', '🐶 Dog', '🐱 Cat'],
-      _selectedPetType,
-      (val) => setState(() => _selectedPetType = val),
+    return BlocBuilder<PetTypeBloc, PetTypeState>(
+      builder: (context, state) {
+        List<String> options = ['All'];
+        if (state is PetTypeLoaded) {
+          options.addAll(state.petTypes.map((p) => p.petTypeName));
+        }
+        return _buildSelectionSection(
+          'Pet Type',
+          options,
+          _selectedPetType,
+          (val) => setState(() => _selectedPetType = val),
+        );
+      },
     );
   }
 
@@ -252,82 +302,105 @@ class _ShopFilterBottomSheetState extends State<ShopFilterBottomSheet> {
   }
 
   Widget _buildBrands() {
-    final List<String> brands = ['Royal Cain', 'Pedigree', 'Vet\'s Best', 'Hills', 'Purina', 'Drools'];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Brands', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-        const SizedBox(height: 16),
-        Container(
-          height: 45,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF7F8FA),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const TextField(
-            decoration: InputDecoration(
-              hintText: 'Search for brands...',
-              hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
-              prefixIcon: Icon(Icons.search, size: 20),
-              border: InputBorder.none,
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 8,
-          runSpacing: 12,
-          children: brands.map((brand) {
-            final isSelected = _selectedBrands.contains(brand);
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  if (isSelected) {
-                    _selectedBrands.remove(brand);
-                  } else {
-                    _selectedBrands.add(brand);
-                  }
-                });
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: isSelected ? AppColors.primary : Colors.grey.shade300),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      height: 18,
-                      width: 18,
-                      decoration: BoxDecoration(
-                        color: isSelected ? AppColors.primary : Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: isSelected ? AppColors.primary : Colors.grey.shade400),
-                      ),
-                      child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 12) : null,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(brand, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                  ],
+    return BlocBuilder<BrandBloc, BrandState>(
+      builder: (context, state) {
+        List<String> brands = [];
+        if (state is BrandLoaded) {
+          brands = state.brands.map((b) => b.brandName).toList();
+        }
+
+        final displayBrands = _isBrandExpanded ? brands : brands.take(6).toList();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Brands', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            const SizedBox(height: 16),
+            Container(
+              height: 45,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF7F8FA),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search for brands...',
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
+                  prefixIcon: Icon(Icons.search, size: 20),
+                  border: InputBorder.none,
                 ),
               ),
-            );
-          }).toList(),
-        ),
-        const SizedBox(height: 12),
-        InkWell(
-          onTap: () {},
-          child: Row(
-            children: const [
-              Text('See more', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12)),
-              Icon(Icons.keyboard_arrow_down, color: AppColors.primary, size: 18),
-            ],
-          ),
-        ),
-      ],
+            ),
+            const SizedBox(height: 16),
+            if (state is BrandLoading)
+              const Center(child: CircularProgressIndicator())
+            else
+              Wrap(
+                spacing: 8,
+                runSpacing: 12,
+                children: displayBrands.map((brand) {
+                  final isSelected = _selectedBrands.contains(brand);
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (isSelected) {
+                          _selectedBrands.remove(brand);
+                        } else {
+                          _selectedBrands.add(brand);
+                        }
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: isSelected ? AppColors.primary : Colors.grey.shade300),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            height: 18,
+                            width: 18,
+                            decoration: BoxDecoration(
+                              color: isSelected ? AppColors.primary : Colors.white,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: isSelected ? AppColors.primary : Colors.grey.shade400),
+                            ),
+                            child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 12) : null,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(brand, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            if (brands.length > 6)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: InkWell(
+                  onTap: () => setState(() => _isBrandExpanded = !_isBrandExpanded),
+                  child: Row(
+                    children: [
+                      Text(
+                        _isBrandExpanded ? 'See less' : 'See more',
+                        style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
+                      Icon(
+                        _isBrandExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                        color: AppColors.primary,
+                        size: 18,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
@@ -507,7 +580,25 @@ class _ShopFilterBottomSheetState extends State<ShopFilterBottomSheet> {
           Expanded(
             flex: 3,
             child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                context.read<ProductBloc>().add(ApplyComplexFiltersEvent(
+                  sort: _selectedSort,
+                  priceRange: _priceRange,
+                  petTypes: [_selectedPetType],
+                  brands: _selectedBrands.toList(),
+                  rating: _selectedRating,
+                  availability: _availability,
+                ));
+                Navigator.pop(context);
+                if (widget.navigateToResults) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchResultsPage(title: 'Filtered Results'),
+                    ),
+                  );
+                }
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 padding: const EdgeInsets.symmetric(vertical: 16),

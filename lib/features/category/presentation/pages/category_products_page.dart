@@ -118,7 +118,7 @@ class _CategoryProductsPageState extends State<CategoryProductsPage> {
           ),
           const SizedBox(width: 12),
           GestureDetector(
-            onTap: () => ShopFilterBottomSheet.show(context),
+            onTap: () => ShopFilterBottomSheet.show(context, navigateToResults: false),
             child: Container(
               height: 50,
               width: 50,

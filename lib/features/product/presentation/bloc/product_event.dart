@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 abstract class ProductEvent extends Equatable {
   const ProductEvent();
@@ -60,4 +61,25 @@ class FilterProductsByMultipleCriteriaEvent extends ProductEvent {
 
   @override
   List<Object?> get props => [categoryIds, petTypeIds];
+}
+
+class ApplyComplexFiltersEvent extends ProductEvent {
+  final String? sort;
+  final RangeValues? priceRange;
+  final List<String>? petTypes;
+  final List<String>? brands;
+  final String? rating;
+  final bool? availability;
+
+  const ApplyComplexFiltersEvent({
+    this.sort,
+    this.priceRange,
+    this.petTypes,
+    this.brands,
+    this.rating,
+    this.availability,
+  });
+
+  @override
+  List<Object?> get props => [sort, priceRange, petTypes, brands, rating, availability];
 }

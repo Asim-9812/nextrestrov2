@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../domain/entities/product.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
-import '../../../auth/presentation/bloc/auth_bloc.dart';
-import '../../../auth/presentation/bloc/auth_state.dart';
+import 'package:divinepets/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:divinepets/features/auth/presentation/bloc/auth_state.dart';
 
 class ProductBottomActionBar extends StatefulWidget {
   final Product product;

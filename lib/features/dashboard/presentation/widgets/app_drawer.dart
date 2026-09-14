@@ -6,14 +6,15 @@ import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/widgets/app_logo.dart';
 import '../../../../core/widgets/app_error_widget.dart';
-import '../../../auth/presentation/bloc/auth_bloc.dart';
-import '../../../auth/presentation/bloc/auth_event.dart';
-import '../../../auth/presentation/bloc/auth_state.dart';
+import 'package:divinepets/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:divinepets/features/auth/presentation/bloc/auth_event.dart';
+import 'package:divinepets/features/auth/presentation/bloc/auth_state.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import '../../../notification/presentation/pages/notification_page.dart';
 import '../../../order/presentation/pages/my_orders_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../pets/presentation/pages/my_pets_page.dart';
+import '../../../brand/presentation/pages/brand_list_page.dart';
 import '../../../notification/presentation/bloc/notification_bloc.dart';
 import '../../../notification/presentation/bloc/notification_state.dart';
 import '../../../category/presentation/pages/category_list_page.dart';
@@ -72,18 +73,6 @@ class AppDrawer extends StatelessWidget {
                 _buildOrdersSection(context),
                 AppSizes.gapH24,
                 
-                // Main Menu
-                // _buildDrawerItem(
-                //   FontAwesomeIcons.paw,
-                //   'Your Pets',
-                //   onTap: () {
-                //     Navigator.pop(context); // Close drawer
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(builder: (context) => const MyPetsPage()),
-                //     );
-                //   },
-                // ),
                 _buildDrawerItem(
                   Icons.grid_view_rounded, 
                   'Categories', 
@@ -95,8 +84,17 @@ class AppDrawer extends StatelessWidget {
                     );
                   },
                 ),
-                _buildDrawerItem(FontAwesomeIcons.tag, 'Brands', onTap: () {}),
-                // _buildDrawerItem(FontAwesomeIcons.percent, 'Deals & Offers', onTap: () {}),
+                _buildDrawerItem(
+                  FontAwesomeIcons.tag, 
+                  'Brands', 
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const BrandListPage()),
+                    );
+                  },
+                ),
                 
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -108,7 +106,6 @@ class AppDrawer extends StatelessWidget {
                   builder: (context, authState) {
                     int? userId;
                     if (authState is Authenticated) userId = authState.user.userId;
-                    if (authState is ProfileLoaded) userId = authState.user.userId;
 
                     return BlocBuilder<NotificationBloc, NotificationState>(
                       builder: (context, state) {
@@ -132,20 +129,7 @@ class AppDrawer extends StatelessWidget {
                     );
                   },
                 ),
-                // _buildDrawerItem(Icons.headset_mic_rounded, 'Help & Support', onTap: () {}),
-                // _buildDrawerItem(FontAwesomeIcons.circleQuestion, 'FAQs', onTap: () {}),
                 // _buildDrawerItem(Icons.info_rounded, 'About Us', onTap: () {}),
-                // _buildDrawerItem(
-                //   Icons.error_outline_rounded,
-                //   'Error Page',
-                //   onTap: () {
-                //     Navigator.pop(context);
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(builder: (context) => const AppErrorWidget()),
-                //     );
-                //   },
-                // ),
                 //
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -168,8 +152,6 @@ class AppDrawer extends StatelessWidget {
       builder: (context, state) {
         String name = 'Guest';
         if (state is Authenticated) {
-          name = state.user.username;
-        } else if (state is ProfileLoaded) {
           name = state.user.username;
         }
         return Container(

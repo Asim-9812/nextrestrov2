@@ -9,6 +9,7 @@ import 'package:divinepets/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:divinepets/features/cart/domain/entities/cart_item.dart';
 
 import 'package:divinepets/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:divinepets/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:divinepets/features/auth/presentation/bloc/auth_state.dart';
 import 'package:divinepets/core/widgets/app_product_image.dart';
 

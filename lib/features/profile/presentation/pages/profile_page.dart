@@ -29,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    context.read<AuthBloc>().add(FetchProfileEvent());
+    // context.read<AuthBloc>().add(FetchProfileEvent());
   }
 
   @override
@@ -97,37 +97,37 @@ class _ProfilePageState extends State<ProfilePage> {
                           const ProfileOrdersCard(),
                           AppSizes.gapH24,
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('My Pets', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const MyPetsPage()),
-                                  );
-                                },
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'View all',
-                                      style: TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w500),
-                                    ),
-                                    Icon(Icons.chevron_right, color: AppColors.primary, size: 14),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          const ProfilePetsSection(),
-                          AppSizes.gapH24,
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: [
+                          //     const Text('My Pets', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          //     GestureDetector(
+                          //       onTap: () {
+                          //         Navigator.push(
+                          //           context,
+                          //           MaterialPageRoute(builder: (context) => const MyPetsPage()),
+                          //         );
+                          //       },
+                          //       child: Row(
+                          //         children: [
+                          //           Text(
+                          //             'View all',
+                          //             style: TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w500),
+                          //           ),
+                          //           Icon(Icons.chevron_right, color: AppColors.primary, size: 14),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
+                          // const SizedBox(height: 16),
+                          // const ProfilePetsSection(),
+                          // AppSizes.gapH24,
 
-                          const Text('Account', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                          const SizedBox(height: 16),
-                          const ProfileMenuSection(),
-                          AppSizes.gapH24,
+                          // const Text('Account', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          // const SizedBox(height: 16),
+                          // const ProfileMenuSection(),
+                          // AppSizes.gapH24,
 
                           const Text('Supports & Others', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                           const SizedBox(height: 16),

@@ -96,11 +96,11 @@ class _CartPageState extends State<CartPage> {
                       ),
                     ),
                     AppSizes.gapH16,
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: FreeDeliveryBanner(currentTotal: state.totalPrice),
-                    ),
-                    AppSizes.gapH24,
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                    //   child: FreeDeliveryBanner(currentTotal: state.totalPrice),
+                    // ),
+                    // AppSizes.gapH24,
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
@@ -362,9 +362,9 @@ class _CartPageState extends State<CartPage> {
               crossAxisSpacing: 16,
               itemCount: displayProducts.length,
               itemBuilder: (context, index) {
-                if (index == 1) {
-                  return _buildNewArrivalsBanner();
-                }
+                // if (index == 1) {
+                //   return _buildNewArrivalsBanner();
+                // }
                 return ProductCard(
                   product: displayProducts[index],
                   imageHeight: index % 2 == 0 ? 120 : 150,

@@ -52,28 +52,28 @@ class ProfileHeader extends StatelessWidget {
               ),
             ],
           ),
-          Positioned(
-            right: 0,
-            top: 0,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const EditProfilePage()),
-                );
-              },
-              child: Row(
-                children: const [
-                  Icon(Icons.edit, color: AppColors.primary, size: 16),
-                  SizedBox(width: 4),
-                  Text(
-                    'Edit',
-                    style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // Positioned(
+          //   right: 0,
+          //   top: 0,
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(builder: (context) => const EditProfilePage()),
+          //       );
+          //     },
+          //     child: Row(
+          //       children: const [
+          //         Icon(Icons.edit, color: AppColors.primary, size: 16),
+          //         SizedBox(width: 4),
+          //         Text(
+          //           'Edit',
+          //           style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
