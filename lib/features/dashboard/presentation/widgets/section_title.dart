@@ -17,24 +17,24 @@ class SectionTitle extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 16, left: 16, bottom: 12),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
             title,
             style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold, fontSize: 14),
           ),
-          GestureDetector(
-            onTap: onSeeAll,
-            child: Row(
-              children: [
-                Text(
-                  'See all',
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),
-                ),
-                const Icon(Icons.chevron_right, color: AppColors.primary),
-              ],
-            ),
-          ),
+          // GestureDetector(
+          //   onTap: onSeeAll,
+          //   child: Row(
+          //     children: [
+          //       Text(
+          //         'See all',
+          //         style: AppTextStyles.bodyMedium.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),
+          //       ),
+          //       const Icon(Icons.chevron_right, color: AppColors.primary),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
