@@ -30,7 +30,7 @@ class ProfileHeader extends StatelessWidget {
                 child: const CircleAvatar(
                   radius: 40,
                   backgroundColor: AppColors.primary,
-                  foregroundImage: AssetImage('assets/images/profile.jpg'),
+                  // foregroundImage: AssetImage('assets/images/profile.jpg'),
                   child: Icon(Icons.person, color: Colors.white, size: 40), // Fallback shows if image fails
                 ),
               ),

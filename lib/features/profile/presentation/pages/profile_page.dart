@@ -29,7 +29,10 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    // context.read<AuthBloc>().add(FetchProfileEvent());
+    final authState = context.read<AuthBloc>().state;
+    if (authState is! ProfileLoaded) {
+      context.read<AuthBloc>().add(FetchProfileEvent());
+    }
   }
 
   @override
@@ -174,18 +177,18 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsPage()),
-              );
-            },
-            icon: const Icon(Icons.settings_outlined, color: Colors.black, size: 26),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
-          const SizedBox(width: 16),
+          // IconButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => const SettingsPage()),
+          //     );
+          //   },
+          //   icon: const Icon(Icons.settings_outlined, color: Colors.black, size: 26),
+          //   padding: EdgeInsets.zero,
+          //   constraints: const BoxConstraints(),
+          // ),
+          // const SizedBox(width: 16),
           GestureDetector(
             onTap: () {
               Navigator.push(

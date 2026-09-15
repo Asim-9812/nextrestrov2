@@ -143,8 +143,8 @@ class ProductDetailsPage extends StatelessWidget {
                   ],
                 ),
               ),
-              ProductFAQSection(faqs: product.faqs),
-              AppSizes.gapH16,
+              // ProductFAQSection(faqs: product.faqs),
+              // AppSizes.gapH16,
               const Divider(
                 color: AppColors.textSecondary,
                 thickness: 0.2,

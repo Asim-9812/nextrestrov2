@@ -47,3 +47,11 @@ class RegisterSuccess extends AuthState {}
 class ProfileLoaded extends Authenticated {
   const ProfileLoaded(super.user);
 }
+
+class ProfileError extends Authenticated {
+  final String message;
+  const ProfileError(UserEntity user, this.message) : super(user);
+
+  @override
+  List<Object?> get props => [user, message];
+}

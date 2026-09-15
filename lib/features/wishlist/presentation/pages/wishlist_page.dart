@@ -5,6 +5,8 @@ import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/utils/sample_products.dart';
 import '../../../dashboard/presentation/widgets/product_card.dart';
+import '../../../dashboard/presentation/widgets/recommended_pets_list.dart';
+import '../../../dashboard/presentation/widgets/section_title.dart';
 import '../bloc/wishlist_bloc.dart';
 import '../widgets/wishlist_item_tile.dart';
 
@@ -62,56 +64,58 @@ class WishlistPage extends StatelessWidget {
                 ),
                 
                 AppSizes.gapH32,
-                
-                // Recommendations Header
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Text('You May Also Like', style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w800, fontSize: 16)),
-                          const SizedBox(width: 6),
-                          const Icon(Icons.pets, color: AppColors.primary, size: 16),
-                        ],
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Row(
-                          children: [
-                            Text(
-                              'View All',
-                              style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold),
-                            ),
-                            Icon(Icons.chevron_right, color: AppColors.primary, size: 16),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                
-                // Horizontal Recommendations
-                SizedBox(
-                  height: 240,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: 4,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: ProductCard(
-                          product: sampleProducts[index + 17],
-                          width: 160,
-                          imageHeight: 110,
-                        ),
-                      );
-                    },
-                  ),
-                ),
+
+                  SectionTitle(title: 'You may also like', onSeeAll: () {}),
+                  const RecommendedPetsList(),
+                // // Recommendations Header
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       Row(
+                //         children: [
+                //           Text('You May Also Like', style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w800, fontSize: 16)),
+                //           const SizedBox(width: 6),
+                //           const Icon(Icons.pets, color: AppColors.primary, size: 16),
+                //         ],
+                //       ),
+                //       GestureDetector(
+                //         onTap: () {},
+                //         child: Row(
+                //           children: [
+                //             Text(
+                //               'View All',
+                //               style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold),
+                //             ),
+                //             Icon(Icons.chevron_right, color: AppColors.primary, size: 16),
+                //           ],
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                // const SizedBox(height: 16),
+                //
+                // // Horizontal Recommendations
+                // SizedBox(
+                //   height: 240,
+                //   child: ListView.builder(
+                //     scrollDirection: Axis.horizontal,
+                //     padding: const EdgeInsets.symmetric(horizontal: 16),
+                //     itemCount: 4,
+                //     itemBuilder: (context, index) {
+                //       return Padding(
+                //         padding: const EdgeInsets.only(right: 16),
+                //         child: ProductCard(
+                //           product: sampleProducts[index + 17],
+                //           width: 160,
+                //           imageHeight: 110,
+                //         ),
+                //       );
+                //     },
+                //   ),
+                // ),
                 
                 const SizedBox(height: 120), // Bottom padding
               ],

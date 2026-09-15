@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../order/presentation/bloc/order_bloc.dart';
 import '../../../order/presentation/bloc/order_state.dart';
 import '../../../order/domain/entities/order_entity.dart';
+import '../../../order/presentation/pages/my_orders_page.dart';
 
 class ProfileOrdersCard extends StatelessWidget {
   const ProfileOrdersCard({super.key});
@@ -26,24 +27,32 @@ class ProfileOrdersCard extends StatelessWidget {
           cancelledCount = state.orders.where((o) => o.status == OrderStatus.cancelled).length;
         }
 
-        return Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.grey.shade100),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildOrderItem(Icons.assignment_outlined, 'Pending', pendingCount.toString()),
-              _buildDivider(),
-              _buildOrderItem(Icons.check_circle_outline_rounded, 'Confirmed', confirmedCount.toString()),
-              _buildDivider(),
-              _buildOrderItem(Icons.local_shipping_outlined, 'Shipped', shippedCount.toString()),
-              _buildDivider(),
-              _buildOrderItem(Icons.task_alt_rounded, 'Delivered', deliveredCount.toString()),
-            ],
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MyOrdersPage()),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.grey.shade100),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildOrderItem(Icons.assignment_outlined, 'Pending', pendingCount.toString()),
+                _buildDivider(),
+                _buildOrderItem(Icons.check_circle_outline_rounded, 'Confirmed', confirmedCount.toString()),
+                _buildDivider(),
+                _buildOrderItem(Icons.local_shipping_outlined, 'Shipped', shippedCount.toString()),
+                _buildDivider(),
+                _buildOrderItem(Icons.task_alt_rounded, 'Delivered', deliveredCount.toString()),
+              ],
+            ),
           ),
         );
       },

@@ -49,19 +49,19 @@ class DashboardSearchBar extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                height: 42,
-                width: 42,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.qr_code,
-                  color: Colors.white,
-                  size: 18,
-                ),
-              ),
+              // Container(
+              //   height: 42,
+              //   width: 42,
+              //   decoration: BoxDecoration(
+              //     color: AppColors.primary,
+              //     borderRadius: BorderRadius.circular(10),
+              //   ),
+              //   child: const Icon(
+              //     Icons.qr_code,
+              //     color: Colors.white,
+              //     size: 18,
+              //   ),
+              // ),
             ],
           ),
         ),

@@ -166,14 +166,14 @@ class _ShopPageState extends State<ShopPage> {
                   hintText: 'Search for products, brands...',
                   hintStyle: const TextStyle(color: Colors.grey, fontSize: 13),
                   prefixIcon: const Icon(Icons.search, color: Colors.black),
-                  suffixIcon: Container(
-                    margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(Icons.grid_view_rounded, color: Colors.white, size: 18),
-                  ),
+                  // suffixIcon: Container(
+                  //   margin: const EdgeInsets.all(8),
+                  //   decoration: BoxDecoration(
+                  //     color: AppColors.primary,
+                  //     borderRadius: BorderRadius.circular(8),
+                  //   ),
+                  //   child: const Icon(Icons.grid_view_rounded, color: Colors.white, size: 18),
+                  // ),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(vertical: 15),
                 ),
@@ -267,7 +267,7 @@ class _ShopPageState extends State<ShopPage> {
           AppSizes.gapH24,
           const ShopByBrandsSection(),
           AppSizes.gapH24,
-          _buildAnotherArrivalsSection(allProducts.skip(14).take(3).toList()),
+          _buildAnotherArrivalsSection(allProducts.skip(14).take(4).toList()),
         ],
       );
     }
@@ -350,7 +350,7 @@ class _ShopPageState extends State<ShopPage> {
             children: [
               Expanded(child: ProductCard(product: products[0])),
               const SizedBox(width: 16),
-              Expanded(child: _buildSmallArrivalsTile()),
+              Expanded(child: ProductCard(product: products[3])),
             ],
           ),
           const SizedBox(height: 16),

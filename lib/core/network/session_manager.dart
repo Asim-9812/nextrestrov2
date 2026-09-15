@@ -26,9 +26,13 @@ class SessionManager {
   }
 
   void updateSession(UserModel user) {
-    debugPrint('SessionManager: Updating session for ${user.username}. Token present: ${user.token != null}');
+    debugPrint('SessionManager: Updating session for ${user.username}. Token present in new user: ${user.token != null}');
     _currentUser = user;
-    _token = user.token;
+    // Only update token if the new user object has one. 
+    // This prevents clearing the token when fetching profile data that doesn't include it.
+    if (user.token != null && user.token!.isNotEmpty) {
+      _token = user.token;
+    }
   }
 
   Future<void> logout() async {

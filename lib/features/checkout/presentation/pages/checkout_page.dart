@@ -35,7 +35,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void initState() {
     super.initState();
     // Ensure we have the latest profile data for pre-filling
-    // context.read<AuthBloc>().add(FetchProfileEvent());
+    // Only fetch if not already loaded to avoid duplicate requests
+    final authState = context.read<AuthBloc>().state;
+    if (authState is! ProfileLoaded) {
+      context.read<AuthBloc>().add(FetchProfileEvent());
+    }
   }
 
   @override

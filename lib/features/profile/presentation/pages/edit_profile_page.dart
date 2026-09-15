@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_event.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/address_data.dart';
@@ -38,16 +39,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
       name = authState.user.fullName;
       phone = authState.user.phone;
       email = authState.user.email;
-    } else if (authState is ProfileLoaded) {
-      name = authState.user.fullName;
-      phone = authState.user.phone;
-      email = authState.user.email;
     }
 
     _nameController = TextEditingController(text: name);
     _phoneController = TextEditingController(text: phone);
     _emailController = TextEditingController(text: email);
     _dobController = TextEditingController(text: 'May 15, 1998');
+
+    // Fetch profile if not already loaded
+    if (authState is! ProfileLoaded) {
+      context.read<AuthBloc>().add(FetchProfileEvent());
+    }
   }
 
   // Address Lists
@@ -115,8 +117,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is Authenticated) {
+          if (_nameController.text.isEmpty && state.user.fullName.isNotEmpty) {
+            _nameController.text = state.user.fullName;
+          }
+          if (_phoneController.text.isEmpty && state.user.phone.isNotEmpty) {
+            _phoneController.text = state.user.phone;
+          }
+          if (_emailController.text.isEmpty && state.user.email.isNotEmpty) {
+            _emailController.text = state.user.email;
+          }
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -237,8 +253,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
         ),
       ),
-    );
-  }
+    )
+  );
+ }
 
   Widget _buildProfilePicSection() {
     return BlocBuilder<AuthBloc, AuthState>(

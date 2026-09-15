@@ -77,9 +77,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onFetchProfile(FetchProfileEvent event, Emitter<AuthState> emit) async {
+    final currentState = state;
     final result = await authRepository.getProfile();
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
+      (failure) {
+        if (currentState is Authenticated) {
+          emit(ProfileError(currentState.user, failure.message));
+        } else {
+          emit(AuthError(failure.message));
+        }
+      },
       (user) => emit(ProfileLoaded(user)),
     );
   }

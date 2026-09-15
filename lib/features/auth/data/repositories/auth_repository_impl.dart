@@ -106,7 +106,13 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, UserEntity>> getProfile() async {
     try {
-      final userModel = await remoteDataSource.getProfile();
+      var userModel = await remoteDataSource.getProfile();
+      
+      // Merge the existing token if the profile response doesn't include one
+      if ((userModel.token == null || userModel.token!.isEmpty) && sessionManager.token != null) {
+        userModel = userModel.copyWith(token: sessionManager.token);
+      }
+      
       await localDataSource.cacheUser(userModel);
       sessionManager.updateSession(userModel);
       return Right(userModel);

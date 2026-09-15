@@ -58,4 +58,40 @@ class UserModel extends UserEntity {
       'token': token,
     };
   }
+
+  UserModel copyWith({
+    int? userId,
+    String? username,
+    String? email,
+    String? fullName,
+    String? phone,
+    String? role,
+    int? roleId,
+    String? hireDate,
+    String? createdAt,
+    bool? isActive,
+    int? companyId,
+    String? companyName,
+    int? branchId,
+    String? branchName,
+    String? token,
+  }) {
+    return UserModel(
+      userId: userId ?? this.userId,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      fullName: fullName ?? this.fullName,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      roleId: roleId ?? this.roleId,
+      hireDate: hireDate ?? this.hireDate,
+      createdAt: createdAt ?? this.createdAt,
+      isActive: isActive ?? this.isActive,
+      companyId: companyId ?? this.companyId,
+      companyName: companyName ?? this.companyName,
+      branchId: branchId ?? this.branchId,
+      branchName: branchName ?? this.branchName,
+      token: token ?? this.token,
+    );
+  }
 }
