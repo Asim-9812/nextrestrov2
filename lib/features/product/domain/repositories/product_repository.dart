@@ -5,6 +5,7 @@ import '../entities/product.dart';
 abstract class ProductRepository {
   Future<Either<Failure, List<Product>>> getAllProducts();
   Future<Either<Failure, List<ProductReview>>> getProductReviews(int productId);
+  Future<Either<Failure, List<ProductVariant>>> getProductVariants(int productId);
   Future<Either<Failure, void>> createProductReview({
     required int productId,
     required int customerId,

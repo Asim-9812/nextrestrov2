@@ -143,6 +143,38 @@ class ApiEndpoints {
   static const String unresolvedPayment = "/api/Payment/unresolved";
   static const String esewaPaymentSuccess = "/api/Payment/esewa/success";
 
+  // Appointment
+  static const String bookAppointment = "/api/Appointment/bookappointment";
+  static const String getAppointmentById = "/api/Appointment/getappointbyid";
+  static const String getAllAppointments = "/api/Appointment/getallapointment";
+  static const String changeAppointmentStatus = "/api/Appointment/changeappointstatus";
+  static const String cancelAppointment = "/api/Appointment/cancelappointment";
+
+  // Dashboard
+  static const String dashboard = "/api/Dashboard";
+
+  // Product Variant
+  static const String saveProductVariant = "/api/ProductVariant";
+  static const String getAllProductVariants = "/api/ProductVariant";
+  static String getProductVariantById(int id) => "/api/ProductVariant/$id";
+  static String updateProductVariant(int id) => "/api/ProductVariant/$id";
+  static String changeProductVariantStatus(int id) => "/api/ProductVariant/$id/status";
+
+  // Stock
+  static const String stockIn = "/api/Stock/stockin";
+  static const String stockOut = "/api/Stock/stockout";
+  static const String getCurrentStock = "/api/Stock/getcurrentstock";
+  static const String getStockLedger = "/api/Stock/getstockledger";
+  static const String getStockReport = "/api/Stock/getstockreport";
+  static const String getExpiryReport = "/api/Stock/getexpiryreport";
+  static const String stockReportSummary = "/api/StockReport";
+
+  // Notification Extra
+  static const String notificationUnreadCount = "/api/Notification/unread-count";
+  static String markNotificationAsRead(int id) => "/api/Notification/$id/read";
+  static const String markAllNotificationsAsRead = "/api/Notification/mark-all-read";
+  static const String createPromotionNotification = "/api/Notification/promotion";
+
   // AI Chat
   static const String aiChat = "/api/AI/chat";
 }

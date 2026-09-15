@@ -1,11 +1,13 @@
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/network/api_endpoints.dart';
+import '../../domain/entities/product.dart';
 import '../models/product_model.dart';
 import '../models/product_review_model.dart';
 
 abstract class ProductRemoteDataSource {
   Future<List<ProductModel>> getAllProducts();
   Future<List<ProductReviewModel>> getProductReviews(int productId);
+  Future<List<ProductVariant>> getProductVariants(int productId);
   Future<void> createProductReview(Map<String, dynamic> reviewData);
 }
 
@@ -21,6 +23,22 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       if (response.data != null && response.data['data'] != null) {
         return (response.data['data'] as List)
             .map((json) => ProductModel.fromJson(json))
+            .toList();
+      }
+      return [];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<ProductVariant>> getProductVariants(int productId) async {
+    try {
+      final response = await _dioClient.get(ApiEndpoints.getAllProductVariants);
+      if (response.data != null && response.data['data'] != null) {
+        return (response.data['data'] as List)
+            .map((json) => ProductVariant.fromJson(json))
+            .where((variant) => variant.productId == productId)
             .toList();
       }
       return [];

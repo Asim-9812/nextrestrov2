@@ -35,6 +35,18 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
+  Future<Either<Failure, List<ProductVariant>>> getProductVariants(int productId) async {
+    try {
+      final variants = await remoteDataSource.getProductVariants(productId);
+      return Right(variants);
+    } on DioException catch (e) {
+      return Left(ServerFailure(e.message ?? 'Failed to fetch variants'));
+    } catch (e) {
+      return Left(GenericFailure(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> createProductReview({
     required int productId,
     required int customerId,

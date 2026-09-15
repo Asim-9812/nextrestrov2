@@ -168,3 +168,66 @@ class RatingSummary extends Equatable {
   @override
   List<Object?> get props => [averageRating, starPercentages];
 }
+
+class ProductVariant extends Equatable {
+  final int productVariantId;
+  final int productId;
+  final String? size;
+  final String? color;
+  final String? sku;
+  final String? barcode;
+  final double? purchasePriceNPR;
+  final double? salesPrice;
+  final double? mrp;
+  final bool isActive;
+  final String? productName;
+  final String? productCode;
+
+  const ProductVariant({
+    required this.productVariantId,
+    required this.productId,
+    this.size,
+    this.color,
+    this.sku,
+    this.barcode,
+    this.purchasePriceNPR,
+    this.salesPrice,
+    this.mrp,
+    this.isActive = true,
+    this.productName,
+    this.productCode,
+  });
+
+  factory ProductVariant.fromJson(Map<String, dynamic> json) {
+    return ProductVariant(
+      productVariantId: (json['productVariantId'] as num?)?.toInt() ?? 0,
+      productId: (json['productId'] as num?)?.toInt() ?? 0,
+      size: json['size'],
+      color: json['color'],
+      sku: json['sku']?.toString(),
+      barcode: json['barcode']?.toString(),
+      purchasePriceNPR: (json['purchasePriceNPR'] as num?)?.toDouble(),
+      salesPrice: (json['salesPrice'] as num?)?.toDouble(),
+      mrp: (json['mrp'] as num?)?.toDouble(),
+      isActive: json['isActive'] ?? true,
+      productName: json['productName'],
+      productCode: json['productCode'],
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        productVariantId,
+        productId,
+        size,
+        color,
+        sku,
+        barcode,
+        purchasePriceNPR,
+        salesPrice,
+        mrp,
+        isActive,
+        productName,
+        productCode,
+      ];
+}

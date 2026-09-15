@@ -9,6 +9,8 @@ import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
 import '../bloc/review_cubit.dart';
 import '../bloc/review_state.dart';
+import '../bloc/product_variant_cubit.dart';
+import '../bloc/product_variant_state.dart';
 import '../widgets/product_image_gallery.dart';
 import '../widgets/product_info_header.dart';
 import '../widgets/product_description.dart';
@@ -26,8 +28,15 @@ class ProductDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<ReviewCubit>()..getProductReviews(product.productId ?? 0),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<ReviewCubit>()..getProductReviews(product.productId ?? 0),
+        ),
+        BlocProvider(
+          create: (context) => sl<ProductVariantCubit>()..getProductVariants(product.productId ?? 0),
+        ),
+      ],
       child: Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
@@ -135,11 +144,32 @@ class ProductDetailsPage extends StatelessWidget {
                   children: [
                     ProductDescription(description: product.description),
                     AppSizes.gapH24,
-                    ProductSizeSelector(
-                      sizes: product.sizes,
-                      onSizeSelected: (size) {},
+                    BlocBuilder<ProductVariantCubit, ProductVariantState>(
+                      builder: (context, state) {
+                        if (state is ProductVariantLoaded && state.variants.isNotEmpty) {
+                          final uniqueSizes = state.variants
+                              .map((v) => v.size)
+                              .where((s) => s != null && s.isNotEmpty)
+                              .cast<String>()
+                              .toSet()
+                              .toList();
+
+                          if (uniqueSizes.isNotEmpty) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ProductSizeSelector(
+                                  sizes: uniqueSizes,
+                                  onSizeSelected: (size) {},
+                                ),
+                                AppSizes.gapH32,
+                              ],
+                            );
+                          }
+                        }
+                        return const SizedBox.shrink();
+                      },
                     ),
-                    AppSizes.gapH32,
                   ],
                 ),
               ),
