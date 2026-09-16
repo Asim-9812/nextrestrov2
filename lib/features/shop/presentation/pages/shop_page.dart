@@ -279,24 +279,24 @@ class _ShopPageState extends State<ShopPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
             title,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
-          GestureDetector(
-            onTap: onSeeAll,
-            child: Row(
-              children: [
-                Text(
-                  'See all',
-                  style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 13),
-                ),
-                Icon(Icons.chevron_right, color: AppColors.primary, size: 18),
-              ],
-            ),
-          ),
+          // GestureDetector(
+          //   onTap: onSeeAll,
+          //   child: Row(
+          //     children: [
+          //       Text(
+          //         'See all',
+          //         style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 13),
+          //       ),
+          //       Icon(Icons.chevron_right, color: AppColors.primary, size: 18),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
