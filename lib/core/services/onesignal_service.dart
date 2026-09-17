@@ -13,7 +13,8 @@ import '../../features/order/presentation/bloc/order_bloc.dart';
 import '../../injection_container.dart' as di;
 
 class OneSignalService {
-  static const String _appId = "a320a637-fe26-4694-bbc2-43dc677ba436";
+  // static const String _appId = "a320a637-fe26-4694-bbc2-43dc677ba436";
+  static const String _appId = "eb8837b3-6cbb-4309-95a8-dddf8411b2c7";
   static const String _dialogShownKey = "onesignal_verification_dialog_shown";
 
   static int? _pendingOrderId;
