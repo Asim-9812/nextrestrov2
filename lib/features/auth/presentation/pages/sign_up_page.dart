@@ -19,6 +19,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -30,10 +31,12 @@ class _SignUpPageState extends State<SignUpPage> {
   int _strengthLevel = 0;
   String _strengthLabel = 'Weak';
   Color _strengthColor = AppColors.accentError;
+  String? _usernameError;
 
   @override
   void dispose() {
     _fullNameController.dispose();
+    _usernameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
@@ -93,6 +96,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is RegisterSuccess) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Account created successfully! Please login.'),
@@ -102,9 +106,18 @@ class _SignUpPageState extends State<SignUpPage> {
           );
           Navigator.pop(context);
         } else if (state is AuthError) {
+          final msg = state.message.toLowerCase();
+          String displayError = state.message;
+          if (msg.contains('user already exists') || msg.contains('already exists') || msg.contains('username')) {
+            displayError = 'Username already exists';
+            setState(() {
+              _usernameError = 'Username already exists';
+            });
+          }
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.message),
+              content: Text(displayError),
               backgroundColor: Colors.red,
               behavior: SnackBarBehavior.floating,
             ),
@@ -208,7 +221,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderRadius: BorderRadius.circular(30),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primary.withOpacity(0.05),
+                            color: AppColors.primary.withValues(alpha: 0.05),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -221,6 +234,21 @@ class _SignUpPageState extends State<SignUpPage> {
                             hintText: 'Full Name',
                             icon: Icons.person_outline,
                             keyboardType: TextInputType.name,
+                          ),
+                          AppSizes.gapH16,
+                          AuthTextField(
+                            controller: _usernameController,
+                            hintText: 'Username',
+                            icon: Icons.alternate_email,
+                            keyboardType: TextInputType.text,
+                            errorText: _usernameError,
+                            onChanged: (val) {
+                              if (_usernameError != null) {
+                                setState(() {
+                                  _usernameError = null;
+                                });
+                              }
+                            },
                           ),
                           AppSizes.gapH16,
                           AuthTextField(
@@ -363,24 +391,29 @@ class _SignUpPageState extends State<SignUpPage> {
                                   onPressed: (state is AuthLoading || !_agreeToTerms)
                                       ? null
                                       : () {
-                                          if (_fullNameController.text.isNotEmpty &&
-                                              _emailController.text.isNotEmpty &&
-                                              _phoneController.text.isNotEmpty &&
+                                          if (_fullNameController.text.trim().isNotEmpty &&
+                                              _usernameController.text.trim().isNotEmpty &&
+                                              _emailController.text.trim().isNotEmpty &&
+                                              _phoneController.text.trim().isNotEmpty &&
                                               _passwordController.text.isNotEmpty &&
                                               _passwordController.text == _confirmPasswordController.text) {
                                             context.read<AuthBloc>().add(
                                                   RegisterEvent(
-                                                    email: _emailController.text,
+                                                    username: _usernameController.text.trim(),
+                                                    email: _emailController.text.trim(),
                                                     password: _passwordController.text,
-                                                    fullName: _fullNameController.text,
-                                                    phone: _phoneController.text,
+                                                    fullName: _fullNameController.text.trim(),
+                                                    phone: _phoneController.text.trim(),
                                                   ),
                                                 );
                                           } else {
                                             String error = 'Please fill all fields correctly';
-                                            if (_passwordController.text != _confirmPasswordController.text) {
+                                            if (_usernameController.text.trim().isEmpty) {
+                                              error = 'Please enter a username';
+                                            } else if (_passwordController.text != _confirmPasswordController.text) {
                                               error = 'Passwords do not match';
                                             }
+                                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                             ScaffoldMessenger.of(context).showSnackBar(
                                               SnackBar(
                                                 content: Text(error),

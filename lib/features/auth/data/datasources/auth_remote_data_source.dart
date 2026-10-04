@@ -7,6 +7,7 @@ import '../models/user_model.dart';
 abstract class AuthRemoteDataSource {
   Future<UserModel> login(String username, String password);
   Future<void> register({
+    required String username,
     required String email,
     required String password,
     required String fullName,
@@ -48,13 +49,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<void> register({
+    required String username,
     required String email,
     required String password,
     required String fullName,
     required String phone,
   }) async {
     try {
-      final username = fullName.split(' ').first;
       final hireDate = DateTime.now().toUtc().toIso8601String();
 
       await _dioClient.post(
@@ -66,7 +67,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           "email": email,
           "fullName": fullName,
           "phone": phone,
-          "roleID": 1,
+          "roleID": 2,
           "hireDate": hireDate,
           "isActive": true,
           "companyID": 1,

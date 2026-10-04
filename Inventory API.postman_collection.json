@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Inventory API",
+    "title": "Divine Pets Inventory API",
     "version": "v1"
   },
   "paths": {
@@ -926,7 +926,7 @@
         }
       }
     },
-    "/api/Company": {
+    "/api/Company/save": {
       "post": {
         "tags": [
           "Company"
@@ -1024,7 +1024,9 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/Company/getall": {
       "get": {
         "tags": [
           "Company"
@@ -1036,7 +1038,7 @@
         }
       }
     },
-    "/api/Company/{companyId}": {
+    "/api/Company/getbyid": {
       "get": {
         "tags": [
           "Company"
@@ -1044,8 +1046,7 @@
         "parameters": [
           {
             "name": "companyId",
-            "in": "path",
-            "required": true,
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1057,7 +1058,9 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/Company/delete": {
       "delete": {
         "tags": [
           "Company"
@@ -1065,8 +1068,7 @@
         "parameters": [
           {
             "name": "companyId",
-            "in": "path",
-            "required": true,
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1134,7 +1136,7 @@
         }
       }
     },
-    "/api/FiscalYear": {
+    "/api/FiscalYear/save": {
       "post": {
         "tags": [
           "FiscalYear"
@@ -1163,7 +1165,9 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/FiscalYear/update": {
       "put": {
         "tags": [
           "FiscalYear"
@@ -1192,28 +1196,17 @@
             "description": "OK"
           }
         }
-      },
-      "get": {
-        "tags": [
-          "FiscalYear"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
       }
     },
-    "/api/FiscalYear/{id}": {
+    "/api/FiscalYear/delete": {
       "delete": {
         "tags": [
           "FiscalYear"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "fiscalYearId",
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1225,16 +1218,17 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/FiscalYear/getbyid": {
       "get": {
         "tags": [
           "FiscalYear"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "fiscalYearId",
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1248,16 +1242,27 @@
         }
       }
     },
-    "/api/FiscalYear/ChangeStatus/{id}": {
+    "/api/FiscalYear/getall": {
+      "get": {
+        "tags": [
+          "FiscalYear"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/FiscalYear/changestatus": {
       "patch": {
         "tags": [
           "FiscalYear"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "fiscalYearId",
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1271,22 +1276,73 @@
         }
       }
     },
-    "/api/FiscalYear/BookClose/{id}": {
+    "/api/FiscalYear/bookclose": {
       "patch": {
         "tags": [
           "FiscalYear"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "fiscalYearId",
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Invoice/getbyinvoiceno": {
+      "get": {
+        "tags": [
+          "Invoice"
+        ],
+        "parameters": [
+          {
+            "name": "invoiceNo",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Invoice/print": {
+      "post": {
+        "tags": [
+          "Invoice"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoicePrintRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoicePrintRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoicePrintRequestDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -2911,6 +2967,45 @@
         }
       }
     },
+    "/api/ProductBatch/availablebatchproduct/{productId}": {
+      "get": {
+        "tags": [
+          "ProductBatch"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "branchId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "fiscalYearId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/ProductReview/create": {
       "post": {
         "tags": [
@@ -3747,6 +3842,102 @@
         }
       }
     },
+    "/api/StockOut/createstockout": {
+      "post": {
+        "tags": [
+          "StockOut"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StockOutDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StockOutDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/StockOutDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/StockOut/{stockOutId}": {
+      "get": {
+        "tags": [
+          "StockOut"
+        ],
+        "parameters": [
+          {
+            "name": "stockOutId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/StockOut/GetAllStockout": {
+      "get": {
+        "tags": [
+          "StockOut"
+        ],
+        "parameters": [
+          {
+            "name": "branchId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "fiscalYearId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/StockOut/reasons": {
+      "get": {
+        "tags": [
+          "StockOut"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/StockReport": {
       "get": {
         "tags": [
@@ -4476,6 +4667,20 @@
         },
         "additionalProperties": false
       },
+      "InvoicePrintRequestDto": {
+        "type": "object",
+        "properties": {
+          "invoiceNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "printStatus": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginDto": {
         "type": "object",
         "properties": {
@@ -4683,6 +4888,11 @@
             "nullable": true
           },
           "openingQty": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "availableQty": {
             "type": "number",
             "format": "double",
             "nullable": true
@@ -5027,6 +5237,75 @@
           "toDate": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StockOutDto": {
+        "type": "object",
+        "properties": {
+          "stockOutId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "branchId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "branchName": {
+            "type": "string",
+            "nullable": true
+          },
+          "fiscalYearId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fiscalYear": {
+            "type": "string",
+            "nullable": true
+          },
+          "productId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productVariantId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "productBatchId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "stockOutReasonId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "remarks": {
+            "type": "string",
+            "nullable": true
+          },
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "batchNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "reasonName": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },

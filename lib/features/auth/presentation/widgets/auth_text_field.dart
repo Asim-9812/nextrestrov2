@@ -12,6 +12,7 @@ class AuthTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final TextInputType keyboardType;
   final ValueChanged<String>? onChanged;
+  final String? errorText;
 
   const AuthTextField({
     super.key,
@@ -23,6 +24,7 @@ class AuthTextField extends StatelessWidget {
     this.suffixIcon,
     this.keyboardType = TextInputType.text,
     this.onChanged,
+    this.errorText,
   });
 
   @override
@@ -38,6 +40,13 @@ class AuthTextField extends StatelessWidget {
       ),
       decoration: InputDecoration(
         hintText: hintText,
+        errorText: errorText,
+        errorMaxLines: 2,
+        errorStyle: const TextStyle(
+          color: AppColors.accentError,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
         hintStyle: AppTextStyles.bodyLarge.copyWith(
           color: AppColors.textTertiary,
           fontWeight: FontWeight.w400,
@@ -68,11 +77,24 @@ class AuthTextField extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.textPlaceholder),
+          borderSide: BorderSide(
+            color: errorText != null ? AppColors.accentError : AppColors.textPlaceholder,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: BorderSide(
+            color: errorText != null ? AppColors.accentError : AppColors.primary,
+            width: 1.5,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.accentError, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.accentError, width: 2),
         ),
       ),
     );

@@ -35,6 +35,9 @@ class UserEntity extends Equatable {
     this.token,
   });
 
+  bool get isAdmin =>
+      roleId == 1 || (role != null && role!.toLowerCase().contains('admin'));
+
   @override
   List<Object?> get props => [
         userId,

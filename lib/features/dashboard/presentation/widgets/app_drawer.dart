@@ -9,6 +9,8 @@ import '../../../../core/widgets/app_error_widget.dart';
 import 'package:divinepets/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:divinepets/features/auth/presentation/bloc/auth_event.dart';
 import 'package:divinepets/features/auth/presentation/bloc/auth_state.dart';
+import '../../../../core/services/admin_mode_service.dart';
+import '../../../admin/presentation/pages/admin_dashboard_page.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import '../../../notification/presentation/pages/notification_page.dart';
 import '../../../order/presentation/pages/my_orders_page.dart';
@@ -67,8 +69,36 @@ class AppDrawer extends StatelessWidget {
                   },
                   child: _buildProfileSection(),
                 ),
-                AppSizes.gapH24,
-                
+                AppSizes.gapH16,
+
+                // Admin Portal Switcher (Visible only for Admin users)
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, authState) {
+                    if (authState is Authenticated && authState.user.isAdmin) {
+                      return Column(
+                        children: [
+                          _buildDrawerItem(
+                            Icons.admin_panel_settings_rounded,
+                            'Admin Portal',
+                            onTap: () async {
+                              await AdminModeService.setPreferredMode('admin');
+                              if (!context.mounted) return;
+                              Navigator.pop(context);
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(builder: (_) => const AdminDashboardPage()),
+                                (route) => false,
+                              );
+                            },
+                          ),
+                          AppSizes.gapH12,
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+                AppSizes.gapH12,
+
                 // My Orders Section
                 _buildOrdersSection(context),
                 AppSizes.gapH24,

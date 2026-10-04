@@ -41,6 +41,19 @@ class DioClient {
   }
 
   String _getErrorMessage(DioException error) {
+    if (error.response?.data != null) {
+      final responseData = error.response!.data;
+      if (responseData is Map) {
+        if (responseData.containsKey('message') && responseData['message'] != null && responseData['message'].toString().trim().isNotEmpty) {
+          return responseData['message'].toString().trim();
+        }
+        if (responseData.containsKey('error') && responseData['error'] != null && responseData['error'].toString().trim().isNotEmpty) {
+          return responseData['error'].toString().trim();
+        }
+      } else if (responseData is String && responseData.trim().isNotEmpty) {
+        return responseData.trim();
+      }
+    }
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
         return "Connection timeout. Please check your internet.";

@@ -45,7 +45,7 @@ void main() async {
   await di.init();
   runApp(
     DevicePreview(
-      enabled: false, //!kReleaseMode,
+      enabled: true, //!kReleaseMode,
       builder: (context) => MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => di.sl<AuthBloc>()..add(CheckAuthEvent())),

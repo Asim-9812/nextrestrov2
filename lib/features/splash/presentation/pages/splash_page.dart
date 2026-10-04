@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:divinepets/features/admin/presentation/pages/admin_dashboard_page.dart';
 import 'package:divinepets/features/auth/presentation/pages/login_page.dart';
 import 'package:divinepets/features/dashboard/presentation/pages/main_navigation_page.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../core/services/admin_mode_service.dart';
 import '../../../../core/widgets/app_logo.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
@@ -34,11 +36,25 @@ class _SplashPageState extends State<SplashPage> {
     _navigateToNext(state);
   }
 
-  void _navigateToNext(AuthState state) {
+  void _navigateToNext(AuthState state) async {
     if (state is Authenticated) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const MainNavigationPage()),
-      );
+      if (state.user.isAdmin) {
+        final mode = await AdminModeService.getPreferredMode();
+        if (!mounted) return;
+        if (mode == 'customer') {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const MainNavigationPage()),
+          );
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const AdminDashboardPage()),
+          );
+        }
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const MainNavigationPage()),
+        );
+      }
     } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const LoginPage()),
