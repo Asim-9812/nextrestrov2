@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../core/services/admin_mode_service.dart';
+import '../../../admin/presentation/pages/admin_dashboard_page.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
@@ -10,12 +12,8 @@ import '../../../notification/presentation/pages/notification_page.dart';
 import '../../../notification/presentation/bloc/notification_bloc.dart';
 import '../../../notification/presentation/bloc/notification_state.dart';
 import '../../../order/presentation/pages/my_orders_page.dart';
-import '../../../pets/presentation/pages/my_pets_page.dart';
-import '../../../pets/presentation/widgets/profile_pets_section.dart';
-import 'settings_page.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_orders_card.dart';
-import '../widgets/profile_menu_section.dart';
 import '../widgets/profile_support_section.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -55,11 +53,19 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     _buildHeader(context),
                     const SizedBox(height: 10),
-                    if (user != null)
+                    if (user != null) ...[
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: ProfileHeader(user: user),
-                      )
+                      ),
+                      if (user.isAdmin) ...[
+                        const SizedBox(height: 16),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: _buildAdminPortalButton(context),
+                        ),
+                      ],
+                    ]
                     else if (state is AuthLoading)
                       const Center(child: Padding(
                         padding: EdgeInsets.all(20.0),
@@ -232,6 +238,53 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAdminPortalButton(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0F7FC),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ListTile(
+        onTap: () async {
+          final navigator = Navigator.of(context);
+          await AdminModeService.setPreferredMode('admin');
+          if (!mounted) return;
+          navigator.pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => const AdminDashboardPage()),
+            (route) => false,
+          );
+        },
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Icon(Icons.admin_panel_settings_rounded, color: Colors.white, size: 22),
+        ),
+        title: const Text(
+          'Switch to Admin Portal',
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.primary),
+        ),
+        subtitle: const Text(
+          'Manage orders, inventory, and portal analytics',
+          style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios_rounded, color: AppColors.primary, size: 16),
       ),
     );
   }

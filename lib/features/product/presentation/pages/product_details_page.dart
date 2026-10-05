@@ -15,7 +15,6 @@ import '../widgets/product_image_gallery.dart';
 import '../widgets/product_info_header.dart';
 import '../widgets/product_description.dart';
 import '../widgets/product_size_selector.dart';
-import '../widgets/product_faq_section.dart';
 import '../widgets/product_reviews_section.dart';
 import '../widgets/product_recommendations.dart';
 import '../widgets/product_bottom_action_bar.dart';
@@ -23,8 +22,14 @@ import '../widgets/product_bottom_action_bar.dart';
 class ProductDetailsPage extends StatelessWidget {
   final Product product;
   final int? orderId;
+  final bool isAdminView;
 
-  const ProductDetailsPage({super.key, required this.product, this.orderId});
+  const ProductDetailsPage({
+    super.key,
+    required this.product,
+    this.orderId,
+    this.isAdminView = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,70 +51,72 @@ class ProductDetailsPage extends StatelessWidget {
             icon: const Icon(Icons.arrow_back, color: AppColors.primary, size: 28),
             onPressed: () => Navigator.pop(context),
           ),
-          actions: [
-            BlocBuilder<WishlistBloc, WishlistState>(
-              builder: (context, state) {
-                final isFav = state.isFavorite(product.id);
-                return IconButton(
-                  icon: Icon(
-                    isFav ? Icons.favorite : Icons.favorite_border,
-                    color: AppColors.primary,
+          actions: isAdminView
+              ? null
+              : [
+                  BlocBuilder<WishlistBloc, WishlistState>(
+                    builder: (context, state) {
+                      final isFav = state.isFavorite(product.id);
+                      return IconButton(
+                        icon: Icon(
+                          isFav ? Icons.favorite : Icons.favorite_border,
+                          color: AppColors.primary,
+                        ),
+                        onPressed: () {
+                          context.read<WishlistBloc>().add(ToggleWishlist(product));
+                        },
+                      );
+                    },
                   ),
-                  onPressed: () {
-                    context.read<WishlistBloc>().add(ToggleWishlist(product));
-                  },
-                );
-              },
-            ),
-            const SizedBox(width: 12,),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const CartPage()),
-                );
-              },
-              child: BlocBuilder<CartBloc, CartState>(
-                builder: (context, state) {
-                  return Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      const Icon(Icons.shopping_cart_outlined, size: 26),
-                      if (state.totalItems > 0)
-                        Positioned(
-                          right: -4,
-                          top: -4,
-                          child: Container(
-                            padding: const EdgeInsets.all(2),
-                            constraints: const BoxConstraints(
-                              minWidth: 16,
-                              minHeight: 16,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFF782C),
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 1.5),
-                            ),
-                            child: Center(
-                              child: Text(
-                                '${state.totalItems}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1,
+                  const SizedBox(width: 12),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CartPage()),
+                      );
+                    },
+                    child: BlocBuilder<CartBloc, CartState>(
+                      builder: (context, state) {
+                        return Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            const Icon(Icons.shopping_cart_outlined, size: 26),
+                            if (state.totalItems > 0)
+                              Positioned(
+                                right: -4,
+                                top: -4,
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 16,
+                                    minHeight: 16,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFFF782C),
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: Colors.white, width: 1.5),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '${state.totalItems}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.bold,
+                                        height: 1,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            const SizedBox(width: 12,)
-          ],
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                ],
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -228,7 +235,7 @@ class ProductDetailsPage extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: ProductBottomActionBar(product: product),
+        bottomNavigationBar: isAdminView ? null : ProductBottomActionBar(product: product),
       ),
     );
   }
