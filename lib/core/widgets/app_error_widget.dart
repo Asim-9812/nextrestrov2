@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
 import '../constants/app_text_styles.dart';
@@ -110,7 +109,7 @@ class AppErrorWidget extends StatelessWidget {
                   FadeIn(
                     delay: const Duration(milliseconds: 600),
                     child: const Icon(
-                      FontAwesomeIcons.paw,
+                      Icons.pets,
                       color: AppColors.primary,
                       size: 24,
                     ),
@@ -199,10 +198,10 @@ class _BackgroundPattern extends StatelessWidget {
       builder: (context, constraints) {
         final random = Random(42);
         final icons = [
-          FontAwesomeIcons.paw,
-          FontAwesomeIcons.heart,
+          Icons.pets,
+          Icons.favorite,
           Icons.sports_baseball,
-          FontAwesomeIcons.bone,
+          Icons.pets,
         ];
         
         const int rows = 5;

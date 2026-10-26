@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pinput/pinput.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
@@ -366,7 +365,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                             ),
                                             AppSizes.gapW8,
                                             const Icon(
-                                              FontAwesomeIcons.arrowRight,
+                                              Icons.arrow_forward,
                                               color: AppColors.white,
                                               size: 16,
                                             ),
@@ -384,7 +383,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Icon(
-                                  FontAwesomeIcons.arrowLeft,
+                                  Icons.arrow_back,
                                   color: AppColors.primary,
                                   size: 14,
                                 ),

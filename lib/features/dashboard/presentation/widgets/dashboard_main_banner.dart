@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
@@ -45,7 +44,7 @@ class DashboardMainBanner extends StatelessWidget {
                           ),
                         ),
                         AppSizes.gapW4,
-                        const Icon(FontAwesomeIcons.paw, size: 11, color: AppColors.primary),
+                        const Icon(Icons.pets, size: 11, color: AppColors.primary),
                       ],
                     ),
                     // AppSizes.gapH12,

@@ -2,9 +2,9 @@ import 'package:animate_do/animate_do.dart';
 import 'package:divinepets/features/admin/presentation/pages/admin_dashboard_page.dart';
 import 'package:divinepets/features/auth/presentation/pages/login_page.dart';
 import 'package:divinepets/features/dashboard/presentation/pages/main_navigation_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
@@ -115,7 +115,7 @@ class _SplashPageState extends State<SplashPage> {
                           child: BounceInDown(
                             delay: const Duration(milliseconds: 1000),
                             child: const Icon(
-                              FontAwesomeIcons.paw,
+                              CupertinoIcons.paw,
                               color: Color(0xFFFF782C), // Orange paw
                               size: 20,
                             ),
@@ -162,13 +162,13 @@ class _SplashPageState extends State<SplashPage> {
 
   List<Widget> _buildBackgroundPattern() {
     return [
-      _PositionedIcon(top: 100, left: 50, icon: FontAwesomeIcons.paw, size: 30),
-      _PositionedIcon(top: 150, right: 40, icon: FontAwesomeIcons.heart, size: 25),
-      _PositionedIcon(top: 250, left: 100, icon: FontAwesomeIcons.bone, size: 40, angle: 0.5),
-      _PositionedIcon(bottom: 150, right: 60, icon: FontAwesomeIcons.paw, size: 25, angle: -0.2),
-      _PositionedIcon(bottom: 250, left: 40, icon: FontAwesomeIcons.heart, size: 20),
+      _PositionedIcon(top: 100, left: 50, icon: CupertinoIcons.paw, size: 30),
+      _PositionedIcon(top: 150, right: 40, icon: CupertinoIcons.heart, size: 25),
+      _PositionedIcon(top: 250, left: 100, icon: Icons.cookie, size: 40, angle: 0.5),
+      _PositionedIcon(bottom: 150, right: 60, icon: CupertinoIcons.paw, size: 25, angle: -0.2),
+      _PositionedIcon(bottom: 250, left: 40, icon: CupertinoIcons.heart, size: 20),
       _PositionedIcon(top: 400, left: 30, icon: Icons.sports_tennis, size: 35, angle: 0.8),
-      _PositionedIcon(bottom: 400, right: 40, icon: FontAwesomeIcons.bone, size: 30, angle: -0.5),
+      _PositionedIcon(bottom: 400, right: 40, icon: Icons.cookie_outlined, size: 30, angle: -0.5),
       _PositionedIcon(bottom: 100, left: 120, icon: Icons.sports_tennis, size: 25),
     ];
   }

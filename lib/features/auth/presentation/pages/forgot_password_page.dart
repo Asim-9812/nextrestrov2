@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -186,7 +185,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                             ),
                                             AppSizes.gapW8,
                                             const Icon(
-                                              FontAwesomeIcons.arrowRight,
+                                              Icons.arrow_forward,
                                               color: AppColors.white,
                                               size: 16,
                                             ),
@@ -231,7 +230,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Icon(
-                                    FontAwesomeIcons.phone,
+                                    Icons.phone,
                                     color: AppColors.primary,
                                     size: 16,
                                   ),
@@ -255,7 +254,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Icon(
-                                  FontAwesomeIcons.arrowLeft,
+                                  Icons.arrow_back,
                                   color: AppColors.primary,
                                   size: 14,
                                 ),
@@ -301,12 +300,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   List<Widget> _buildBackgroundPattern() {
     return [
-      _PositionedIcon(top: 80, left: 30, icon: FontAwesomeIcons.paw, size: 25),
-      _PositionedIcon(top: 150, left: 10, icon: FontAwesomeIcons.paw, size: 20),
-      _PositionedIcon(top: 50, right: 30, icon: FontAwesomeIcons.bone, size: 30, angle: 0.5),
-      _PositionedIcon(top: 200, right: 10, icon: FontAwesomeIcons.bone, size: 20, angle: -0.5),
+      _PositionedIcon(top: 80, left: 30, icon: Icons.pets, size: 25),
+      _PositionedIcon(top: 150, left: 10, icon: Icons.pets, size: 20),
+      _PositionedIcon(top: 50, right: 30, icon: Icons.pets, size: 30, angle: 0.5),
+      _PositionedIcon(top: 200, right: 10, icon: Icons.pets, size: 20, angle: -0.5),
       _PositionedIcon(bottom: 20, left: 30, icon: Icons.sports_tennis, size: 25),
-      _PositionedIcon(bottom: 10, right: 20, icon: FontAwesomeIcons.heart, size: 25),
+      _PositionedIcon(bottom: 10, right: 20, icon: Icons.favorite, size: 25),
     ];
   }
 }

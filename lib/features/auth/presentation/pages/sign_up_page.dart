@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -187,11 +186,11 @@ class _SignUpPageState extends State<SignUpPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      _buildFeatureItem(FontAwesomeIcons.paw, 'Personalized for your pets.'),
+                                      _buildFeatureItem(Icons.pets, 'Personalized for your pets.'),
                                       AppSizes.gapH12,
-                                      _buildFeatureItem(FontAwesomeIcons.tag, 'Exclusive offers & rewards.'),
+                                      _buildFeatureItem(Icons.local_offer_outlined, 'Exclusive offers & rewards.'),
                                       AppSizes.gapH12,
-                                      _buildFeatureItem(FontAwesomeIcons.shieldHalved, '100% Safe & Secure.'),
+                                      _buildFeatureItem(Icons.shield_outlined, '100% Safe & Secure.'),
                                       AppSizes.gapH24,
                                     ],
                                   ),
@@ -520,11 +519,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
   List<Widget> _buildBackgroundPattern() {
     return [
-      _PositionedIcon(top: 100, left: 30, icon: FontAwesomeIcons.paw, size: 25),
-      _PositionedIcon(top: 150, right: 30, icon: FontAwesomeIcons.paw, size: 20),
-      _PositionedIcon(top: 50, right: 100, icon: FontAwesomeIcons.bone, size: 25, angle: 0.5),
-      _PositionedIcon(bottom: 50, left: 20, icon: FontAwesomeIcons.paw, size: 30),
-      _PositionedIcon(top: 450, right: 20, icon: FontAwesomeIcons.heart, size: 25),
+      _PositionedIcon(top: 100, left: 30, icon: Icons.pets, size: 25),
+      _PositionedIcon(top: 150, right: 30, icon: Icons.pets, size: 20),
+      _PositionedIcon(top: 50, right: 100, icon: Icons.pets, size: 25, angle: 0.5),
+      _PositionedIcon(bottom: 50, left: 20, icon: Icons.pets, size: 30),
+      _PositionedIcon(top: 450, right: 20, icon: Icons.favorite, size: 25),
     ];
   }
 }

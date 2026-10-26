@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
@@ -16,13 +15,13 @@ class ShopByPets extends StatelessWidget {
   IconData _getPetIcon(String type) {
     switch (type.toLowerCase()) {
       case 'dog':
-        return FontAwesomeIcons.dog;
+        return Icons.pets_rounded;
       case 'cat':
-        return FontAwesomeIcons.cat;
+        return Icons.pets_rounded;
       case 'bird':
-        return FontAwesomeIcons.dove;
+        return Icons.cruelty_free_rounded;
       case 'fish':
-        return FontAwesomeIcons.fish;
+        return Icons.set_meal_rounded;
       case 'rabbit':
         return Icons.cruelty_free_rounded;
       case 'hamster':

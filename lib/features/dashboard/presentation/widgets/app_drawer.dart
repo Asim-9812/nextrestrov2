@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
@@ -115,7 +114,7 @@ class AppDrawer extends StatelessWidget {
                   },
                 ),
                 _buildDrawerItem(
-                  FontAwesomeIcons.tag, 
+                  Icons.local_offer_outlined, 
                   'Brands', 
                   onTap: () {
                     Navigator.pop(context);
@@ -270,8 +269,8 @@ class AppDrawer extends StatelessWidget {
                 children: [
                   _buildOrderStatusItem(context, Icons.hourglass_empty_rounded, 'Pending', pendingCount),
                   _buildOrderStatusItem(context, Icons.check_circle_outline_rounded, 'Confirmed', confirmedCount),
-                  _buildOrderStatusItem(context, FontAwesomeIcons.truck, 'Shipped', shippedCount),
-                  _buildOrderStatusItem(context, FontAwesomeIcons.bagShopping, 'Delivered', deliveredCount),
+                  _buildOrderStatusItem(context, Icons.local_shipping_outlined, 'Shipped', shippedCount),
+                  _buildOrderStatusItem(context, Icons.shopping_bag_outlined, 'Delivered', deliveredCount),
                 ],
               ),
             ],

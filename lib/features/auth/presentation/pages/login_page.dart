@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../dashboard/presentation/pages/main_navigation_page.dart';
 import '../../../admin/presentation/widgets/admin_mode_dialog.dart';
 import '../bloc/auth_bloc.dart';
@@ -420,12 +419,12 @@ class _LoginPageState extends State<LoginPage> {
 
   List<Widget> _buildBackgroundPattern() {
     return [
-      _PositionedIcon(top: 100, left: 30, icon: FontAwesomeIcons.paw, size: 25),
-      _PositionedIcon(top: 150, right: 30, icon: FontAwesomeIcons.paw, size: 20),
-      _PositionedIcon(top: 50, right: 100, icon: FontAwesomeIcons.paw, size: 15),
-      _PositionedIcon(top: 350, right: 50, icon: FontAwesomeIcons.bone, size: 30, angle: 0.8),
+      _PositionedIcon(top: 100, left: 30, icon: Icons.pets, size: 25),
+      _PositionedIcon(top: 150, right: 30, icon: Icons.pets, size: 20),
+      _PositionedIcon(top: 50, right: 100, icon: Icons.pets, size: 15),
+      _PositionedIcon(top: 350, right: 50, icon: Icons.pets, size: 30, angle: 0.8),
       _PositionedIcon(top: 150, left: 120, icon: Icons.sports_tennis, size: 20),
-      _PositionedIcon(top: 400, left: 80, icon: FontAwesomeIcons.heart, size: 25),
+      _PositionedIcon(top: 400, left: 80, icon: Icons.favorite, size: 25),
     ];
   }
 }
