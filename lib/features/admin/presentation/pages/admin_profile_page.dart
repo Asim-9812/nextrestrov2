@@ -113,7 +113,6 @@ class AdminProfilePage extends StatelessWidget {
                 },
               ),
               AppSizes.gapH12,
-
               // System Logs
               _buildActionCard(
                 context,

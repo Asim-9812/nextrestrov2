@@ -194,7 +194,7 @@ class _AdminOverviewPageState extends State<AdminOverviewPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Live metrics, order breakdown, and stock charts.',
+                      'Live metrics, order breakdown, a1nd stock charts.',
                       style: AppTextStyles.bodySmall.copyWith(color: Colors.white70),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
