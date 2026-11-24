@@ -53,6 +53,9 @@ dependencies:
   flutter_svg: ^2.2.4
   cached_network_image: ^3.4.1
   image_picker: ^1.1.2
+  flutter_email_sender: ^6.0.2
+  url_launcher: ^6.3.1
+  share_plus: ^10.1.2
   iconify_flutter: ^0.0.7
   font_awesome_flutter: ^11.0.0
   animate_do: ^5.1.0

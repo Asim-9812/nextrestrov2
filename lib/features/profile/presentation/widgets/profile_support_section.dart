@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../pages/bug_reporter_page.dart';
 
 class ProfileSupportSection extends StatelessWidget {
   const ProfileSupportSection({super.key});
@@ -8,19 +9,29 @@ class ProfileSupportSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Row(
-        //   children: [
-        //     Expanded(child: _buildSupportTile(Icons.history_rounded, 'Returns & Refunds')),
-        //     const SizedBox(width: 16),
-        //     Expanded(child: _buildSupportTile(Icons.headset_mic_rounded, 'Help Center')),
-        //   ],
-        // ),
-        // const SizedBox(height: 16),
         Row(
           children: [
-            Expanded(child: _buildSupportTile(Icons.description_rounded, 'Terms & Conditions')),
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const BugReporterPage()),
+                  );
+                },
+                child: _buildSupportTile(Icons.bug_report_rounded, 'Report a Bug'),
+              ),
+            ),
             const SizedBox(width: 16),
+            Expanded(child: _buildSupportTile(Icons.description_rounded, 'Terms & Conditions')),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
             Expanded(child: _buildSupportTile(Icons.policy_rounded, 'Privacy Policy')),
+            const SizedBox(width: 16),
+            const Expanded(child: SizedBox()),
           ],
         ),
         // const SizedBox(height: 16),

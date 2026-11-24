@@ -15,6 +15,7 @@ import '../../../order/presentation/pages/my_orders_page.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_orders_card.dart';
 import '../widgets/profile_support_section.dart';
+import 'settings_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -183,18 +184,18 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-          // IconButton(
-          //   onPressed: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(builder: (context) => const SettingsPage()),
-          //     );
-          //   },
-          //   icon: const Icon(Icons.settings_outlined, color: Colors.black, size: 26),
-          //   padding: EdgeInsets.zero,
-          //   constraints: const BoxConstraints(),
-          // ),
-          // const SizedBox(width: 16),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
+              );
+            },
+            icon: const Icon(Icons.settings_outlined, color: Colors.black, size: 26),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+          const SizedBox(width: 16),
           GestureDetector(
             onTap: () {
               Navigator.push(

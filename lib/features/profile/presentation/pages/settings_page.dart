@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import 'bug_reporter_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -87,6 +88,20 @@ class _SettingsPageState extends State<SettingsPage> {
             _buildActionTile(Icons.delete_outline_rounded, 'Delete Account', isDestructive: true),
             
             AppSizes.gapH24,
+            _buildSectionHeader('Support & Feedback'),
+            _buildActionTile(
+              Icons.bug_report_rounded,
+              'Report a Bug',
+              trailingText: 'codeinfinitynepal@gmail.com',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const BugReporterPage()),
+                );
+              },
+            ),
+
+            AppSizes.gapH24,
             _buildSectionHeader('About'),
             _buildActionTile(Icons.info_outline_rounded, 'App Version', trailingText: 'v1.0.0'),
             _buildActionTile(Icons.description_outlined, 'Privacy Policy'),
@@ -148,7 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildActionTile(IconData icon, String title, {String? trailingText, bool isDestructive = false}) {
+  Widget _buildActionTile(IconData icon, String title, {String? trailingText, bool isDestructive = false, VoidCallback? onTap}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -157,7 +172,7 @@ class _SettingsPageState extends State<SettingsPage> {
         border: Border.all(color: Colors.grey.shade100),
       ),
       child: ListTile(
-        onTap: () {},
+        onTap: onTap ?? () {},
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
